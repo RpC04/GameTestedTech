@@ -5,11 +5,23 @@ import Link from "next/link"
 import { Search, Youtube, Instagram, Twitter, DiscIcon as Discord, Facebook, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { HomeJsonLd } from "@/components/home-jsonld"
+import { useState } from "react"
 
 export default function Articles() {
+  //State to control the animations
+  const [activeSlide, setActiveSlide] = useState(0)
   // Sample featured games data
+  const dotPositions = [
+    { top: "11.028856%", left: "27.500000%" },
+    { top: "50.000000%", left: "5.000000%" },
+    { top: "88.971144%", left: "27.500000%" },
+    { top: "88.971144%", left: "72.500000%" },
+    { top: "50.000000%", left: "95.000000%" },
+    { top: "11.028856%", left: "72.500000%" },
+  ];
+
   const featuredGames = [
     {
       title: "Cyberpunk 2077",
@@ -87,9 +99,9 @@ export default function Articles() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header completo con imagen de fondo */}
+      {/* Full header with background image */}
       <div className="relative">
-        {/* Imagen de fondo para todo el header */}
+        {/* Background image for the whole header */}
         <div className="absolute inset-0 w-full h-full">
           <img src="/images/articlepage-background.png" alt="Cyberpunk background" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/30"></div>
@@ -120,20 +132,20 @@ export default function Articles() {
                 <input
                   type="text"
                   className="w-full bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 rounded-full py-2 px-4 pr-10 text-white"
-                  placeholder="Buscar..."
+                  placeholder="Search..."
                 />
-                <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" /> { /*Search icon*/}
               </div>
 
               <nav className="hidden md:flex items-center gap-6">
                 <Link href="/" className="text-game-white hover:text-game-cyan transition">
-                  Inicio
+                  Home
                 </Link>
                 <Link href="/articles" className="text-game-white hover:text-game-cyan transition">
-                  Artículos
+                  Articles
                 </Link>
                 <Link href="/about" className="text-game-white hover:text-game-cyan transition">
-                  About
+                  About Us
                 </Link>
                 <Link href="/contact" className="text-game-white hover:text-game-cyan transition">
                   Contact
@@ -175,36 +187,126 @@ export default function Articles() {
                 </motion.div>
               </motion.div>
 
-              <div className="flex gap-8 pt-4">
-                <div className="text-center">
+              <motion.div className="flex gap-8 pt-4" variants={itemVariants}>
+                <motion.div
+                  className="text-center"
+                  whileHover={{ y: -5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <p className="text-2xl font-bold">666K</p>
                   <p className="text-sm text-gray-400">Users</p>
-                </div>
-                <div className="text-center">
+                </motion.div>
+                <motion.div
+                  className="text-center"
+                  whileHover={{ y: -5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <p className="text-2xl font-bold">6666K</p>
                   <p className="text-sm text-gray-400">Articles</p>
-                </div>
-                <div className="text-center">
+                </motion.div>
+                <motion.div
+                  className="text-center"
+                  whileHover={{ y: -5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <p className="text-2xl font-bold">666K</p>
                   <p className="text-sm text-gray-400">Games</p>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
 
-            <div className="relative hidden md:block">
-              <Image
-                src="/placeholder.svg?height=400&width=400"
-                alt="Gaming concept"
-                width={400}
-                height={400}
-                className="object-contain"
-              />
-            </div>
+            <motion.div
+              className="relative hidden md:block"
+              initial={{ x: 100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.5 }}>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeSlide}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.5 }}
+                  className="relative"
+                >
+                  <div className="relative w-[400px] h-[400px] flex items-center justify-center">
+                    <Image
+                      src="/images/game-controller-logo.png"
+                      alt="Game Controller Logo"
+                      width={350}
+                      height={350}
+                      className="object-contain z-10 relative"
+                    />
+                    <motion.div
+                      className="absolute inset-0 rounded-full bg-game-cyan/20 blur-xl"
+                      animate={{
+                        scale: [1, 1.05, 1],
+                        opacity: [0.5, 0.3, 0.5],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Number.POSITIVE_INFINITY,
+                        repeatType: "reverse",
+                      }}
+                    />
+                    <motion.div
+                      className="absolute inset-0 rounded-full bg-game-pink/20 blur-xl"
+                      animate={{
+                        scale: [1.05, 1, 1.05],
+                        opacity: [0.3, 0.5, 0.3],
+                      }}
+                      transition={{
+                        duration: 4,
+                        repeat: Number.POSITIVE_INFINITY,
+                        repeatType: "reverse",
+                      }}
+                    />
+                  </div>
+                  <motion.div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full"
+                    animate={{
+                      rotate: 360,
+                      scale: [1, 1.02, 1],
+                    }}
+                    transition={{
+                      rotate: {
+                        duration: 20,
+                        repeat: Number.POSITIVE_INFINITY,
+                        ease: "linear",
+                      },
+                      scale: {
+                        duration: 3,
+                        repeat: Number.POSITIVE_INFINITY,
+                        repeatType: "reverse",
+                      },
+                    }}
+                  >
+                    {dotPositions.map((pos, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-2 h-2 rounded-full bg-game-cyan"
+                        style={{ top: pos.top, left: pos.left }}
+                        animate={{
+                          opacity: [0.2, 1, 0.2],
+                          scale: [0.8, 1.2, 0.8],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Number.POSITIVE_INFINITY,
+                          delay: i * 0.3,
+                        }}
+                      />
+                    ))}
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
           </div>
         </div>
       </div>
 
-      {/* El resto del contenido permanece igual */}
+      {/* The other part of the content keeps the same */}
       {/* Featured Games Section */}
       <section className="bg-game-purple py-12">
         <div className="max-w-7xl mx-auto px-6">
@@ -437,13 +539,13 @@ export default function Articles() {
             {/* Navigation Links */}
             <div className="space-y-4">
               <Link href="/" className="block text-gray-400 hover:text-white">
-                Inicio
+                Home
               </Link>
               <Link href="/articles" className="block text-gray-400 hover:text-white">
-                Artículos
+                Articles
               </Link>
               <Link href="/about" className="block text-gray-400 hover:text-white">
-                About
+                About Us
               </Link>
               <Link href="/contact" className="block text-gray-400 hover:text-white">
                 Contact

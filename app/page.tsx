@@ -460,7 +460,7 @@ export default function Home() {
                   </motion.p>
                 </motion.div>
               </AnimatePresence>
- 
+
               <motion.div className="flex gap-4" variants={itemVariants}>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link href="/articles">
@@ -531,8 +531,8 @@ export default function Home() {
               className="relative hidden md:block"
               initial={{ x: 100, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.5 }}
-            >
+              transition={{ duration: 0.7, delay: 0.5 }}>
+
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeSlide}
