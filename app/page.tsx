@@ -325,7 +325,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-game-dark">
+    <div className="min-h-screen flex flex-col bg-game-dark"> 
       {/* Header completo con imagen de fondo */}
       <div className="relative">
         {/* Imagen de fondo para todo el header con efecto parallax */}
