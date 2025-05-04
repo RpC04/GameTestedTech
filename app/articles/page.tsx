@@ -1,15 +1,12 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Search, Youtube, Instagram, Twitter, DiscIcon as Discord, Facebook, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { motion } from "framer-motion"
 import { HomeJsonLd } from "@/components/home-jsonld"
-
-// Update the metadata at the top of the file
-export const metadata = {
-  title: "Artículos - Game Tested Tech",
-  description: "Descubre los últimos artículos de gaming, reseñas y conocimientos técnicos de Game Tested Tech.",
-}
 
 export default function Articles() {
   // Sample featured games data
@@ -56,6 +53,14 @@ export default function Articles() {
     { name: "Simulation", count: 29, icon: "🚗" },
   ]
 
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 100 },
+    },
+  }
   // Sample upcoming games
   const upcomingGames = [
     {
@@ -86,7 +91,7 @@ export default function Articles() {
       <div className="relative">
         {/* Imagen de fondo para todo el header */}
         <div className="absolute inset-0 w-full h-full">
-          <img src="/images/cyberpunk-bg.png" alt="Cyberpunk background" className="w-full h-full object-cover" />
+          <img src="/images/articlepage-background.png" alt="Cyberpunk background" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/30"></div>
         </div>
 
@@ -138,7 +143,6 @@ export default function Articles() {
           </div>
         </div>
 
-        {/* Hero Section - Sin formas geométricas */}
         <div className="relative z-10 py-16 overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
@@ -146,22 +150,30 @@ export default function Articles() {
                 <h1 className="text-4xl font-bold text-game-white">
                   Your Ultimate <span className="text-game-pink">Gaming</span> Resource
                 </h1>
-                <p className="text-gray-300 mt-2">Discover the latest games, reviews, and gaming tech insights.</p>
+                <p className="text-gray-300 mt-2">
+                  Discover the latest games, reviews, and gaming tech insights.
+                </p>
               </div>
 
-              <div className="flex gap-4">
-                <Link href="/articles">
-                  <Button className="bg-[#9d8462] hover:bg-[#8d7452] text-white rounded-md">Explore Now</Button>
-                </Link>
-                <Link href="/contact">
-                  <Button
-                    variant="outline"
-                    className="bg-transparent hover:bg-[#1a1a2e] border-2 border-[#9d8462] text-white rounded-md"
-                  >
-                    Contact Us
-                  </Button>
-                </Link>
-              </div>
+              <motion.div className="flex gap-4">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link href="/about">
+                    <Button className="bg-[#9d8462] hover:bg-[#9d8462] text-white rounded-md transition-all duration-300 border-0">
+                      About Us
+                    </Button>
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link href="/contact">
+                    <Button
+                      variant="outline"
+                      className="bg-transparent hover:bg-transparent border-2 border-[#9d8462] hover:border-[#9d8462] 
+                      text-white hover:text-white rounded-md transition-all duration-300">
+                      Contact Us
+                    </Button>
+                  </Link>
+                </motion.div>
+              </motion.div>
 
               <div className="flex gap-8 pt-4">
                 <div className="text-center">

@@ -325,7 +325,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-game-dark"> 
+    <div className="min-h-screen flex flex-col bg-game-dark">
       {/* Header completo con imagen de fondo */}
       <div className="relative">
         {/* Imagen de fondo para todo el header con efecto parallax */}
@@ -460,8 +460,7 @@ export default function Home() {
                   </motion.p>
                 </motion.div>
               </AnimatePresence>
-
-              {/* Busca la sección de botones en el Hero Section y reemplázala con esto: */}
+ 
               <motion.div className="flex gap-4" variants={itemVariants}>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link href="/articles">
@@ -472,10 +471,9 @@ export default function Home() {
                 </motion.div>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link href="/contact">
-                    <Button
-                      variant="outline"
-                      className="bg-transparent hover:bg-transparent border-2 border-[#9d8462] hover:border-[#9d8462] text-white hover:text-white rounded-md transition-all duration-300"
-                    >
+                    <Button variant="outline"
+                      className="bg-transparent hover:bg-transparent border-2 border-[#9d8462] hover:border-[#9d8462]
+                    text-white hover:text-white rounded-md transition-all duration-300">
                       Contact Us
                     </Button>
                   </Link>
