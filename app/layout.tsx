@@ -1,7 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Roboto } from "next/font/google"
-import "./globals.css"
+import './globals.css'
 
 const roboto = Roboto({
   weight: ["400", "500", "700", "900"],
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     google: "google-site-verification-code",
     yandex: "yandex-verification-code",
   },
-  generator: 'v0.dev'
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -84,10 +84,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`bg-game-dark text-game-white ${roboto.className}`}>
-        {children}
-      </body>
-
+      <body className={roboto.className}>{children}</body>
     </html>
   )
 }
