@@ -397,32 +397,28 @@ export default function Home() {
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block"
-                  >
-                    Inicio
+                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block">
+                    Home
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/articles"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block"
-                  >
-                    Artículos
+                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block">
+                    Articles
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/about"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block"
-                  >
+                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block">
                     About
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/contact"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block"
-                  >
+                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block">
                     Contact
                   </Link>
                 </motion.div>
