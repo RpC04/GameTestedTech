@@ -7,7 +7,7 @@ import { HomeJsonLd } from "@/components/home-jsonld"
 
 // Update the metadata at the top of the file
 export const metadata = {
-  title: "Artículos - Game Tested Tech",
+  title: "Articles - Game Tested Tech",
   description: "Descubre los últimos artículos de gaming, reseñas y conocimientos técnicos de Game Tested Tech.",
 }
 
@@ -115,20 +115,20 @@ export default function Articles() {
                 <input
                   type="text"
                   className="w-full bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 rounded-full py-2 px-4 pr-10 text-white"
-                  placeholder="Buscar..."
+                  placeholder="Search..."
                 />
-                <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
               </div>
 
               <nav className="hidden md:flex items-center gap-6">
                 <Link href="/" className="text-game-white hover:text-game-cyan transition">
-                  Inicio
+                  Home
                 </Link>
                 <Link href="/articles" className="text-game-white hover:text-game-cyan transition">
-                  Artículos
+                  Articles
                 </Link>
                 <Link href="/about" className="text-game-white hover:text-game-cyan transition">
-                  About
+                  About Us
                 </Link>
                 <Link href="/contact" className="text-game-white hover:text-game-cyan transition">
                   Contact
@@ -198,9 +198,9 @@ export default function Articles() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-bold text-white">Featured Games</h2>
-            <Link href="/games" className="text-game-cyan hover:text-white flex items-center gap-1 transition-colors">
+            {/*<Link href="/games" className="text-game-cyan hover:text-white flex items-center gap-1 transition-colors">
               View all <ArrowRight className="h-4 w-4" />
-            </Link>
+            </Link>*/}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -240,12 +240,13 @@ export default function Articles() {
             <div className="lg:col-span-3">
               <div className="flex justify-between items-center mb-8">
                 <h2 className="text-2xl font-bold text-white">Latest Articles</h2>
-                <Link
+                {/*<Link
                   href="/articles"
                   className="text-game-cyan hover:text-white flex items-center gap-1 transition-colors"
                 >
                   View all <ArrowRight className="h-4 w-4" />
                 </Link>
+                  */}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -425,13 +426,13 @@ export default function Articles() {
             {/* Navigation Links */}
             <div className="space-y-4">
               <Link href="/" className="block text-gray-400 hover:text-white">
-                Inicio
+                Home
               </Link>
               <Link href="/articles" className="block text-gray-400 hover:text-white">
-                Artículos
+                Articles
               </Link>
               <Link href="/about" className="block text-gray-400 hover:text-white">
-                About
+                About Us
               </Link>
               <Link href="/contact" className="block text-gray-400 hover:text-white">
                 Contact
