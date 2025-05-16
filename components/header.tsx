@@ -36,23 +36,20 @@ export function Header() {
             <input
               type="text"
               className="w-full bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 rounded-full py-2 px-4 pr-10 text-white"
-              placeholder="Buscar..."
+              placeholder="Search..."
             />
-            <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
           </div>
 
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/" className="text-game-white hover:text-game-cyan transition">
-              Inicio
+              Home
             </Link>
             <Link href="/articles" className="text-game-white hover:text-game-cyan transition">
-              Artículos
-            </Link>
-            <Link href="/blog" className="text-game-white hover:text-game-cyan transition">
-              Blog
-            </Link>
+              Articles
+            </Link> 
             <Link href="/about" className="text-game-white hover:text-game-cyan transition">
-              About
+              About Us
             </Link>
             <Link href="/contact" className="text-game-white hover:text-game-cyan transition">
               Contact
