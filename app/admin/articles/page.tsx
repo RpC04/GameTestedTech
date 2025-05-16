@@ -18,8 +18,19 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
+type Article = {
+  id: number
+  title: string
+  status: string
+  category_id: number | null
+  author_id: number | null
+  created_at: string
+  updated_at: string
+  views: number
+}
+
 export default function ArticlesPage() {
-  const [articles, setArticles] = useState([])
+  const [articles, setArticles] = useState<Article[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
@@ -39,7 +50,7 @@ export default function ArticlesPage() {
     try {
       let query = supabase
         .from("articles")
-        .select("id, title, status, category_id, author, created_at, updated_at, views")
+        .select("id, title, status, category_id, author_id, created_at, updated_at, views")
         .order(sortField, { ascending: sortDirection === "asc" })
 
       if (statusFilter !== "all") {
