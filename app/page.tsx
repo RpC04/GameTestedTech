@@ -325,7 +325,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-game-dark"> 
+    <div className="min-h-screen flex flex-col bg-game-dark">
       {/* Header completo con imagen de fondo */}
       <div className="relative">
         {/* Imagen de fondo para todo el header con efecto parallax */}
@@ -383,9 +383,9 @@ export default function Home() {
                 <input
                   type="text"
                   className="w-full bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 rounded-full py-2 px-4 pr-10 text-white transition-all duration-300 focus:border-game-cyan focus:ring-1 focus:ring-game-cyan"
-                  placeholder="Buscar..."
+                  placeholder="Search..."
                 />
-                <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
               </motion.div>
 
               <motion.nav
@@ -397,17 +397,15 @@ export default function Home() {
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block"
-                  >
-                    Inicio
+                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block">
+                    Home
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/articles"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block"
-                  >
-                    Artículos
+                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block">
+                    Articles
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
@@ -415,14 +413,13 @@ export default function Home() {
                     href="/about"
                     className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block"
                   >
-                    About
+                    About Us
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/contact"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block"
-                  >
+                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block">
                     Contact
                   </Link>
                 </motion.div>
@@ -461,7 +458,6 @@ export default function Home() {
                 </motion.div>
               </AnimatePresence>
 
-              {/* Busca la sección de botones en el Hero Section y reemplázala con esto: */}
               <motion.div className="flex gap-4" variants={itemVariants}>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link href="/articles">
@@ -472,10 +468,9 @@ export default function Home() {
                 </motion.div>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link href="/contact">
-                    <Button
-                      variant="outline"
-                      className="bg-transparent hover:bg-transparent border-2 border-[#9d8462] hover:border-[#9d8462] text-white hover:text-white rounded-md transition-all duration-300"
-                    >
+                    <Button variant="outline"
+                      className="bg-transparent hover:bg-transparent border-2 border-[#9d8462] hover:border-[#9d8462]
+                    text-white hover:text-white rounded-md transition-all duration-300">
                       Contact Us
                     </Button>
                   </Link>
@@ -533,8 +528,8 @@ export default function Home() {
               className="relative hidden md:block"
               initial={{ x: 100, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.5 }}
-            >
+              transition={{ duration: 0.7, delay: 0.5 }}>
+
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeSlide}
@@ -620,7 +615,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Text Banner con animación de desplazamiento y efecto blur */}
+      {/* Text Banner  with animation for the move and blur effect*/}
       <div className="relative py-8 overflow-hidden">
         <div className="absolute inset-0 bg-game-dark"></div>
         <div className="relative z-10 flex justify-center">
@@ -1009,7 +1004,7 @@ export default function Home() {
                 )}
               </AnimatePresence>
 
-              {/* También actualiza el botón de "Load More Articles" en la sección de artículos: */}
+              {/* Update the buton of "Load More Articles" in Articles section*/}
               <motion.div
                 className="mt-8 text-center"
                 initial={{ opacity: 0, y: 20 }}
@@ -1075,7 +1070,7 @@ export default function Home() {
                     placeholder="Your email address"
                     className="w-full bg-[#10061e] border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-1 focus:ring-game-cyan"
                   />
-                  {/* Y actualiza el botón de suscripción en la sección de Newsletter: */}
+                  {/* And update the buton for Subscription in Newsletter section*/}
                   <Button className="bg-[#9d8462] hover:bg-[#9d8462] text-white py-3 px-6">Subscribe</Button>
                 </form>
                 <p className="text-gray-500 text-xs mt-2">We respect your privacy. Unsubscribe at any time.</p>

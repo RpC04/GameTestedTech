@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import { Heart, Eye, Send, Clock } from "lucide-react"
 import { Header } from "@/components/header"
 
-// Función para calcular el tiempo de lectura
+// Function to calculate reading time based on word count
 const calculateReadingTime = (content: string): string => {
   const wordsPerMinute = 225
   const wordCount = content.trim().split(/\s+/).length
@@ -14,7 +14,8 @@ const calculateReadingTime = (content: string): string => {
   return `${readingTime} min read`
 }
 
-// Simulación de datos para la entrada de blog con tiempo de lectura calculado
+// Simulated function to fetch blog post data
+// In a real application, this would be replaced with an API call or database query
 const getBlogPost = (slug: string) => {
   // En un caso real, esto sería una llamada a una API o base de datos
   const post = {
@@ -131,9 +132,11 @@ const getBlogPost = (slug: string) => {
   }
 
   // Calcular el tiempo de lectura basado en el contenido
-  post.readingTime = calculateReadingTime(post.content.replace(/<[^>]*>/g, ""))
-
-  return post
+  return {
+    ...post,
+    readingTime: calculateReadingTime(post.content.replace(/<[^>]*>/g, ""))
+  }
+  
 }
 
 // Función para formatear fechas
@@ -153,7 +156,13 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
   const [activeSection, setActiveSection] = useState("introduction")
 
   // Obtener datos del post
-  const post = getBlogPost(params.slug)
+  const rawPost = getBlogPost(params.slug)
+
+  const post = {
+    ...rawPost,
+    readingTime: calculateReadingTime(rawPost.content.replace(/<[^>]*>/g, ""))
+  }
+  
 
   // Efecto para simular carga e incrementar visualizaciones
   useEffect(() => {
@@ -388,7 +397,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
           </div>
         </div>
 
-        {/* Artículos relacionados */}
+        {/* Articles relacionados */}
         <div className="mt-16 mb-16">
           <h3 className="text-2xl font-bold text-white mb-8 text-center">Related Articles</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
