@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const [newCategory, setNewCategory] = useState({ name: "", slug: "", description: "" })
+  const [newCategory, setNewCategory] = useState({ name: "", slug: "", description: "", icon: "" })
   const [editingCategory, setEditingCategory] = useState(null)
   const [isAdding, setIsAdding] = useState(false)
   const [error, setError] = useState("")
@@ -78,6 +78,7 @@ export default function CategoriesPage() {
           name: newCategory.name,
           slug: newCategory.slug || newCategory.name.toLowerCase().replace(/\s+/g, "-"),
           description: newCategory.description,
+          icon: newCategory.icon
         })
         .select()
 
@@ -105,6 +106,7 @@ export default function CategoriesPage() {
           name: editingCategory.name,
           slug: editingCategory.slug,
           description: editingCategory.description,
+          icon: editingCategory.icon
         })
         .eq("id", editingCategory.id)
 
@@ -183,6 +185,22 @@ export default function CategoriesPage() {
             </div>
 
             <div>
+              <label htmlFor="icon" className="block text-sm font-medium text-gray-300 mb-2">
+                Icon
+              </label>
+              <input
+                type="text"
+                id="icon"
+                name="icon"
+                value={newCategory.icon}
+                onChange={handleNewCategoryChange}
+                maxLength={2}
+                className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-2 px-3 text-white"
+                placeholder="🎮"
+              />
+              <p className="text-xs text-gray-500 mt-1">Choose an emoji to represent this category</p>
+            </div>
+            <div>
               <label htmlFor="slug" className="block text-sm font-medium text-gray-300 mb-2">
                 Slug
               </label>
@@ -231,6 +249,7 @@ export default function CategoriesPage() {
           <table className="w-full">
             <thead>
               <tr className="bg-[#1f1f3a] text-gray-300 text-left">
+                <th className="px-4 py-3">Icon</th>
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Slug</th>
                 <th className="px-4 py-3">Description</th>
@@ -244,6 +263,9 @@ export default function CategoriesPage() {
                   .fill(0)
                   .map((_, index) => (
                     <tr key={index} className="border-t border-gray-800 animate-pulse">
+                      <td className="px-4 py-3">
+                        <div className="h-4 bg-gray-700 rounded w-24"></div>
+                      </td>
                       <td className="px-4 py-3">
                         <div className="h-4 bg-gray-700 rounded w-24"></div>
                       </td>
@@ -265,6 +287,18 @@ export default function CategoriesPage() {
                 categories.map((category: any) =>
                   editingCategory && editingCategory.id === category.id ? (
                     <tr key={category.id} className="border-t border-gray-800 bg-[#1f1f3a]">
+                      <td className="px-4 py-3 text-center">
+                        <input
+                          type="text"
+                          name="icon"
+                          value={editingCategory.icon || ""}
+                          onChange={handleEditCategoryChange}
+                          className="w-12 text-center bg-[#0a0a14] border border-gray-700 rounded-md py-1 px-2 text-white focus:outline-none focus:ring-1 focus:ring-[#9d8462] focus:border-[#9d8462]"
+                          placeholder="🎮"
+                          maxLength={2} // evitar que pongan texto largo
+                        />
+                      </td>
+
                       <td className="px-4 py-3">
                         <input
                           type="text"
@@ -314,6 +348,7 @@ export default function CategoriesPage() {
                     </tr>
                   ) : (
                     <tr key={category.id} className="border-t border-gray-800 hover:bg-[#1f1f3a]">
+                      <td className="px-4 py-3 text-center text-xl">{category.icon || "🎮"}</td>
                       <td className="px-4 py-3 font-medium text-white">
                         <div className="flex items-center gap-2">
                           <Tag className="h-4 w-4 text-[#9d8462]" />
