@@ -13,29 +13,52 @@ export default function Articles() {
     // Sample latest articles data
     const [latestArticles, setLatestArticles] = useState<any[]>([])
     const [featuredGames, setFeaturedGames] = useState<any[]>([])
+    const [categories, setCategories] = useState<{ id: number; name: string; icon?: string }[]>([])
+
+    useEffect(() => {
+        async function fetchCategories() {
+            const { data, error } = await supabase
+                .from("categories")
+                .select("id, name, icon")
+                .order("name")
+
+            if (!error && data) {
+                setCategories(data)
+            }
+        }
+
+        fetchCategories()
+    }, [])
 
     useEffect(() => {
         async function fetchFeaturedGames() {
             const { data, error } = await supabase
                 .from("articles")
-                .select("*")
+                .select(`
+        *,
+        article_tags (
+          tag:tags (
+            id,
+            name,
+            is_featured
+          )
+        )
+      `)
                 .order("created_at", { ascending: false })
 
             if (!error && data) {
-                // Filter for featured games based on tags
-                // Assuming the tags are stored as an array of strings in the database
-                const gameTags = ["rpg", "action", "fps", "strategy", "adventure", "simulation", "sports"]
+                // Filtra los artículos que tienen al menos un tag destacado
                 const filtered = data.filter((article) =>
-                    (article.tags || []).some((tag: string) =>
-                        gameTags.includes(tag.toLowerCase())
-                    )
+                    (article.article_tags || []).some(({ tag }) => tag?.is_featured)
                 )
-                setFeaturedGames(filtered.slice(0, 3)) // Just show the first 3 featured games
+
+                setFeaturedGames(filtered.slice(0, 3)) // Muestra máximo 3 destacados
             }
         }
 
         fetchFeaturedGames()
     }, [])
+
 
 
     useEffect(() => {
@@ -234,14 +257,18 @@ export default function Articles() {
                                     <div className="absolute top-2 left-2 bg-game-tag-blue text-white text-xs px-3 py-1 rounded-full">
                                         {(game.tags && game.tags[0]) || "Game"}
                                     </div>
-                                    <div className="absolute top-2 right-2 bg-[#9d8462] text-white text-xs px-3 py-1 rounded-full flex items-center">
+                                    {/*<div className="absolute top-2 right-2 bg-[#9d8462] text-white text-xs px-3 py-1 rounded-full flex items-center">
                                         ★ {game.rating || "4.5"}
-                                    </div>
+                                    </div>*/}
                                 </div>
                                 <div className="p-4 space-y-2">
                                     <h3 className="font-bold text-white text-lg">{game.title}</h3>
                                     <p className="text-sm text-gray-400">{game.excerpt}</p>
-                                    <Button className="w-full bg-[#9d8462] hover:bg-[#8d7452] text-white mt-2">View Details</Button>
+                                    <Link href={`/blog/${game.slug}`}>
+                                        <Button className="w-full bg-[#9d8462] hover:bg-[#8d7452] text-white mt-2">
+                                            View Details
+                                        </Button>
+                                    </Link>
                                 </div>
                             </Card>
                         ))}
@@ -317,25 +344,25 @@ export default function Articles() {
                             </div>
                         </div>
 
-                        {/* Sidebar - Categories & Upcoming Games */}
+                        {/* Sidebar - Categories & Upcoming */}
                         <div className="lg:col-span-1 space-y-8">
-                            {/* Game Categories */}
+                            {/*Categories */}
                             <div className="bg-[#1f0032] rounded-lg p-6">
-                                <h3 className="text-xl font-bold text-white mb-4">Game Categories</h3>
+                                <h3 className="text-xl font-bold text-white mb-4">Categories</h3>
                                 <div className="space-y-3">
-                                    {gameCategories.map((category, index) => (
+                                    {categories.map((category) => (
                                         <Link
-                                            key={index}
-                                            href={`/category/${category.name.toLowerCase()}`}
+                                            key={category.id}
+                                            href={`/category/${category.name.toLowerCase().replace(/\s+/g, "-")}`}
                                             className="flex items-center justify-between p-2 hover:bg-[#2a0045] rounded-md transition-colors"
                                         >
                                             <div className="flex items-center gap-2">
                                                 <span className="text-xl">{category.icon}</span>
                                                 <span className="text-white">{category.name}</span>
                                             </div>
-                                            <span className="text-gray-400 text-sm">{category.count}</span>
                                         </Link>
                                     ))}
+
                                 </div>
                                 <Button className="w-full mt-4 bg-[#9d8462] hover:bg-[#8d7452] text-white">All Categories</Button>
                             </div>
