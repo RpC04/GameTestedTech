@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import type React from "react"
-import type { ArticleForm, Category, Tag } from "@/types/article"
+import type { ArticleFormWithTags, Category, Tag } from "@/types/article"
 
 import { useRouter } from "next/navigation"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
@@ -29,7 +29,7 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
     const isNewArticle = articleId === "new"
     const numericId = isNewArticle ? null : Number.parseInt(articleId)
 
-    const [article, setArticle] = useState<ArticleForm>({
+    const [article, setArticle] = useState<ArticleFormWithTags>({
         title: "",
         slug: "",
         content: "",
@@ -79,16 +79,23 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
                 if (numericId) {
                     const { data: articleData, error } = await supabase
                         .from("articles")
-                        .select("*")
+                        .select(`
+                            *,
+                            article_tags (
+                            tag_id
+                            )
+                        `)
                         .eq("id", numericId)
                         .single()
+
 
                     if (error) throw error
 
                     if (articleData) {
+                        const tagIds = (articleData.article_tags || []).map((t: any) => t.tag_id)
                         setArticle({
                             ...articleData,
-                            tags: articleData.tags || [],
+                            tags: tagIds,
                         })
                     }
                 }
@@ -149,23 +156,65 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
 
         try {
             const status = newStatus || article.status
+            const { tags, article_tags, ...articleData } = article
+
             const payload = {
-                ...article,
+                ...articleData,
                 status,
                 updated_at: new Date().toISOString(),
                 ...(isNewArticle && { created_at: new Date().toISOString() }),
             }
 
             if (isNewArticle) {
-                const { data, error } = await supabase.from("articles").insert(payload).select()
+                const { data, error } = await supabase
+                    .from("articles")
+                    .insert(payload)
+                    .select()
+
                 if (error) throw error
-                router.push(`/admin/articles/${data[0].id}`)
+
+                const newArticleId = data?.[0]?.id
+                if (!newArticleId) throw new Error("Failed to retrieve new article ID")
+
+                if (tags.length > 0) {
+                    const tagInserts = tags.map((tagId) => ({
+                        article_id: newArticleId,
+                        tag_id: tagId,
+                    }))
+                    const { error: tagError } = await supabase
+                        .from("article_tags")
+                        .insert(tagInserts)
+                    if (tagError) throw tagError
+                }
+
+                router.push(`/admin/articles/${newArticleId}`)
             } else {
-                const { error } = await supabase.from("articles").update(payload).eq("id", articleId)
+                const article_id = Number.parseInt(articleId)
+                if (Number.isNaN(article_id)) throw new Error("Invalid article ID")
+
+                const { error } = await supabase
+                    .from("articles")
+                    .update(payload)
+                    .eq("id", article_id)
                 if (error) throw error
+
+                // Primero borra los tags antiguos
+                await supabase.from("article_tags").delete().eq("article_id", article_id)
+
+                // Luego inserta los nuevos
+                if (tags.length > 0) {
+                    const tagInserts = tags.map((tagId) => ({
+                        article_id,
+                        tag_id: tagId,
+                    }))
+                    const { error: tagError } = await supabase
+                        .from("article_tags")
+                        .insert(tagInserts)
+                    if (tagError) throw tagError
+                }
             }
-        } catch (error) {
-            console.error("Error saving article:", error)
+        } catch (error: any) {
+            console.error("Error saving article:", error?.message || error, error?.details)
             setError("Failed to save article")
         } finally {
             setIsSaving(false)
