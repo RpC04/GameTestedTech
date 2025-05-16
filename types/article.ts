@@ -17,6 +17,10 @@ export interface Article {
 }
 
 export type ArticleForm = Omit<Article, "id" | "views" | "created_at" | "updated_at">
+export type ArticleFormWithTags = ArticleForm & {
+  article_tags?: { tag_id: number }[]
+}
+
 
 export interface Author {
     id: number
