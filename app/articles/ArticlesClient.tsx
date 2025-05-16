@@ -47,6 +47,8 @@ export default function Articles() {
                     author:authors (
                       name,
                       avatar_url
+                    ), article_tags (
+                    tag:tags ( id, name )
                     )
                   `)
                 .order("created_at", { ascending: false }) // Fetch latest articles
@@ -293,16 +295,18 @@ export default function Articles() {
                                             </h3>
                                             <p className="text-sm text-gray-400">{article.excerpt}</p>
                                             <div className="flex gap-2 pt-1">
-                                                {(article.tags || []).map((tag: string, idx: number) => (
+                                                {(article.article_tags || []).map(({ tag }, idx) => (
                                                     <a
                                                         key={idx}
-                                                        href={`/articles?tag=${tag.toLowerCase().replace(/\s+/g, "-")}`}
+                                                        href={`/articles?tag=${tag.name.toLowerCase().replace(/\s+/g, "-")}`}
                                                         className="category-tag hover:bg-game-blue transition-colors"
                                                     >
-                                                        {tag}
+                                                        {tag.name}
                                                     </a>
                                                 ))}
+
                                             </div>
+
                                             <p className="text-xs text-gray-400 pt-1">
                                                 By <span className="font-medium">{article.author?.name || "Unknown"}</span>
                                             </p>
