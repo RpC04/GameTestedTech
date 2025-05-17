@@ -2,8 +2,10 @@ import { cookies } from "next/headers"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import BlogPost from "@/components/BlogPost"
 
-const BlogPostPage = async ({ params }: { params: { slug: string } }) => {
+export const dynamic = "force-dynamic"
 
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   const cookieStore = cookies()
   const supabase = createServerComponentClient({ cookies: () => cookieStore })
 
@@ -15,14 +17,13 @@ const BlogPostPage = async ({ params }: { params: { slug: string } }) => {
       authors:author_id (id, name, avatar_url, bio),
       comments (id)
     `)
-    .eq("slug", params.slug)
+    .eq("slug", slug)
     .single()
 
   if (error || !article) {
     return <div className="text-white p-8">Article not found.</div>
   }
 
-  // Transformar tags si están en JSOn
   const { data: tags } = await supabase
     .from("tags")
     .select("name")
@@ -36,8 +37,8 @@ const BlogPostPage = async ({ params }: { params: { slug: string } }) => {
           name: article.authors?.name ?? "Autor desconocido",
           avatar: article.authors?.avatar_url ?? null,
           bio: article.authors?.bio ?? "",
-          articles: 0, // puedes hacer un count real si quieres
-          followers: 0 // opcional tambien
+          articles: 0,
+          followers: 0
         },
         categories: [article.categories?.name ?? "Uncategorized"],
         tags: tags?.map(tag => tag.name) || [],
@@ -46,5 +47,3 @@ const BlogPostPage = async ({ params }: { params: { slug: string } }) => {
     />
   )
 }
-
-export default BlogPostPage
