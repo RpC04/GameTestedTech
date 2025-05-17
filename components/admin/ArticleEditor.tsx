@@ -59,7 +59,7 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
         async function fetchData() {
             setIsLoading(true)
             try {
-                // ✅ Fetch de categorías
+                //Fetch de categorías
                 const { data: categoriesData } = await supabase
                     .from("categories")
                     .select("id, name")
@@ -67,7 +67,7 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
 
                 if (categoriesData) setCategories(categoriesData)
 
-                // ✅ Fetch de tags
+                //Fetch de tags
                 const { data: tagsData } = await supabase
                     .from("tags")
                     .select("id, name")
@@ -75,7 +75,7 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
 
                 if (tagsData) setAvailableTags(tagsData)
 
-                // ✅ Fetch del artículo si no es nuevo
+                //Fetch del artículo si no es nuevo
                 if (numericId) {
                     const { data: articleData, error } = await supabase
                         .from("articles")
@@ -109,9 +109,6 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
 
         fetchData()
     }, [numericId, supabase])
-
-    // ...rest of your code (handlers, UI rendering, etc.)
-    // OMITIDO EN ESTA RESPUESTA SOLO POR LONGITUD, YA ESTÁ EN TU VERSIÓN
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -166,15 +163,34 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
             }
 
             if (isNewArticle) {
+                // 🔐 Obtener usuario autenticado
+                const { data: { user }, error: userError } = await supabase.auth.getUser()
+                if (userError || !user) throw new Error("No se pudo obtener el usuario.")
+
+                // 🔁 Buscar el autor correspondiente (relacionado con ese usuario)
+                const { data: author, error: authorError } = await supabase
+                    .from("authors")
+                    .select("id")
+                    .limit(1)
+                    .single()
+
+                if (authorError || !author) throw new Error("No se encontró un autor vinculado al usuario.")
+
+                // 📝 Insertar el artículo con author_id incluido
                 const { data, error } = await supabase
                     .from("articles")
-                    .insert(payload)
+                    .insert([
+                        {
+                            ...payload,
+                            author_id: author.id,
+                        }
+                    ])
                     .select()
 
                 if (error) throw error
 
                 const newArticleId = data?.[0]?.id
-                if (!newArticleId) throw new Error("Failed to retrieve new article ID")
+                if (!newArticleId) throw new Error("No se pudo obtener el ID del nuevo artículo.")
 
                 if (tags.length > 0) {
                     const tagInserts = tags.map((tagId) => ({
@@ -186,8 +202,6 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
                         .insert(tagInserts)
                     if (tagError) throw tagError
                 }
-
-                router.push(`/admin/articles/${newArticleId}`)
             } else {
                 const article_id = Number.parseInt(articleId)
                 if (Number.isNaN(article_id)) throw new Error("Invalid article ID")
