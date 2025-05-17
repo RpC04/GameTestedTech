@@ -2,9 +2,10 @@ import { cookies } from "next/headers"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import BlogPost from "@/components/BlogPost"
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) { 
-  const supabase = createServerComponentClient({ cookies: () => cookies() })
+const BlogPostPage = async ({ params }: { params: { slug: string } }) => {
 
+  const cookieStore = cookies()
+  const supabase = createServerComponentClient({ cookies: () => cookieStore })
 
   const { data: article, error } = await supabase
     .from("articles")
@@ -21,7 +22,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     return <div className="text-white p-8">Article not found.</div>
   }
 
-  // Transformar tags si están en JSON
+  // Transformar tags si están en JSOn
   const { data: tags } = await supabase
     .from("tags")
     .select("name")
@@ -32,11 +33,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       article={{
         ...article,
         author: {
-          name: article.authors.name,
-          avatar: article.authors.avatar_url,
-          bio: article.authors.bio,
+          name: article.authors?.name ?? "Autor desconocido",
+          avatar: article.authors?.avatar_url ?? null,
+          bio: article.authors?.bio ?? "",
           articles: 0, // puedes hacer un count real si quieres
-          followers: 0 // opcional también
+          followers: 0 // opcional tambien
         },
         categories: [article.categories?.name ?? "Uncategorized"],
         tags: tags?.map(tag => tag.name) || [],
@@ -46,3 +47,4 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   )
 }
 
+export default BlogPostPage
