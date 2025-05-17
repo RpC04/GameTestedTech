@@ -1,7 +1,7 @@
 "use client"
 
 import { marked } from "marked"
-import DOMPurify from "dompurify" 
+import DOMPurify from "isomorphic-dompurify"
 
 import { useState, useEffect } from "react"
 import Image from "next/image"

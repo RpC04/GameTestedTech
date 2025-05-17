@@ -85,42 +85,6 @@ export default function Articles() {
         fetchArticles()
     }, [])
 
-
-
-    // Sample game categories
-    const gameCategories = [
-        { name: "Action", count: 120, icon: "🎮" },
-        { name: "Adventure", count: 85, icon: "🗺️" },
-        { name: "RPG", count: 64, icon: "⚔️" },
-        { name: "Strategy", count: 42, icon: "🧠" },
-        { name: "Sports", count: 38, icon: "⚽" },
-        { name: "Simulation", count: 29, icon: "🚗" },
-    ]
-
-    // Sample upcoming games
-    const upcomingGames = [
-        {
-            title: "Starfield",
-            releaseDate: "Coming 2023",
-            image: "/placeholder.svg?height=100&width=100",
-        },
-        {
-            title: "The Legend of Zelda: Tears of the Kingdom",
-            releaseDate: "May 12, 2023",
-            image: "/placeholder.svg?height=100&width=100",
-        },
-        {
-            title: "Diablo IV",
-            releaseDate: "June 6, 2023",
-            image: "/placeholder.svg?height=100&width=100",
-        },
-        {
-            title: "Final Fantasy XVI",
-            releaseDate: "June 22, 2023",
-            image: "/placeholder.svg?height=100&width=100",
-        },
-    ]
-
     return (
         <div className="min-h-screen flex flex-col">
             {/* Header completo con imagen de fondo */}
@@ -238,7 +202,7 @@ export default function Articles() {
             <section className="bg-game-purple py-12">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex justify-between items-center mb-8">
-                        <h2 className="text-2xl font-bold text-white">Featured Games</h2>
+                        <h2 className="text-2xl font-bold text-white">Featured</h2>
                         <Link href="/games" className="text-game-cyan hover:text-white flex items-center gap-1 transition-colors">
                             View all <ArrowRight className="h-4 w-4" />
                         </Link>
@@ -367,7 +331,7 @@ export default function Articles() {
                                 <Button className="w-full mt-4 bg-[#9d8462] hover:bg-[#8d7452] text-white">All Categories</Button>
                             </div>
 
-                            {/* Upcoming Games */}
+                            {/* Upcoming Games 
                             <div className="bg-[#1f0032] rounded-lg p-6">
                                 <h3 className="text-xl font-bold text-white mb-4">Upcoming Games</h3>
                                 <div className="space-y-4">
@@ -387,7 +351,7 @@ export default function Articles() {
                                         </div>
                                     ))}
                                 </div>
-                            </div>
+                            </div>*/}
                         </div>
                     </div>
                 </div>
