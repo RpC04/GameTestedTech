@@ -2,18 +2,26 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import DatePicker from "react-datepicker"
 import { Search, Youtube, Instagram, Twitter, DiscIcon as Discord, Facebook, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { HomeJsonLd } from "@/components/home-jsonld"
 import { supabase } from "@/lib/supabase"
 import { useEffect, useState } from "react"
+import { Disclosure } from "@headlessui/react"
+import { ChevronDown } from "lucide-react"
 
 export default function Articles() {
     // Sample latest articles data
     const [latestArticles, setLatestArticles] = useState<any[]>([])
     const [featuredGames, setFeaturedGames] = useState<any[]>([])
     const [categories, setCategories] = useState<{ id: number; name: string; icon?: string }[]>([])
+    const [selectedCategories, setSelectedCategories] = useState<number[]>([])
+    const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null])
+    const [startDate, endDate] = dateRange
+    const [tags, setTags] = useState<{ id: number; name: string }[]>([])
+    const [selectedTags, setSelectedTags] = useState<number[]>([])
 
     useEffect(() => {
         async function fetchCategories() {
@@ -31,19 +39,31 @@ export default function Articles() {
     }, [])
 
     useEffect(() => {
+        async function fetchTags() {
+            const { data, error } = await supabase
+                .from("tags")
+                .select("id, name")
+                .order("name")
+
+            if (!error && data) {
+                setTags(data)
+            }
+        }
+
+        fetchTags()
+    }, [])
+
+    useEffect(() => {
         async function fetchFeaturedGames() {
             const { data, error } = await supabase
                 .from("articles")
                 .select(`
-        *,
-        article_tags (
-          tag:tags (
-            id,
-            name,
-            is_featured
-          )
-        )
-      `)
+                    *,
+                    category:categories ( id, name ),
+                    article_tags (
+                        tag:tags ( id, name, is_featured )
+                    )
+                `)
                 .order("created_at", { ascending: false })
 
             if (!error && data) {
@@ -59,35 +79,67 @@ export default function Articles() {
         fetchFeaturedGames()
     }, [])
 
-
-
     useEffect(() => {
-        async function fetchArticles() {
-            const { data, error } = await supabase
-                .from("articles") // Fetch articles from the "articles" table
+        async function fetchFilteredArticles() {
+            let query = supabase
+                .from("articles")
                 .select(`
-                    *,
-                    author:authors (
-                      name,
-                      avatar_url
-                    ), article_tags (
+                *,
+                author:authors (
+                    name,
+                    avatar_url
+                ),
+                article_tags (
                     tag:tags ( id, name )
-                    )
-                  `)
-                .order("created_at", { ascending: false }) // Fetch latest articles
-                .limit(6)
+                ),
+                category:categories (
+                    id,
+                    name
+                )
+            `)
+                .order("created_at", { ascending: false })
+
+            // Filtro por categorías (asume que tienes category_id en la tabla articles)
+            if (selectedCategories.length > 0) {
+                query = query.in("category_id", selectedCategories)
+            }
+
+            // Filtro por fechas
+            if (startDate)
+                query = query.gte("created_at", startDate.toISOString().split("T")[0])
+
+            if (endDate) {
+                const end = new Date(endDate)
+                end.setHours(23, 59, 59, 999)
+                query = query.lte("created_at", end.toISOString())
+            }
+
+            const { data, error } = await query
 
             if (!error && data) {
-                setLatestArticles(data)
+                // Filtro manual por tags (relación muchos a muchos)
+                const filteredByTags =
+                    selectedTags.length > 0
+                        ? data.filter((article) =>
+                            (article.article_tags || []).some(({ tag }) => selectedTags.includes(tag.id))
+                        )
+                        : data
+                setLatestArticles(filteredByTags)
             }
         }
 
-        fetchArticles()
-    }, [])
+        fetchFilteredArticles()
+    }, [selectedCategories, selectedTags, startDate, endDate])
+
+    function handleClearFilters() {
+        setSelectedCategories([])
+        setSelectedTags([])
+        setDateRange([null, null])
+    }
 
     return (
         <div className="min-h-screen flex flex-col">
-            {/* Header completo con imagen de fondo */}
+            {/* Complete header with background image */}
             <div className="relative">
                 {/* Imagen de fondo para todo el header */}
                 <div className="absolute inset-0 w-full h-full">
@@ -197,7 +249,6 @@ export default function Articles() {
                 </div>
             </div>
 
-            {/* El resto del contenido permanece igual */}
             {/* Featured Games Section */}
             <section className="bg-game-purple py-12">
                 <div className="max-w-7xl mx-auto px-6">
@@ -218,8 +269,17 @@ export default function Articles() {
                                         fill
                                         className="object-cover"
                                     />
-                                    <div className="absolute top-2 left-2 bg-game-tag-blue text-white text-xs px-3 py-1 rounded-full">
-                                        {(game.tags && game.tags[0]) || "Game"}
+                                    <div className="absolute top-2 left-2 flex flex-wrap gap-2">
+                                        {(game.article_tags?.[0]?.tag?.is_featured) && (
+                                            <div className="bg-game-tag-blue text-white text-xs px-3 py-1 rounded-full">
+                                                {game.article_tags[0].tag.name}
+                                            </div>
+                                        )}
+                                        {game.category?.name && (
+                                            <div className="bg-[#FDF2FA] text-[#C11574] text-xs px-3 py-1 rounded-full font-semibold">
+                                                {game.category.name}
+                                            </div>
+                                        )}
                                     </div>
                                     {/*<div className="absolute top-2 right-2 bg-[#9d8462] text-white text-xs px-3 py-1 rounded-full flex items-center">
                                         ★ {game.rating || "4.5"}
@@ -246,15 +306,6 @@ export default function Articles() {
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                         {/* Latest Articles - 3 columns */}
                         <div className="lg:col-span-3">
-                            <div className="flex justify-between items-center mb-8">
-                                <h2 className="text-2xl font-bold text-white">Latest Articles</h2>
-                                <Link
-                                    href="/articles"
-                                    className="text-game-cyan hover:text-white flex items-center gap-1 transition-colors"
-                                >
-                                    View all <ArrowRight className="h-4 w-4" />
-                                </Link>
-                            </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                                 {latestArticles.map((article, index) => (
@@ -266,6 +317,11 @@ export default function Articles() {
                                                 fill
                                                 className="object-cover"
                                             />
+                                            {article.category?.name && (
+                                                <div className="absolute top-2 left-2 bg-[#FDF2FA] text-[#C11574] text-xs px-3 py-1 rounded-full font-semibold">
+                                                    {article.category.name}
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="p-4 space-y-2">
                                             <time dateTime={article.created_at} className="text-game-cyan text-xs">
@@ -314,44 +370,120 @@ export default function Articles() {
                             <div className="bg-[#1f0032] rounded-lg p-6">
                                 <h3 className="text-xl font-bold text-white mb-4">Categories</h3>
                                 <div className="space-y-3">
-                                    {categories.map((category) => (
-                                        <Link
-                                            key={category.id}
-                                            href={`/category/${category.name.toLowerCase().replace(/\s+/g, "-")}`}
-                                            className="flex items-center justify-between p-2 hover:bg-[#2a0045] rounded-md transition-colors"
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-xl">{category.icon}</span>
-                                                <span className="text-white">{category.name}</span>
-                                            </div>
-                                        </Link>
-                                    ))}
-
-                                </div>
-                                <Button className="w-full mt-4 bg-[#9d8462] hover:bg-[#8d7452] text-white">All Categories</Button>
-                            </div>
-
-                            {/* Upcoming Games 
-                            <div className="bg-[#1f0032] rounded-lg p-6">
-                                <h3 className="text-xl font-bold text-white mb-4">Upcoming Games</h3>
-                                <div className="space-y-4">
-                                    {upcomingGames.map((game, index) => (
-                                        <div key={index} className="flex gap-3">
-                                            <Image
-                                                src={game.image || "/placeholder.svg"}
-                                                alt={game.title}
-                                                width={50}
-                                                height={50}
-                                                className="rounded-md object-cover"
-                                            />
+                                    {/* CATEGORY FILTER */}
+                                    <Disclosure>
+                                        {({ open }) => (
                                             <div>
-                                                <h4 className="text-white font-medium">{game.title}</h4>
-                                                <p className="text-game-cyan text-xs">{game.releaseDate}</p>
+                                                <Disclosure.Button className="flex w-full justify-between items-center text-white font-medium py-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-white">Category</span>
+                                                    </div>
+                                                    <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
+                                                </Disclosure.Button>
+                                                <Disclosure.Panel className="mt-2 space-y-2 max-h-64 overflow-y-auto pr-2">
+                                                    {categories.map((category) => (
+                                                        <label
+                                                            key={category.id}
+                                                            className="flex items-center gap-2 text-sm text-white cursor-pointer select-none"
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                value={category.id}
+                                                                checked={selectedCategories.includes(category.id)}
+                                                                onChange={(e) => {
+                                                                    const id = parseInt(e.target.value)
+                                                                    setSelectedCategories((prev) =>
+                                                                        e.target.checked ? [...prev, id] : prev.filter((cid) => cid !== id)
+                                                                    )
+                                                                }}
+                                                                className="appearance-none w-4 h-4 border-2 border-gray-500 rounded-sm bg-[#1a1a1a] checked:bg-[#9d8462] checked:border-[#9d8462] focus:outline-none transition-all duration-150"
+                                                            />
+                                                            {category.name}
+                                                        </label>
+                                                    ))}
+                                                </Disclosure.Panel>
                                             </div>
-                                        </div>
-                                    ))}
+                                        )}
+                                    </Disclosure>
+
+                                    {/* TAG FILTER */}
+                                    <Disclosure>
+                                        {({ open }) => (
+                                            <div>
+                                                <Disclosure.Button className="flex w-full justify-between items-center text-white font-medium py-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-white">Tags</span>
+                                                    </div>
+                                                    <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
+                                                </Disclosure.Button>
+                                                <Disclosure.Panel className="mt-2 space-y-2 max-h-64 overflow-y-auto pr-2">
+                                                    {tags.map((tag) => (
+                                                        <label
+                                                            key={tag.id}
+                                                            className="flex items-center gap-2 text-sm text-white cursor-pointer select-none"
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                value={tag.id}
+                                                                checked={selectedTags.includes(tag.id)}
+                                                                onChange={(e) => {
+                                                                    const id = parseInt(e.target.value)
+                                                                    setSelectedTags((prev) =>
+                                                                        e.target.checked ? [...prev, id] : prev.filter((tid) => tid !== id)
+                                                                    )
+                                                                }}
+                                                                className="appearance-none w-4 h-4 border-2 border-gray-500 rounded-sm bg-[#1a1a1a] checked:bg-[#9d8462] checked:border-[#9d8462] focus:outline-none transition-all duration-150"
+                                                            />
+                                                            {tag.name}
+                                                        </label>
+                                                    ))}
+                                                </Disclosure.Panel>
+                                            </div>
+                                        )}
+                                    </Disclosure>
+
+                                    {/* DATE FILTER */}
+                                    <Disclosure>
+                                        {({ open }) => (
+                                            <div>
+                                                <Disclosure.Button className="flex w-full justify-between items-center text-white font-medium py-2">
+                                                    <span className="text-white">Date</span>
+                                                    <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
+                                                </Disclosure.Button>
+                                                <Disclosure.Panel className="mt-2 space-y-3">
+                                                    <div className="flex flex-col gap-2">
+                                                        <label className="text-white text-sm">Select Range:</label>
+                                                        <DatePicker
+                                                            selectsRange
+                                                            startDate={startDate}
+                                                            endDate={endDate}
+                                                            onChange={(update: [Date | null, Date | null]) => setDateRange(update)}
+                                                            isClearable
+                                                            className="bg-[#1a1a1a] border border-gray-600 rounded-md px-3 py-1 text-white w-full"
+                                                            dateFormat="yyyy-MM-dd"
+                                                            placeholderText="Click to pick date range"
+                                                            calendarClassName="bg-[#1a0030] text-white rounded-md shadow-lg border border-gray-700"
+                                                            popperClassName="z-50"
+                                                            showYearDropdown
+                                                            scrollableYearDropdown
+                                                            yearDropdownItemNumber={40}
+                                                            showMonthDropdown
+                                                            scrollableMonthYearDropdown
+                                                        />
+                                                    </div>
+                                                </Disclosure.Panel>
+                                            </div>
+                                        )}
+                                    </Disclosure>
                                 </div>
-                            </div>*/}
+
+                                <Button
+                                    onClick={handleClearFilters}
+                                    className="w-full mt-4 bg-[#9d8462] hover:bg-[#8d7452] text-white"
+                                >
+                                    Clean Filters
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </div>

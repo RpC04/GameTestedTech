@@ -37,14 +37,15 @@ export default function Home() {
       const { data, error } = await supabase
         .from("articles")
         .select(`
-                    *,
-                    author:authors (
-                      name,
-                      avatar_url
-                    ), article_tags (
-                    tag:tags ( id, name )
-                    )
-                  `)
+              *,
+              author:authors (
+                name,
+                avatar_url
+              ), article_tags (
+                tag:tags ( id, name )
+              ),
+              category:categories ( id, name )
+        `)
         .order("created_at", { ascending: false })
         .limit(6)
 
