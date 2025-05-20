@@ -8,13 +8,17 @@ export function ArticleCard({ article, large = false, className = "" }) {
     return (
         <article className={`bg-[#1f0032] rounded-lg overflow-hidden ${className}`}>
             <div className={`relative w-full ${large ? "h-[400px]" : "h-[240px]"}`}>
-
                 <Image
                     src={article.featured_image || "/placeholder.svg"}
                     alt={`Thumbnail for article: ${article.title}`}
                     fill
                     className="object-cover"
                 />
+                {article.category?.name && (
+                    <div className="absolute top-2 left-2 bg-[#FDF2FA] text-[#C11574] text-xs font-semibold px-3 py-1 rounded-full text-center">
+                        {article.category.name}
+                    </div>
+                )}
             </div>
             <div className="p-4 space-y-2">
                 <time dateTime={article.created_at} className="text-game-cyan text-xs">

@@ -1,4 +1,5 @@
 import ArticlesClient from "./ArticlesClient"
+import "react-datepicker/dist/react-datepicker.css"
 
 export const metadata = {
   title: "Articles - Game Tested Tech",
