@@ -6,6 +6,7 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./styles/**/*.css",
+    "*.{js,ts,jsx,tsx,mdx}", // Solo pon esto si realmente tienes archivos sueltos en la raíz, si no puedes quitarlo.
   ],
   theme: {
     container: {
@@ -14,7 +15,6 @@ module.exports = {
       screens: {
         "2xl": "1400px",
       },
-
     },
     extend: {
       colors: {
@@ -51,7 +51,7 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Custom colors
+        // Custom colors del segundo config
         "game-dark": "#10061e",
         "game-purple": "#1f0032",
         "game-black": "#1a1a1a",
@@ -64,7 +64,7 @@ module.exports = {
         "game-tag-blue": "#066fb3",
       },
       borderColor: {
-        border: "#e5e7eb", // ✅ Este es el que activa border-border
+        border: "#e5e7eb", // Activa border-border
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -85,6 +85,34 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      // Agrega el bloque typography del primero
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: "100%",
+            color: "#fff",
+            a: {
+              color: "#3b82f6",
+              "&:hover": {
+                color: "#2563eb",
+              },
+            },
+            h1: { color: "#fff" },
+            h2: { color: "#fff" },
+            h3: { color: "#fff" },
+            h4: { color: "#fff" },
+            h5: { color: "#fff" },
+            h6: { color: "#fff" },
+            strong: { color: "#fff" },
+            code: { color: "#fff" },
+            figcaption: { color: "#94a3b8" },
+            blockquote: {
+              color: "#94a3b8",
+              borderLeftColor: "#334155",
+            },
+          },
+        },
+      },
     },
   },
   safelist: [
@@ -94,6 +122,8 @@ module.exports = {
     { pattern: /bg-game-tag-blue/ },
     { pattern: /text-white/ },
   ],
-  
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+  ],
 }
