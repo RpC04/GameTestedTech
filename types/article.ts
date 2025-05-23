@@ -18,7 +18,10 @@ export interface Article {
 
 export type ArticleForm = Omit<Article, "id" | "views" | "created_at" | "updated_at">
 export type ArticleFormWithTags = ArticleForm & {
-  article_tags?: { tag_id: number }[]
+    id?: number; //If dont want to update inmediatly the image of the article, this field is not required, just comment the line or remove it 1/2
+    article_tags?: { 
+        tag_id: number 
+    }[]
 }
 
 

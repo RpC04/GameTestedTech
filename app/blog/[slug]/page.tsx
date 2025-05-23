@@ -33,6 +33,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     <BlogPost
       article={{
         ...article,
+        featuredImage: article.featured_image,
         author: {
           name: article.authors?.name ?? "Autor desconocido",
           avatar: article.authors?.avatar_url ?? null,
