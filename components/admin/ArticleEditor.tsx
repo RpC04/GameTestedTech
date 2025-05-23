@@ -222,6 +222,51 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
     }
   }
 
+  const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const filePath = `featured-images/${Date.now()}-${file.name}`;
+    const { error } = await supabase
+      .storage
+      .from("imagesblog")
+      .upload(filePath, file);
+
+    if (error) {
+      setError("Error uploading image: " + error.message);
+      return;
+    }
+
+    // Get public URL
+    const { data: publicUrlData } = supabase.storage.from("imagesblog").getPublicUrl(filePath);
+    const publicUrl = publicUrlData?.publicUrl;
+
+    /******
+      If dont want to update immediatly the image of the article, just comment the lines below or remove it 2/2,
+      and change for this:
+
+      setArticle((prev) => ({
+        ...prev,
+        featured_image: publicUrl || "",
+      }))
+    ******/
+    setArticle(prev => ({
+      ...prev,
+      featured_image: publicUrl,
+    }));
+
+    // If existing article, update the featured image in the database
+    if (!isNewArticle && article.id) {
+      const { error: updateError } = await supabase
+        .from("articles")
+        .update({ featured_image: publicUrl })
+        .eq("id", article.id);
+      if (updateError) {
+        setError("Error updating article image: " + updateError.message);
+      }
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -441,6 +486,7 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
           <div className="bg-slate-900 rounded-lg p-6 shadow-md">
             <h3 className="text-lg font-medium text-white mb-4">Featured Image</h3>
 
+            {/* ...dentro de la sección Featured Image... */}
             <div className="space-y-4">
               <input
                 type="text"
@@ -452,9 +498,18 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
                 placeholder="Image URL"
               />
 
+              {/* Input de archivo oculto */}
+              <input
+                type="file"
+                accept="image/*"
+                id="featured_image_file"
+                style={{ display: "none" }}
+                onChange={handleUploadImage}
+              />
               <button
                 type="button"
                 className="w-full bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-md flex items-center justify-center gap-2"
+                onClick={() => document.getElementById("featured_image_file")?.click()}
               >
                 <ImageIcon className="h-4 w-4" />
                 Upload Image
@@ -467,12 +522,13 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
                     alt="Featured"
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      ;(e.target as HTMLImageElement).src = "/placeholder.svg?height=200&width=400"
+                      ; (e.target as HTMLImageElement).src = "/placeholder.svg?height=200&width=400"
                     }}
                   />
                 </div>
               )}
             </div>
+
           </div>
 
           {/* SEO */}
