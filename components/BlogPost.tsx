@@ -2,7 +2,7 @@
 
 import { marked } from "marked"
 import DOMPurify from "isomorphic-dompurify"
-
+import * as cheerio from "cheerio";
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -44,13 +44,32 @@ renderer.heading = function (text, level) {
 }
 marked.setOptions({ renderer })
 
-// ✅ Convertir markdown a HTML seguro
+function processHtmlAndExtractTOC(html: string): { htmlWithIds: string, toc: { id: string, title: string }[] } {
+    const $ = cheerio.load(html);
+    const toc: { id: string, title: string }[] = [];
+    $("h2").each((idx, el) => {
+        const text = $(el).text();
+        let id = $(el).attr("id");
+        if (!id) {
+            id =
+                text
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")
+                    .replace(/[^\w-]/g, "") + "-" + idx;
+            $(el).attr("id", id);
+        }
+        toc.push({ id, title: text });
+    });
+    return { htmlWithIds: $.html(), toc };
+}
+
+// Convertir markdown a HTML seguro
 function convertMarkdownToHTML(markdown: string): string {
     const rawHtml = marked.parse(markdown) // Si usas marked 6+, usa `await marked.parseAsync()`
     return DOMPurify.sanitize(rawHtml)
 }
 
-// ✅ Extraer TOC desde el HTML procesado
+// Extraer TOC desde el HTML procesado
 function extractTableOfContents(html: string): { id: string; title: string }[] {
     const regex = /<h2\s+id="([^"]+)">([^<]+)<\/h2>/g
     const toc: { id: string; title: string }[] = []
@@ -69,7 +88,8 @@ export default function BlogPost({ article }: { article: any }) {
     const [activeSection, setActiveSection] = useState("introduction")
     const [localArticle, setLocalArticle] = useState(article)
     const safeHtml = convertMarkdownToHTML(article.content || "")
-    const tableOfContents = extractTableOfContents(safeHtml)
+    const { htmlWithIds, toc: tableOfContents } = processHtmlAndExtractTOC(safeHtml);
+
 
 
     const post = {
@@ -106,6 +126,19 @@ export default function BlogPost({ article }: { article: any }) {
 
         return () => observer.disconnect()
     }, [article.id, article.views])
+
+    useEffect(() => {
+        // SOLO aquí puedes usar document
+        document.querySelectorAll("article h2").forEach((h2, idx) => {
+            const text = h2.textContent || "";
+            if (!h2.id) {
+                h2.id = text
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")
+                    .replace(/[^\w-]/g, "") + "-" + idx;
+            }
+        });
+    }, [safeHtml]);
 
     const handleLike = async () => {
         const likedKey = `liked-article-${article.id}`
@@ -218,9 +251,10 @@ export default function BlogPost({ article }: { article: any }) {
                             </div>
                         </div>
 
-                        <article className="prose prose-lg prose-invert max-w-none whitespace-pre-line">
-                            <div dangerouslySetInnerHTML={{ __html: safeHtml }} />
-                        </article>
+                        <article
+                            className="prose prose-lg prose-invert max-w-none whitespace-pre-line"
+                            dangerouslySetInnerHTML={{ __html: htmlWithIds }}
+                        />
 
                         {/* Tags */}
                         <div className="mt-12 mb-8">

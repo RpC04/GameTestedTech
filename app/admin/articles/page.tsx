@@ -5,6 +5,7 @@ import type React from "react"
 import Link from "next/link"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import {
+  FileText,
   Plus,
   Search,
   Edit,
@@ -37,7 +38,7 @@ export default function ArticlesPage() {
   const [sortField, setSortField] = useState("created_at")
   const [sortDirection, setSortDirection] = useState("desc")
   const [selectedArticles, setSelectedArticles] = useState<number[]>([])
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false) 
 
   const supabase = createClientComponentClient()
 
@@ -319,18 +320,61 @@ export default function ArticlesPage() {
         </div>
 
         {/* Pagination */}
-        <div className="px-4 py-3 border-t border-gray-800 flex items-center justify-between">
-          <div className="text-sm text-gray-400">
-            Showing <span className="font-medium text-white">{filteredArticles.length}</span> of{" "}
-            <span className="font-medium text-white">{articles.length}</span> articles
-          </div>
-          <div className="flex gap-1">
-            <button className="px-3 py-1 rounded bg-[#1f1f3a] text-gray-400 hover:bg-[#2a2a4e] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed">
+        <div className="px-6 py-4 flex items-center justify-between border-t border-gray-800">
+          <div className="flex-1 flex justify-between sm:hidden">
+            <button className="relative inline-flex items-center px-4 py-2 border border-gray-700 text-sm font-medium rounded-md text-gray-300 bg-[#1a1a2e] hover:bg-[#2a2a4a]">
               Previous
             </button>
-            <button className="px-3 py-1 rounded bg-[#1f1f3a] text-gray-400 hover:bg-[#2a2a4e] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed">
+            <button className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-700 text-sm font-medium rounded-md text-gray-300 bg-[#1a1a2e] hover:bg-[#2a2a4a]">
               Next
             </button>
+          </div>
+          <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm text-gray-400">
+                Showing <span className="font-medium">1</span> to <span className="font-medium">8</span> of{" "}
+                <span className="font-medium">8</span> results
+              </p>
+            </div>
+            <div>
+              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                <button className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-700 bg-[#1a1a2e] text-sm font-medium text-gray-400 hover:bg-[#2a2a4a]">
+                  <span className="sr-only">Previous</span>
+                  <svg
+                    className="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                <button className="relative inline-flex items-center px-4 py-2 border border-gray-700 bg-[#2a2a4a] text-sm font-medium text-white">
+                  1
+                </button>
+                <button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-700 bg-[#1a1a2e] text-sm font-medium text-gray-400 hover:bg-[#2a2a4a]">
+                  <span className="sr-only">Next</span>
+                  <svg
+                    className="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </nav>
+            </div>
           </div>
         </div>
       </div>
