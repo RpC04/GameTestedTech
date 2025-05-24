@@ -28,11 +28,6 @@ export default function AboutPage() {
       answer:
         "Yes! We welcome submissions from manufacturers and developers. Please contact our partnerships team at partnerships@gametestedtech.com with details about your product. While we cannot guarantee coverage of every submission, we review all inquiries and select products based on relevance to our audience and innovation in the gaming space.",
     },
-    {
-      question: "How can I join the Game Tested Tech team?",
-      answer:
-        "We're always looking for passionate gamers and tech enthusiasts to join our team. If you have experience in gaming technology, strong writing skills, and a dedication to honest reviewing, please send your resume and writing samples to careers@gametestedtech.com. We offer opportunities for reviewers, content creators, and technical specialists.",
-    },
   ]
 
   // Datos para el equipo
@@ -130,6 +125,7 @@ export default function AboutPage() {
                   gamers worldwide.
                 </p>
               </div>
+              {/*  
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link href="/articles">
                   <Button className="bg-[#9d8462] hover:bg-[#9d8462] text-white">Our Reviews</Button>
@@ -142,7 +138,7 @@ export default function AboutPage() {
                     Join Our Team
                   </Button>
                 </Link>
-              </div>
+              </div>*/}
             </motion.div>
 
             <motion.div
@@ -419,7 +415,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Contact Section 
       <section className="py-16 bg-[#0f0a1e]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -547,7 +543,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
+*/}
       {/* Footer */}
       <footer className="bg-game-dark py-8 mt-auto border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-6">

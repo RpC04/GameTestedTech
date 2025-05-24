@@ -3,6 +3,7 @@ import { useState, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion, useInView } from "framer-motion"
+import { createClient } from '@supabase/supabase-js'
 import {
   Mail,
   Phone,
@@ -49,6 +50,11 @@ const ContactPage = () => {
     setFormState((prev) => ({ ...prev, [name]: value }))
   }
 
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+  )
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -68,8 +74,17 @@ const ContactPage = () => {
 
     // Simulación de envío de formulario
     try {
-      // En una aplicación real, aquí enviarías los datos a tu backend
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const { error } = await supabase
+        .from("contact_messages")
+        .insert([{
+          name: formState.name,
+          email: formState.email,
+          subject: formState.subject,
+          message: formState.message
+        }])
+
+      if (error) throw error
+
       setIsSubmitted(true)
       setFormState({
         name: "",
@@ -210,7 +225,7 @@ const ContactPage = () => {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#ff6b35]/10 mb-4">
                 <Clock className="h-6 w-6 text-[#ff6b35]" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">24-48 Hours</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">12-24 Hours</h3>
               <p className="text-gray-400">Average Response Time</p>
             </div>
 
@@ -218,7 +233,7 @@ const ContactPage = () => {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#ff6b35]/10 mb-4">
                 <Users className="h-6 w-6 text-[#ff6b35]" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">10+ Team Members</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">Team Members</h3>
               <p className="text-gray-400">Ready to Assist You</p>
             </div>
 
@@ -226,8 +241,8 @@ const ContactPage = () => {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#ff6b35]/10 mb-4">
                 <MessageSquare className="h-6 w-6 text-[#ff6b35]" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">1000+ Inquiries</h3>
-              <p className="text-gray-400">Successfully Handled</p>
+              <h3 className="text-2xl font-bold text-white mb-2">Ready to</h3>
+              <p className="text-gray-400">answer your questions</p>
             </div>
           </div>
         </div>
@@ -790,13 +805,13 @@ const ContactPage = () => {
               </Link>
               <Link href="/articles" className="block text-gray-400 hover:text-white transition-colors">
                 Articles
-              </Link> 
+              </Link>
               <Link href="/about" className="block text-gray-400 hover:text-white transition-colors">
                 About Us
               </Link>
               <Link href="/contact" className="block text-gray-400 hover:text-white transition-colors">
                 Contact
-              </Link> 
+              </Link>
             </div>
 
             {/* Social Media Links */}
