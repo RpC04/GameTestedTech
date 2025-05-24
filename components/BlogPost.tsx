@@ -195,6 +195,20 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
         visible: { opacity: 1, transition: { duration: 0.6 } },
     }
 
+    useEffect(() => {
+        // Evita sumar más de una vista por sesión
+        const viewedKey = `viewed-article-${article.id}`;
+        if (!localStorage.getItem(viewedKey)) {
+            supabase
+                .from("articles")
+                .update({ views: (article.views ?? 0) + 1 })
+                .eq("id", article.id)
+                .then(() => {
+                    localStorage.setItem(viewedKey, "true");
+                });
+        }
+    }, [article.id]);
+    
     return (
         <div className="min-h-screen bg-[#0a0a14] text-gray-200">
             <Header />
@@ -252,7 +266,7 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                         variants={fadeIn}
                     >
                         {/* Estadísticas del artículo */}
-                        <div className="flex justify-between mb-8">
+                        <div className="flex justify-end gap-4 mb-8">
                             <button
                                 className={`flex items-center gap-2 px-4 py-2 rounded-full ${liked ? "bg-[#ff6b35]/20 text-[#ff6b35]" : "bg-[#1a1a2e] text-gray-400"} transition-colors`}
                                 onClick={handleLike}
@@ -265,11 +279,11 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                                 <Eye className="h-5 w-5" />
                                 <span>{viewCount}</span>
                             </div>
-
+                            {/* 
                             <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#1a1a2e] text-gray-400">
                                 <Send className="h-5 w-5" />
                                 <span>{post.shares}</span>
-                            </div>
+                            </div>*/}
                         </div>
 
                         <article
