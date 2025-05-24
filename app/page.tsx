@@ -188,7 +188,7 @@ export default function Home() {
                   </span>
                 </Link>
               </motion.div>
-
+              {/*
               <motion.div
                 className="relative flex-1 max-w-xl mx-8"
                 initial={{ scale: 0.95, opacity: 0 }}
@@ -202,7 +202,7 @@ export default function Home() {
                 />
                 <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
               </motion.div>
-
+              */}
               <motion.nav
                 className="hidden md:flex items-center gap-6"
                 variants={containerVariants}
@@ -507,11 +507,61 @@ export default function Home() {
                       {/* 2. Artículo horizontal */}
                       <ArticleCard article={latestArticles[3]} large className="w-full" />
 
-                      {/* 3. Tres bloques informativos personalizados */}
-                      <div className="space-y-6">
-                        <div className="bg-[#2c2c40] p-6 rounded-lg text-white">💡 Block 1 - Some custom content here</div>
-                        <div className="bg-[#2c2c40] p-6 rounded-lg text-white">🛠️ Block 2 - Tools or guides maybe?</div>
-                        <div className="bg-[#2c2c40] p-6 rounded-lg text-white">📣 Block 3 - Announcements or features</div>
+                      {/* Blocks */}
+                      <div className="space-y-12">
+                        {/* Block 1 */}
+                        <div className="flex flex-col md:flex-row items-center  rounded-2xl shadow-lg p-6 gap-6">
+                          <img
+                            src="/images/unsplash.png"
+                            alt="Unfiltered Reviews"
+                            className="w-full h-40 md:w-[360px] md:h-[240px] object-cover rounded-xl"
+
+                          />
+                          <div>
+                            <h3 className="text-xl font-bold mb-2 text-white">
+                              Unfiltered Reviews: Honest Opinions You Can Trust
+                            </h3>
+                            <p className="text-gray-300">
+                              At Game Tested Tech, we provide high-quality, truthful reviews to empower you with the knowledge you need to make informed decisions about gaming hardware and peripherals. Whether you’re researching your next upgrade, seeking validation after a purchase, or simply curious about the latest tech, we’re here to guide you. Our in-depth analyses cover everything from performance and features to value and user experience, ensuring you find the perfect gear for your gaming setup.
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Block 2 */}
+                        <div className="flex flex-col-reverse md:flex-row items-center  rounded-2xl shadow-lg p-6 gap-6">
+                          <div className="text-right w-full">
+                            <h3 className="text-xl font-bold mb-2 text-white">
+                              Unlock True Gaming Potential: Expert Guides
+                            </h3>
+                            <p className="text-gray-300">
+                              Game Tested Tech strives to provide a wealth of diverse and helpful information to empower gamers of all levels, from enthusiasts to casual players. This includes comprehensive guides covering a wide range of topics, such as troubleshooting common errors, optimizing performance, overclocking components, and building powerful gaming PCs. Our guides are designed to be easy to understand and follow, making it simple for anyone to learn and apply the knowledge.
+                            </p>
+                          </div>
+                          <img
+                            src="/images/unsplash.png"
+                            alt="Expert Guides"
+                            className="w-full h-40 md:w-[360px] md:h-[240px] object-cover rounded-xl"
+
+                          />
+                        </div>
+
+                        {/* Block 3 */}
+                        <div className="flex flex-col md:flex-row items-center  rounded-2xl shadow-lg p-6 gap-6">
+                          <img
+                            src="/images/unsplash.png"
+                            alt="Methodology"
+                            className="w-full h-40 md:w-[360px] md:h-[240px] object-cover rounded-xl"
+
+                          />
+                          <div>
+                            <h3 className="text-xl font-bold mb-2 text-white">
+                              The Game Tested Way: Our Rigorous Methodology
+                            </h3>
+                            <p className="text-gray-300">
+                              Benchmarking products requires meticulous care, time, and unwavering honesty. At GTT, we prioritize accuracy and take all necessary precautions to ensure the integrity of our data. We acknowledge that unforeseen circumstances or human error can occasionally lead to inaccuracies, and we take full responsibility for rectifying any such issues. Game Tested Tech cares about providing you with reliable and trustworthy information.
+                            </p>
+                          </div>
+                        </div>
                       </div>
 
                       {/* 4. Dos artículos horizontales alternados */}
@@ -603,12 +653,7 @@ export default function Home() {
                 <Link href="/articles" className="block text-gray-400 hover:text-white transition-colors">
                   Articles
                 </Link>
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <Link href="/categories" className="block text-gray-400 hover:text-white transition-colors">
-                  Categories
-                </Link>
-              </motion.div>
+              </motion.div> 
               <motion.div variants={itemVariants}>
                 <Link href="/about" className="block text-gray-400 hover:text-white transition-colors">
                   About Us
@@ -618,12 +663,7 @@ export default function Home() {
                 <Link href="/contact" className="block text-gray-400 hover:text-white transition-colors">
                   Contact
                 </Link>
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <Link href="/legal/privacy" className="block text-gray-400 hover:text-white transition-colors">
-                  Privacy Policy
-                </Link>
-              </motion.div>
+              </motion.div> 
             </motion.div>
 
             {/* Social Media Links */}

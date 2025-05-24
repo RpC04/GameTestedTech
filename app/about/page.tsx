@@ -46,37 +46,7 @@ export default function AboutPage() {
         twitter: "#",
         linkedin: "#",
       },
-    },
-    {
-      name: "Sarah Chen",
-      role: "Senior Editor & Peripherals Specialist",
-      bio: "Professional esports player turned tech reviewer. Specializes in gaming peripherals and ergonomics with a focus on competitive gaming performance.",
-      image: "/placeholder.svg?height=300&width=300",
-      social: {
-        twitter: "#",
-        linkedin: "#",
-      },
-    },
-    {
-      name: "Michael Johnson",
-      role: "Technical Director & PC Build Expert",
-      bio: "Computer science graduate with a passion for custom PC builds and overclocking. Has built over 200 custom gaming rigs for clients worldwide.",
-      image: "/placeholder.svg?height=300&width=300",
-      social: {
-        twitter: "#",
-        linkedin: "#",
-      },
-    },
-    {
-      name: "Emily Watson",
-      role: "Content Manager & Console Specialist",
-      bio: "Gaming journalist with expertise in console ecosystems and game development. Previously worked at major gaming publications covering hardware releases.",
-      image: "/placeholder.svg?height=300&width=300",
-      social: {
-        twitter: "#",
-        linkedin: "#",
-      },
-    },
+    }
   ]
 
   // Variantes de animación
@@ -109,7 +79,7 @@ export default function AboutPage() {
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e]/80 to-[#0a0a14]"></div>
           <Image
-            src="/placeholder.svg?height=800&width=1600"
+            src="/images/cyberpunk-bg.png?height=800&width=1600"
             alt="Colorful abstract background"
             fill
             className="object-cover"
@@ -184,10 +154,10 @@ export default function AboutPage() {
             >
               <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
                 <Image
-                  src="/placeholder.svg?height=400&width=600"
+                  src="/images/game-controller-logo.png"
                   alt="Gaming setup being tested"
                   fill
-                  className="object-cover"
+                  className="object-contain max-w-[500px] max-h-[600px] m-auto"
                 />
               </div>
               <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-[#9d8462]/20 rounded-full blur-2xl"></div>
@@ -213,7 +183,8 @@ export default function AboutPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 "> 
+            <div className="hidden md:block"></div>
             <motion.div
               className="bg-[#1a1a2e] rounded-lg p-6 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
@@ -243,7 +214,7 @@ export default function AboutPage() {
                 opinions are honest, unbiased, and based solely on thorough testing.
               </p>
             </motion.div>
-
+{/*
             <motion.div
               className="bg-[#1a1a2e] rounded-lg p-6 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
@@ -273,7 +244,7 @@ export default function AboutPage() {
                 ensure our assessments reflect the actual user experience.
               </p>
             </motion.div>
-
+*/} 
             <motion.div
               className="bg-[#1a1a2e] rounded-lg p-6 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
@@ -322,9 +293,10 @@ export default function AboutPage() {
               The passionate gamers and tech experts behind Game Tested Tech
             </p>
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {teamMembers.map((member, index) => (
+{/* */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="hidden md:block"></div>
+            {teamMembers.map((member, index) => ( 
               <motion.div
                 key={index}
                 className="bg-[#1a1a2e] rounded-lg overflow-hidden shadow-lg"
@@ -335,7 +307,7 @@ export default function AboutPage() {
                 whileHover={{ y: -5 }}
               >
                 <div className="relative aspect-square">
-                  <Image src={member.image || "/placeholder.svg"} alt={member.name} fill className="object-cover" />
+                  <Image src={member.image || "/placeholder.svg"} alt={member.name || "Team member"} fill className="object-cover" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
@@ -343,7 +315,7 @@ export default function AboutPage() {
                   <p className="text-gray-300 text-sm mb-4">{member.bio}</p>
                   <div className="flex gap-3">
                     <a
-                      href={member.social.twitter}
+                      href={member.social?.twitter || "#"}
                       className="text-gray-400 hover:text-white transition-colors"
                       aria-label={`${member.name}'s Twitter`}
                     >
@@ -357,7 +329,7 @@ export default function AboutPage() {
                       </svg>
                     </a>
                     <a
-                      href={member.social.linkedin}
+                      href={member.social?.linkedin || "#"}
                       className="text-gray-400 hover:text-white transition-colors"
                       aria-label={`${member.name}'s LinkedIn`}
                     >
@@ -374,6 +346,7 @@ export default function AboutPage() {
                 </div>
               </motion.div>
             ))}
+            <div className="hidden md:block"></div>
           </div>
         </div>
       </section>
@@ -614,10 +587,7 @@ export default function AboutPage() {
               </Link>
               <Link href="/contact" className="block text-gray-400 hover:text-white transition-colors">
                 Contact
-              </Link>
-              <Link href="/legal/privacy" className="block text-gray-400 hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
+              </Link> 
             </div>
 
             {/* Social Media Links */}

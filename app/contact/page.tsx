@@ -790,19 +790,13 @@ const ContactPage = () => {
               </Link>
               <Link href="/articles" className="block text-gray-400 hover:text-white transition-colors">
                 Articles
-              </Link>
-              <Link href="/categories" className="block text-gray-400 hover:text-white transition-colors">
-                Categories
-              </Link>
+              </Link> 
               <Link href="/about" className="block text-gray-400 hover:text-white transition-colors">
                 About Us
               </Link>
               <Link href="/contact" className="block text-gray-400 hover:text-white transition-colors">
                 Contact
-              </Link>
-              <Link href="/privacy" className="block text-gray-400 hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
+              </Link> 
             </div>
 
             {/* Social Media Links */}
