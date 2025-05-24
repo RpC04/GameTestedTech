@@ -10,6 +10,7 @@ import { motion } from "framer-motion"
 import { Heart, Eye, Send, Clock } from "lucide-react"
 import { Header } from "@/components/header"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { Twitter, Linkedin, Instagram, Facebook, Youtube, DiscIcon as Discord } from "lucide-react"
 
 const supabase = createClientComponentClient()
 
@@ -33,7 +34,7 @@ const formatDate = (date: string | Date | null | undefined): string => {
     })
 }
 
-// ✅ Configurar renderer para agregar ID a h2
+// Configurar renderer para agregar ID a h2
 const renderer = new marked.Renderer()
 renderer.heading = function (text, level) {
     if (level === 2) {
@@ -81,7 +82,7 @@ function extractTableOfContents(html: string): { id: string; title: string }[] {
 }
 
 // Componente para la página de blog
-export default function BlogPost({ article }: { article: any }) {
+export default function BlogPost({ article, relatedArticles = [] }: { article: any, relatedArticles?: any[] }) {
     const [isLoaded, setIsLoaded] = useState(false)
     const [liked, setLiked] = useState(false)
     const [viewCount, setViewCount] = useState(0)
@@ -139,6 +140,26 @@ export default function BlogPost({ article }: { article: any }) {
             }
         });
     }, [safeHtml]);
+
+    const [authorArticlesCount, setAuthorArticlesCount] = useState(0);
+
+    useEffect(() => {
+        const fetchAuthorArticles = async () => {
+            if (!post?.author?.id) {
+                setAuthorArticlesCount(0);
+                return;
+            }
+
+            const { count, error } = await supabase
+                .from('articles')
+                .select('id', { count: 'exact', head: true })
+                .eq('author_id', post.author.id);
+
+            setAuthorArticlesCount(error ? 0 : (count ?? 0));
+        };
+
+        fetchAuthorArticles();
+    }, [post.author.id]);// Sin dependencia, se ejecuta una vez al montar
 
     const handleLike = async () => {
         const likedKey = `liked-article-${article.id}`
@@ -289,6 +310,11 @@ export default function BlogPost({ article }: { article: any }) {
                                 </div>
 
                                 <div>
+                                    <p className="text-gray-400 text-sm mb-1">Last Updated</p>
+                                    <p className="text-white">{formatDate(article.updated_at)}</p>
+                                </div>
+
+                                <div>
                                     <p className="text-gray-400 text-sm mb-1">Category</p>
                                     <p className="text-white">{post.categories.join(", ")}</p>
                                 </div>
@@ -334,25 +360,25 @@ export default function BlogPost({ article }: { article: any }) {
                                     <div>
                                         <p className="font-bold text-white">{post.author.name}</p>
                                         <div className="flex gap-4 text-sm text-gray-400 mt-1">
-                                            <span>{post.author.articles} Articles</span>
-                                            <span>{post.author.followers.toLocaleString()} Followers</span>
+                                            <span>{authorArticlesCount} Articles</span>
                                         </div>
                                     </div>
                                 </div>
                                 <p className="text-gray-300 text-sm">{post.author.bio}</p>
-                                <button className="mt-4 w-full bg-[#9d8462] hover:bg-[#9d8462] text-white py-2 rounded-md transition-colors">
-                                    Follow Author
-                                </button>
+                                <Link href="/about" className="mt-4 w-full block">
+                                    <button className="w-full bg-[#9d8462] hover:bg-[#9d8462] text-white py-2 rounded-md transition-colors">
+                                        More details
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                     </motion.div>
                 </div>
 
-                {/* Sección de comentarios */}
+                {/* Sección de comentarios 
                 <div className="max-w-4xl mx-auto mt-16 pt-8 border-t border-gray-800">
                     <h3 className="text-2xl font-bold text-white mb-6">Comments ({post.comments})</h3>
-
-                    {/* Formulario de comentarios */}
+ 
                     <div className="bg-[#1a1a2e] rounded-lg p-6 mb-8">
                         <h4 className="text-lg font-medium text-white mb-4">Leave a Comment</h4>
                         <textarea
@@ -365,39 +391,31 @@ export default function BlogPost({ article }: { article: any }) {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>*/}
 
+                {/* Articles relacionados */}
                 {/* Articles relacionados */}
                 <div className="mt-16 mb-16">
                     <h3 className="text-2xl font-bold text-white mb-8 text-center">Related Articles</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {[1, 2, 3].map((i) => (
-                            <div key={i} className="bg-[#1a1a2e] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all">
+                        {relatedArticles.length === 0 && (
+                            <div className="col-span-3 text-gray-400 text-center">No related articles found.</div>
+                        )}
+                        {relatedArticles.map((rel) => (
+                            <div key={rel.id} className="bg-[#1a1a2e] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all">
                                 <div className="relative aspect-video">
                                     <Image
-                                        src={`/placeholder.svg?height=300&width=500&text=Related Article ${i}`}
-                                        alt={`Related Article ${i}`}
+                                        src={rel.featured_image || "/placeholder.svg"}
+                                        alt={rel.title}
                                         fill
                                         className="object-cover"
                                     />
                                 </div>
                                 <div className="p-4">
-                                    <h4 className="text-lg font-bold text-white mb-2 line-clamp-2">
-                                        {i === 1
-                                            ? "The Impact of Machine Learning on Game Development"
-                                            : i === 2
-                                                ? "Ethical Considerations in AI-Driven Gaming"
-                                                : "The Future of Procedural Generation in Open World Games"}
-                                    </h4>
-                                    <p className="text-gray-300 text-sm line-clamp-3">
-                                        {i === 1
-                                            ? "Exploring how machine learning algorithms are changing the way games are developed and played."
-                                            : i === 2
-                                                ? "A deep dive into the ethical implications of using AI to create and manage gaming experiences."
-                                                : "How procedural generation is evolving to create more immersive and dynamic open world environments."}
-                                    </p>
+                                    <h4 className="text-lg font-bold text-white mb-2 line-clamp-2">{rel.title}</h4>
+                                    <p className="text-gray-300 text-sm line-clamp-3">{rel.excerpt}</p>
                                     <div className="mt-4">
-                                        <Link href={`/blog/article-${i}`} className="text-[#9d8462] hover:text-[#ff6b35] transition-colors">
+                                        <Link href={`/blog/${rel.slug}`} className="text-[#9d8462] hover:text-[#ff6b35] transition-colors">
                                             Read More →
                                         </Link>
                                     </div>
@@ -406,6 +424,7 @@ export default function BlogPost({ article }: { article: any }) {
                         ))}
                     </div>
                 </div>
+
             </div>
 
             {/* Footer */}
@@ -455,21 +474,26 @@ export default function BlogPost({ article }: { article: any }) {
 
                         {/* Social Media Links */}
                         <div className="space-y-4">
-                            <h3 className="text-white font-bold mb-4">Follow Us</h3>
-                            <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                                Youtube
+                            <div className="text-white font-bold mb-4">Follow Us</div>
+                            <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                                <Youtube className="h-5 w-5" />
+                                <span>Youtube</span>
                             </a>
-                            <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                                Instagram
+                            <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                                <Instagram className="h-5 w-5" />
+                                <span>Instagram</span>
                             </a>
-                            <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                                Twitter
+                            <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                                <Twitter className="h-5 w-5" />
+                                <span>Twitter</span>
                             </a>
-                            <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                                Discord
+                            <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                                <Discord className="h-5 w-5" />
+                                <span>Discord</span>
                             </a>
-                            <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                                Facebook
+                            <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                                <Facebook className="h-5 w-5" />
+                                <span>Facebook</span>
                             </a>
                         </div>
                     </div>

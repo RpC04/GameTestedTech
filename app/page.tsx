@@ -13,6 +13,7 @@ import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
 import { ArticleCard } from "@/components/ArticleCard"
 import { HorizontalArticleCard } from "@/components/HorizontalArticleCard"
+import { Twitter, Linkedin, Instagram, Facebook, Youtube, DiscIcon as Discord } from "lucide-react"
 
 
 export default function Home() {
@@ -792,31 +793,46 @@ export default function Home() {
               <motion.h3 className="text-white font-bold mb-4" variants={itemVariants}>
                 Follow Us
               </motion.h3>
-              <motion.div variants={itemVariants}>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                  Youtube
-                </a>
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                  Instagram
-                </a>
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                  Twitter
-                </a>
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                  Discord
-                </a>
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                  Facebook
-                </a>
-              </motion.div>
+              <motion.a
+                href="#"
+                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+                variants={itemVariants}
+              >
+                <Youtube className="h-5 w-5" />
+                <span>Youtube</span>
+              </motion.a>
+              <motion.a
+                href="#"
+                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+                variants={itemVariants}
+              >
+                <Instagram className="h-5 w-5" />
+                <span>Instagram</span>
+              </motion.a>
+              <motion.a
+                href="#"
+                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+                variants={itemVariants}
+              >
+                <Twitter className="h-5 w-5" />
+                <span>Twitter</span>
+              </motion.a>
+              <motion.a
+                href="#"
+                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+                variants={itemVariants}
+              >
+                <Discord className="h-5 w-5" />
+                <span>Discord</span>
+              </motion.a>
+              <motion.a
+                href="#"
+                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+                variants={itemVariants}
+              >
+                <Facebook className="h-5 w-5" />
+                <span>Facebook</span>
+              </motion.a>
             </motion.div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
