@@ -31,7 +31,7 @@ export function Header() {
               </span>
             </Link>
           </div>
-
+{/*
           <div className="relative flex-1 max-w-xl mx-8">
             <input
               type="text"
@@ -40,7 +40,7 @@ export function Header() {
             />
             <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
           </div>
-
+*/}
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/" className="text-game-white hover:text-game-cyan transition">
               Home

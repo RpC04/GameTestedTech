@@ -52,7 +52,7 @@ export default function AdminLogin() {
         throw error
       }
 
-      router.push("/admin")
+      router.push("/admin/articles")
     } catch (error: any) {
       setError(error.message || "An error occurred during login")
     } finally {

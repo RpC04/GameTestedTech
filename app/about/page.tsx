@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { ChevronDown, ChevronUp, Mail, Phone, MapPin, ExternalLink } from "lucide-react"
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
+import { Twitter, Linkedin, Instagram, Facebook, Youtube, DiscIcon as Discord } from "lucide-react"
 
 export default function AboutPage() {
   // Estado para controlar los acordeones de FAQ
@@ -28,11 +29,6 @@ export default function AboutPage() {
       answer:
         "Yes! We welcome submissions from manufacturers and developers. Please contact our partnerships team at partnerships@gametestedtech.com with details about your product. While we cannot guarantee coverage of every submission, we review all inquiries and select products based on relevance to our audience and innovation in the gaming space.",
     },
-    {
-      question: "How can I join the Game Tested Tech team?",
-      answer:
-        "We're always looking for passionate gamers and tech enthusiasts to join our team. If you have experience in gaming technology, strong writing skills, and a dedication to honest reviewing, please send your resume and writing samples to careers@gametestedtech.com. We offer opportunities for reviewers, content creators, and technical specialists.",
-    },
   ]
 
   // Datos para el equipo
@@ -46,37 +42,7 @@ export default function AboutPage() {
         twitter: "#",
         linkedin: "#",
       },
-    },
-    {
-      name: "Sarah Chen",
-      role: "Senior Editor & Peripherals Specialist",
-      bio: "Professional esports player turned tech reviewer. Specializes in gaming peripherals and ergonomics with a focus on competitive gaming performance.",
-      image: "/placeholder.svg?height=300&width=300",
-      social: {
-        twitter: "#",
-        linkedin: "#",
-      },
-    },
-    {
-      name: "Michael Johnson",
-      role: "Technical Director & PC Build Expert",
-      bio: "Computer science graduate with a passion for custom PC builds and overclocking. Has built over 200 custom gaming rigs for clients worldwide.",
-      image: "/placeholder.svg?height=300&width=300",
-      social: {
-        twitter: "#",
-        linkedin: "#",
-      },
-    },
-    {
-      name: "Emily Watson",
-      role: "Content Manager & Console Specialist",
-      bio: "Gaming journalist with expertise in console ecosystems and game development. Previously worked at major gaming publications covering hardware releases.",
-      image: "/placeholder.svg?height=300&width=300",
-      social: {
-        twitter: "#",
-        linkedin: "#",
-      },
-    },
+    }
   ]
 
   // Variantes de animación
@@ -109,7 +75,7 @@ export default function AboutPage() {
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e]/80 to-[#0a0a14]"></div>
           <Image
-            src="/placeholder.svg?height=800&width=1600"
+            src="/images/cyberpunk-bg.png?height=800&width=1600"
             alt="Colorful abstract background"
             fill
             className="object-cover"
@@ -160,6 +126,7 @@ export default function AboutPage() {
                   gamers worldwide.
                 </p>
               </div>
+              {/*  
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link href="/articles">
                   <Button className="bg-[#9d8462] hover:bg-[#9d8462] text-white">Our Reviews</Button>
@@ -172,7 +139,7 @@ export default function AboutPage() {
                     Join Our Team
                   </Button>
                 </Link>
-              </div>
+              </div>*/}
             </motion.div>
 
             <motion.div
@@ -184,10 +151,10 @@ export default function AboutPage() {
             >
               <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
                 <Image
-                  src="/placeholder.svg?height=400&width=600"
+                  src="/images/game-controller-logo.png"
                   alt="Gaming setup being tested"
                   fill
-                  className="object-cover"
+                  className="object-contain max-w-[500px] max-h-[600px] m-auto"
                 />
               </div>
               <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-[#9d8462]/20 rounded-full blur-2xl"></div>
@@ -213,7 +180,8 @@ export default function AboutPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 ">
+            <div className="hidden md:block"></div>
             <motion.div
               className="bg-[#1a1a2e] rounded-lg p-6 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
@@ -243,7 +211,7 @@ export default function AboutPage() {
                 opinions are honest, unbiased, and based solely on thorough testing.
               </p>
             </motion.div>
-
+            {/*
             <motion.div
               className="bg-[#1a1a2e] rounded-lg p-6 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
@@ -273,7 +241,7 @@ export default function AboutPage() {
                 ensure our assessments reflect the actual user experience.
               </p>
             </motion.div>
-
+*/}
             <motion.div
               className="bg-[#1a1a2e] rounded-lg p-6 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
@@ -322,8 +290,9 @@ export default function AboutPage() {
               The passionate gamers and tech experts behind Game Tested Tech
             </p>
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="hidden md:block"></div>
             {teamMembers.map((member, index) => (
               <motion.div
                 key={index}
@@ -335,7 +304,7 @@ export default function AboutPage() {
                 whileHover={{ y: -5 }}
               >
                 <div className="relative aspect-square">
-                  <Image src={member.image || "/placeholder.svg"} alt={member.name} fill className="object-cover" />
+                  <Image src={member.image || "/placeholder.svg"} alt={member.name || "Team member"} fill className="object-cover" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
@@ -343,7 +312,7 @@ export default function AboutPage() {
                   <p className="text-gray-300 text-sm mb-4">{member.bio}</p>
                   <div className="flex gap-3">
                     <a
-                      href={member.social.twitter}
+                      href={member.social?.twitter || "#"}
                       className="text-gray-400 hover:text-white transition-colors"
                       aria-label={`${member.name}'s Twitter`}
                     >
@@ -357,7 +326,7 @@ export default function AboutPage() {
                       </svg>
                     </a>
                     <a
-                      href={member.social.linkedin}
+                      href={member.social?.linkedin || "#"}
                       className="text-gray-400 hover:text-white transition-colors"
                       aria-label={`${member.name}'s LinkedIn`}
                     >
@@ -374,6 +343,7 @@ export default function AboutPage() {
                 </div>
               </motion.div>
             ))}
+            <div className="hidden md:block"></div>
           </div>
         </div>
       </section>
@@ -424,9 +394,8 @@ export default function AboutPage() {
                     )}
                   </button>
                   <div
-                    className={`px-6 pb-6 transition-all duration-300 ease-in-out ${
-                      openFaq === index ? "block opacity-100" : "hidden opacity-0"
-                    }`}
+                    className={`px-6 pb-6 transition-all duration-300 ease-in-out ${openFaq === index ? "block opacity-100" : "hidden opacity-0"
+                      }`}
                   >
                     <p className="text-gray-300">{faq.answer}</p>
                   </div>
@@ -446,7 +415,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Contact Section 
       <section className="py-16 bg-[#0f0a1e]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -574,74 +543,90 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
+*/}
       {/* Footer */}
       <footer className="bg-game-dark py-8 mt-auto border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Contact Info */}
             <div className="space-y-4">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <Image
-                  src="/images/logo.png"
-                  alt="Game Tested Tech Logo"
-                  width={40}
-                  height={40}
-                  className="object-contain"
-                />
-                <span className="text-game-white text-sm font-bold">
-                  GAME
-                  <br />
-                  TESTED TECH
-                </span>
-              </Link>
-              <p className="text-gray-400 text-sm">
-                Your trusted source for honest gaming hardware reviews, guides, and tech insights.
-              </p>
+              <div>
+                <Link href="/" className="flex items-center gap-2 mb-4">
+                  <Image
+                    src="/images/logo.png"
+                    alt="Game Tested Tech Logo"
+                    width={40}
+                    height={40}
+                    className="object-contain"
+                  />
+                  <span className="text-game-white text-sm font-bold">
+                    GAME<br />TESTED TECH
+                  </span>
+                </Link>
+                <p className="text-gray-400 text-sm">
+                  Your trusted source for honest gaming hardware reviews, guides, and tech insights.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 pt-4">
+                <span className="text-gray-400">✉</span>
+                <a href="mailto:contact@gametestedtech.com" className="text-gray-400 hover:text-white">
+                  contact@gametestedtech.com
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-gray-400">📞</span>
+                <a href="tel:+11223456789" className="text-gray-400 hover:text-white">
+                  +1-1223-456-7890
+                </a>
+              </div>
             </div>
 
             {/* Navigation Links */}
             <div className="space-y-4">
-              <h3 className="text-white font-bold mb-4">Quick Links</h3>
-              <Link href="/" className="block text-gray-400 hover:text-white transition-colors">
+              <div className="text-white font-bold mb-4">Quick Links</div>
+              <Link href="/" className="block text-gray-400 hover:text-white">
                 Home
               </Link>
-              <Link href="/articles" className="block text-gray-400 hover:text-white transition-colors">
+              <Link href="/articles" className="block text-gray-400 hover:text-white">
                 Articles
               </Link>
-              <Link href="/about" className="block text-gray-400 hover:text-white transition-colors">
+              <Link href="/about" className="block text-gray-400 hover:text-white">
                 About Us
               </Link>
-              <Link href="/contact" className="block text-gray-400 hover:text-white transition-colors">
+              <Link href="/contact" className="block text-gray-400 hover:text-white">
                 Contact
-              </Link>
-              <Link href="/legal/privacy" className="block text-gray-400 hover:text-white transition-colors">
-                Privacy Policy
               </Link>
             </div>
 
             {/* Social Media Links */}
             <div className="space-y-4">
-              <h3 className="text-white font-bold mb-4">Follow Us</h3>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Youtube
+              <div className="text-white font-bold mb-4">Follow Us</div>
+              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                <Youtube className="h-5 w-5" />
+                <span>Youtube</span>
               </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Instagram
+              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                <Instagram className="h-5 w-5" />
+                <span>Instagram</span>
               </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Twitter
+              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                <Twitter className="h-5 w-5" />
+                <span>Twitter</span>
               </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Discord
+              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                <Discord className="h-5 w-5" />
+                <span>Discord</span>
               </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Facebook
+              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                <Facebook className="h-5 w-5" />
+                <span>Facebook</span>
               </a>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
-            <p>© {new Date().getFullYear()} Game Tested Tech. All rights reserved.</p>
+            <p>
+              © {new Date().getFullYear()} Game Tested Tech. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>

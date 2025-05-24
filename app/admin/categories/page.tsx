@@ -4,11 +4,26 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Tag, Plus, Edit, Trash2, Save, X, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
+type Category = {
+  id: string
+  name: string
+  slug: string
+  description: string
+  icon?: string
+  article_count?: number
+}
+
+
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [newCategory, setNewCategory] = useState({ name: "", slug: "", description: "", icon: "" })
-  const [editingCategory, setEditingCategory] = useState(null)
+  const [newCategory, setNewCategory] = useState<Omit<Category, "id" | "article_count">>({
+    name: "",
+    slug: "",
+    description: "",
+    icon: "",
+  })
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
   const [isAdding, setIsAdding] = useState(false)
   const [error, setError] = useState("")
 
@@ -56,14 +71,19 @@ export default function CategoriesPage() {
     }
   }
 
-  const handleEditCategoryChange = (e) => {
-    const { name, value } = e.target
+  const handleEditCategoryChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const { name, value } = e.target
 
-    setEditingCategory((prev) => ({
+  setEditingCategory((prev) => {
+    if (!prev) return prev // o return null
+
+    return {
       ...prev,
       [name]: value,
-    }))
-  }
+    }
+  })
+}
+
 
   const handleAddCategory = async () => {
     if (!newCategory.name) {
@@ -94,31 +114,35 @@ export default function CategoriesPage() {
   }
 
   const handleUpdateCategory = async () => {
-    if (!editingCategory.name) {
-      setError("Category name is required")
-      return
-    }
-
-    try {
-      const { error } = await supabase
-        .from("categories")
-        .update({
-          name: editingCategory.name,
-          slug: editingCategory.slug,
-          description: editingCategory.description,
-          icon: editingCategory.icon
-        })
-        .eq("id", editingCategory.id)
-
-      if (error) throw error
-
-      setCategories((prev) => prev.map((cat) => (cat.id === editingCategory.id ? editingCategory : cat)))
-      setEditingCategory(null)
-    } catch (error) {
-      console.error("Error updating category:", error)
-      setError("Failed to update category")
-    }
+  // Validar que editingCategory exista y tenga un name válido
+  if (!editingCategory || !editingCategory.name) {
+    setError("Category name is required")
+    return
   }
+
+  try {
+    const { error } = await supabase
+      .from("categories")
+      .update({
+        name: editingCategory.name,
+        slug: editingCategory.slug,
+        description: editingCategory.description,
+        icon: editingCategory.icon,
+      })
+      .eq("id", editingCategory.id) // No uses fallback, el id debe existir
+
+    if (error) throw error
+
+    setCategories((prev) =>
+      prev.map((cat) => (cat.id === editingCategory.id ? editingCategory : cat))
+    )
+    setEditingCategory(null)
+  } catch (error) {
+    console.error("Error updating category:", error)
+    setError("Failed to update category")
+  }
+}
+
 
   const handleDeleteCategory = async (id) => {
     if (!confirm("Are you sure you want to delete this category? This will affect all articles using this category.")) {
