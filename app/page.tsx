@@ -57,6 +57,28 @@ export default function Home() {
     fetchArticles()
   }, [])
 
+  // For community stats
+  const stats = [
+    { value: "1.2M+", label: "Community Members" },
+    { value: "10K+", label: "Game Reviews" },
+    { value: "5K+", label: "Gaming Guides" },
+    { value: "24/7", label: "Support" },
+  ];
+
+  const container = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.15, // Aparece cada 0.15s
+      },
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, type: "spring" } },
+  };
+
   // Efecto para activar las animaciones después de que la página cargue
   useEffect(() => {
     setIsLoaded(true)
@@ -462,7 +484,7 @@ export default function Home() {
       </div>
 
       {/* Main Blog Content Section with Tabs */}
-      <section className="py-12 bg-[#0f0a1e]">
+      <motion.section className="py-12 bg-[#0f0a1e]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-1">
             {/* Main Content - 3 columns */}
@@ -510,12 +532,17 @@ export default function Home() {
                       {/* Blocks */}
                       <div className="space-y-12">
                         {/* Block 1 */}
-                        <div className="flex flex-col md:flex-row items-center  rounded-2xl shadow-lg p-6 gap-6">
+                        <motion.div
+                          className="flex flex-col md:flex-row items-center rounded-2xl shadow-lg p-6 gap-6"
+                          initial={{ opacity: 0, y: 40 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.7, delay: 0.1, type: "spring" }}
+                          viewport={{ once: true, amount: 0.2 }}
+                        >
                           <img
                             src="/images/unsplash.png"
                             alt="Unfiltered Reviews"
                             className="w-full h-40 md:w-[360px] md:h-[240px] object-cover rounded-xl"
-
                           />
                           <div>
                             <h3 className="text-xl font-bold mb-2 text-white">
@@ -525,10 +552,16 @@ export default function Home() {
                               At Game Tested Tech, we provide high-quality, truthful reviews to empower you with the knowledge you need to make informed decisions about gaming hardware and peripherals. Whether you’re researching your next upgrade, seeking validation after a purchase, or simply curious about the latest tech, we’re here to guide you. Our in-depth analyses cover everything from performance and features to value and user experience, ensuring you find the perfect gear for your gaming setup.
                             </p>
                           </div>
-                        </div>
+                        </motion.div>
 
                         {/* Block 2 */}
-                        <div className="flex flex-col-reverse md:flex-row items-center  rounded-2xl shadow-lg p-6 gap-6">
+                        <motion.div
+                          className="flex flex-col-reverse md:flex-row items-center rounded-2xl shadow-lg p-6 gap-6"
+                          initial={{ opacity: 0, y: 40 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.7, delay: 0.25, type: "spring" }}
+                          viewport={{ once: true, amount: 0.2 }}
+                        >
                           <div className="text-right w-full">
                             <h3 className="text-xl font-bold mb-2 text-white">
                               Unlock True Gaming Potential: Expert Guides
@@ -541,17 +574,21 @@ export default function Home() {
                             src="/images/unsplash.png"
                             alt="Expert Guides"
                             className="w-full h-40 md:w-[360px] md:h-[240px] object-cover rounded-xl"
-
                           />
-                        </div>
+                        </motion.div>
 
                         {/* Block 3 */}
-                        <div className="flex flex-col md:flex-row items-center  rounded-2xl shadow-lg p-6 gap-6">
+                        <motion.div
+                          className="flex flex-col md:flex-row items-center rounded-2xl shadow-lg p-6 gap-6"
+                          initial={{ opacity: 0, y: 40 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.7, delay: 0.4, type: "spring" }}
+                          viewport={{ once: true, amount: 0.2 }}
+                        >
                           <img
                             src="/images/unsplash.png"
                             alt="Methodology"
                             className="w-full h-40 md:w-[360px] md:h-[240px] object-cover rounded-xl"
-
                           />
                           <div>
                             <h3 className="text-xl font-bold mb-2 text-white">
@@ -561,7 +598,7 @@ export default function Home() {
                               Benchmarking products requires meticulous care, time, and unwavering honesty. At GTT, we prioritize accuracy and take all necessary precautions to ensure the integrity of our data. We acknowledge that unforeseen circumstances or human error can occasionally lead to inaccuracies, and we take full responsibility for rectifying any such issues. Game Tested Tech cares about providing you with reliable and trustworthy information.
                             </p>
                           </div>
-                        </div>
+                        </motion.div>
                       </div>
 
                       {/* 4. Dos artículos horizontales alternados */}
@@ -577,9 +614,87 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Footer con animación */}
+
+      {/* Newsletter Section 
+      <section className="py-16 bg-game-purple">
+        <motion.div
+          className="max-w-4xl mx-auto px-6 text-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <motion.h2
+            className="text-3xl font-bold text-white mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            Join Our Gaming Tech Community
+          </motion.h2>
+          <motion.p
+            className="text-gray-300 mb-8 max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            Subscribe to our newsletter and be the first to receive our latest articles, reviews, and exclusive content.
+            Stay ahead of the curve with Game Tested Tech.
+          </motion.p>
+
+          <motion.div
+            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <input
+              type="email"
+              placeholder="Your email address"
+              className="flex-1 bg-[#1a1a1a] border border-gray-700 rounded-md py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-game-cyan"
+            />
+            <Button className="bg-[#9d8462] hover:bg-[#9d8462] text-white py-3 px-6">Subscribe</Button>
+          </motion.div>
+          <motion.p
+            className="text-xs text-gray-500 mt-3"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.
+          </motion.p>
+        </motion.div>
+      </section>*/}
+      {/* Community Stats Section */}
+      <motion.section
+        className="bg-game-dark py-12 border-t border-gray-800"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={container}
+      >
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center"
+            variants={container}
+          >
+            {stats.map((stat, i) => (
+              <motion.div key={i} className="p-6" variants={item}>
+                <p className="text-3xl md:text-4xl font-bold text-game-cyan">{stat.value}</p>
+                <p className="text-gray-400 mt-2">{stat.label}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Footer with animation */}
       <motion.footer
         className="bg-game-dark py-8 mt-auto border-t border-gray-800"
         initial={{ opacity: 0 }}
@@ -653,7 +768,7 @@ export default function Home() {
                 <Link href="/articles" className="block text-gray-400 hover:text-white transition-colors">
                   Articles
                 </Link>
-              </motion.div> 
+              </motion.div>
               <motion.div variants={itemVariants}>
                 <Link href="/about" className="block text-gray-400 hover:text-white transition-colors">
                   About Us
@@ -663,7 +778,7 @@ export default function Home() {
                 <Link href="/contact" className="block text-gray-400 hover:text-white transition-colors">
                   Contact
                 </Link>
-              </motion.div> 
+              </motion.div>
             </motion.div>
 
             {/* Social Media Links */}
