@@ -6,7 +6,7 @@ import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
-import { LayoutDashboard, FileText, Tag, Users, Settings, LogOut, Menu, X, AlertCircle } from "lucide-react"
+import { LayoutDashboard, Tags, FileText, Tag, Inbox, Users, Settings, LogOut, Menu, X, AlertCircle } from "lucide-react"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           setIsAuthenticated(true)
           // If on login page, redirect to dashboard
           if (pathname === "/admin/login") {
-            router.push("/admin")
+            router.push("/admin/articles")
           }
         }
       } catch (err) {
@@ -112,13 +112,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!isAuthenticated) {
     return null
   }
-
+{/* { name: "Dashboard", href: "/admin", icon: <LayoutDashboard className="h-5 w-5" /> }, */}
   const navItems = [
-    { name: "Dashboard", href: "/admin", icon: <LayoutDashboard className="h-5 w-5" /> },
+    
     { name: "Articles", href: "/admin/articles", icon: <FileText className="h-5 w-5" /> },
-    { name: "Categories", href: "/admin/categories", icon: <Tag className="h-5 w-5" /> },
-    { name: "Users", href: "/admin/users", icon: <Users className="h-5 w-5" /> },
-    { name: "Settings", href: "/admin/settings", icon: <Settings className="h-5 w-5" /> },
+    { name: "Categories", href: "/admin/categories", icon: <Tag className="h-5 w-5" /> }, 
+    { name: "Contact", href: "/admin/contact", icon: <Inbox className="h-5 w-5" /> },
+    { name: "Tags", href: "/admin/tags", icon: <Tags className="h-5 w-5" /> }, 
   ]
 
   return (

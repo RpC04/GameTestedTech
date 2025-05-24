@@ -3,11 +3,15 @@ import { useState, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion, useInView } from "framer-motion"
+import { createClient } from '@supabase/supabase-js'
 import {
   Mail,
   Phone,
   MapPin,
   Send,
+  Facebook,
+  DiscIcon as Discord,
+  Youtube,
   Github,
   Twitter,
   Linkedin,
@@ -49,6 +53,11 @@ const ContactPage = () => {
     setFormState((prev) => ({ ...prev, [name]: value }))
   }
 
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+  )
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -68,8 +77,17 @@ const ContactPage = () => {
 
     // Simulación de envío de formulario
     try {
-      // En una aplicación real, aquí enviarías los datos a tu backend
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const { error } = await supabase
+        .from("contact_messages")
+        .insert([{
+          name: formState.name,
+          email: formState.email,
+          subject: formState.subject,
+          message: formState.message
+        }])
+
+      if (error) throw error
+
       setIsSubmitted(true)
       setFormState({
         name: "",
@@ -210,7 +228,7 @@ const ContactPage = () => {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#ff6b35]/10 mb-4">
                 <Clock className="h-6 w-6 text-[#ff6b35]" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">24-48 Hours</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">12-24 Hours</h3>
               <p className="text-gray-400">Average Response Time</p>
             </div>
 
@@ -218,7 +236,7 @@ const ContactPage = () => {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#ff6b35]/10 mb-4">
                 <Users className="h-6 w-6 text-[#ff6b35]" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">10+ Team Members</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">Team Members</h3>
               <p className="text-gray-400">Ready to Assist You</p>
             </div>
 
@@ -226,8 +244,8 @@ const ContactPage = () => {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#ff6b35]/10 mb-4">
                 <MessageSquare className="h-6 w-6 text-[#ff6b35]" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">1000+ Inquiries</h3>
-              <p className="text-gray-400">Successfully Handled</p>
+              <h3 className="text-2xl font-bold text-white mb-2">Ready to</h3>
+              <p className="text-gray-400">answer your questions</p>
             </div>
           </div>
         </div>
@@ -748,35 +766,32 @@ const ContactPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Contact Info */}
             <div className="space-y-4">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <Image
-                  src="/images/logo.png"
-                  alt="Game Tested Tech Logo"
-                  width={40}
-                  height={40}
-                  className="object-contain"
-                />
-                <span className="text-game-white text-sm font-bold">
-                  GAME
-                  <br />
-                  TESTED TECH
-                </span>
-              </Link>
-              <p className="text-gray-400 text-sm">
-                Your trusted source for honest gaming hardware reviews, guides, and tech insights.
-              </p>
+              <div>
+                <Link href="/" className="flex items-center gap-2 mb-4">
+                  <Image
+                    src="/images/logo.png"
+                    alt="Game Tested Tech Logo"
+                    width={40}
+                    height={40}
+                    className="object-contain"
+                  />
+                  <span className="text-game-white text-sm font-bold">
+                    GAME<br />TESTED TECH
+                  </span>
+                </Link>
+                <p className="text-gray-400 text-sm">
+                  Your trusted source for honest gaming hardware reviews, guides, and tech insights.
+                </p>
+              </div>
               <div className="flex items-center gap-2 pt-4">
                 <span className="text-gray-400">✉</span>
-                <a
-                  href="mailto:contact@gametestedtech.com"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
+                <a href="mailto:contact@gametestedtech.com" className="text-gray-400 hover:text-white">
                   contact@gametestedtech.com
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-gray-400">📞</span>
-                <a href="tel:+11223456789" className="text-gray-400 hover:text-white transition-colors">
+                <a href="tel:+11223456789" className="text-gray-400 hover:text-white">
                   +1-1223-456-7890
                 </a>
               </div>
@@ -784,49 +799,50 @@ const ContactPage = () => {
 
             {/* Navigation Links */}
             <div className="space-y-4">
-              <h3 className="text-white font-bold mb-4">Quick Links</h3>
-              <Link href="/" className="block text-gray-400 hover:text-white transition-colors">
+              <div className="text-white font-bold mb-4">Quick Links</div>
+              <Link href="/" className="block text-gray-400 hover:text-white">
                 Home
               </Link>
-              <Link href="/articles" className="block text-gray-400 hover:text-white transition-colors">
+              <Link href="/articles" className="block text-gray-400 hover:text-white">
                 Articles
               </Link>
-              <Link href="/categories" className="block text-gray-400 hover:text-white transition-colors">
-                Categories
-              </Link>
-              <Link href="/about" className="block text-gray-400 hover:text-white transition-colors">
+              <Link href="/about" className="block text-gray-400 hover:text-white">
                 About Us
               </Link>
-              <Link href="/contact" className="block text-gray-400 hover:text-white transition-colors">
+              <Link href="/contact" className="block text-gray-400 hover:text-white">
                 Contact
-              </Link>
-              <Link href="/privacy" className="block text-gray-400 hover:text-white transition-colors">
-                Privacy Policy
               </Link>
             </div>
 
             {/* Social Media Links */}
             <div className="space-y-4">
-              <h3 className="text-white font-bold mb-4">Follow Us</h3>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Youtube
+              <div className="text-white font-bold mb-4">Follow Us</div>
+              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                <Youtube className="h-5 w-5" />
+                <span>Youtube</span>
               </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Instagram
+              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                <Instagram className="h-5 w-5" />
+                <span>Instagram</span>
               </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Twitter
+              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                <Twitter className="h-5 w-5" />
+                <span>Twitter</span>
               </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Discord
+              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                <Discord className="h-5 w-5" />
+                <span>Discord</span>
               </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Facebook
+              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
+                <Facebook className="h-5 w-5" />
+                <span>Facebook</span>
               </a>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
-            <p>© {new Date().getFullYear()} Game Tested Tech. All rights reserved.</p>
+            <p>
+              © {new Date().getFullYear()} Game Tested Tech. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>

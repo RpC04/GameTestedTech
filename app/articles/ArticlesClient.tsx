@@ -11,6 +11,7 @@ import { supabase } from "@/lib/supabase"
 import { useEffect, useState } from "react"
 import { Disclosure } from "@headlessui/react"
 import { ChevronDown } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
 export default function Articles() {
     // Sample latest articles data
@@ -22,6 +23,15 @@ export default function Articles() {
     const [startDate, endDate] = dateRange
     const [tags, setTags] = useState<{ id: number; name: string }[]>([])
     const [selectedTags, setSelectedTags] = useState<number[]>([])
+
+    const dotPositions = [
+        { top: "11.028856%", left: "27.500000%" },
+        { top: "50.000000%", left: "5.000000%" },
+        { top: "88.971144%", left: "27.500000%" },
+        { top: "88.971144%", left: "72.500000%" },
+        { top: "50.000000%", left: "95.000000%" },
+        { top: "11.028856%", left: "72.500000%" },
+    ];
 
     useEffect(() => {
         async function fetchCategories() {
@@ -137,13 +147,23 @@ export default function Articles() {
         setDateRange([null, null])
     }
 
+    const itemVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: { type: "spring", stiffness: 100 },
+        },
+    }
+
+
     return (
         <div className="min-h-screen flex flex-col">
             {/* Complete header with background image */}
             <div className="relative">
                 {/* Imagen de fondo para todo el header */}
                 <div className="absolute inset-0 w-full h-full">
-                    <img src="/images/cyberpunk-bg.png" alt="Cyberpunk background" className="w-full h-full object-cover" />
+                    <img src="/images/articlepage-background.png" alt="Article background" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-black/30"></div>
                 </div>
 
@@ -167,16 +187,16 @@ export default function Articles() {
                                     </span>
                                 </Link>
                             </div>
-
+                            {/*
                             <div className="relative flex-1 max-w-xl mx-8">
                                 <input
                                     type="text"
                                     className="w-full bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 rounded-full py-2 px-4 pr-10 text-white"
-                                    placeholder="Buscar..."
+                                    placeholder="Search..."
                                 />
                                 <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
                             </div>
-
+*/}
                             <nav className="hidden md:flex items-center gap-6">
                                 <Link href="/" className="text-game-white hover:text-game-cyan transition">
                                     Home
@@ -185,7 +205,7 @@ export default function Articles() {
                                     Articles
                                 </Link>
                                 <Link href="/about" className="text-game-white hover:text-game-cyan transition">
-                                    About
+                                    About Us
                                 </Link>
                                 <Link href="/contact" className="text-game-white hover:text-game-cyan transition">
                                     Contact
@@ -207,17 +227,24 @@ export default function Articles() {
                             </div>
 
                             <div className="flex gap-4">
-                                <Link href="/articles">
-                                    <Button className="bg-[#9d8462] hover:bg-[#8d7452] text-white rounded-md">Explore Now</Button>
-                                </Link>
-                                <Link href="/contact">
-                                    <Button
-                                        variant="outline"
-                                        className="bg-transparent hover:bg-[#1a1a2e] border-2 border-[#9d8462] text-white rounded-md"
-                                    >
-                                        Contact Us
-                                    </Button>
-                                </Link>
+                                <motion.div className="flex gap-4" variants={itemVariants}>
+                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                        <Link href="/about">
+                                            <Button className="bg-[#9d8462] hover:bg-[#9d8462] text-white rounded-md transition-all duration-300 border-0">
+                                                About Us
+                                            </Button>
+                                        </Link>
+                                    </motion.div>
+                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                        <Link href="/contact">
+                                            <Button variant="outline"
+                                                className="bg-transparent hover:bg-transparent border-2 border-[#9d8462] hover:border-[#9d8462]
+                                                text-white hover:text-white rounded-md transition-all duration-300">
+                                                Contact Us
+                                            </Button>
+                                        </Link>
+                                    </motion.div>
+                                </motion.div>
                             </div>
 
                             <div className="flex gap-8 pt-4">
@@ -237,13 +264,87 @@ export default function Articles() {
                         </div>
 
                         <div className="relative hidden md:block">
-                            <Image
-                                src="/placeholder.svg?height=400&width=400"
-                                alt="Gaming concept"
-                                width={400}
-                                height={400}
-                                className="object-contain"
-                            />
+                            <motion.div
+                                className="relative hidden md:block"
+                                initial={{ x: 100, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ duration: 0.7, delay: 0.5 }}>
+
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                    >
+                                        <div className="relative w-[400px] h-[400px] flex items-center justify-center">
+                                            <Image
+                                                src="/images/game-controller-logo.png"
+                                                alt="Game Controller Logo"
+                                                width={350}
+                                                height={350}
+                                                className="object-contain z-10 relative"
+                                            />
+                                            <motion.div
+                                                className="absolute inset-0 rounded-full bg-game-cyan/20 blur-xl"
+                                                animate={{
+                                                    scale: [1, 1.05, 1],
+                                                    opacity: [0.5, 0.3, 0.5],
+                                                }}
+                                                transition={{
+                                                    duration: 3,
+                                                    repeat: Number.POSITIVE_INFINITY,
+                                                    repeatType: "reverse",
+                                                }}
+                                            />
+                                            <motion.div
+                                                className="absolute inset-0 rounded-full bg-game-pink/20 blur-xl"
+                                                animate={{
+                                                    scale: [1.05, 1, 1.05],
+                                                    opacity: [0.3, 0.5, 0.3],
+                                                }}
+                                                transition={{
+                                                    duration: 4,
+                                                    repeat: Number.POSITIVE_INFINITY,
+                                                    repeatType: "reverse",
+                                                }}
+                                            />
+                                        </div>
+                                        <motion.div
+                                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full"
+                                            animate={{
+                                                rotate: 360,
+                                                scale: [1, 1.02, 1],
+                                            }}
+                                            transition={{
+                                                rotate: {
+                                                    duration: 20,
+                                                    repeat: Number.POSITIVE_INFINITY,
+                                                    ease: "linear",
+                                                },
+                                                scale: {
+                                                    duration: 3,
+                                                    repeat: Number.POSITIVE_INFINITY,
+                                                    repeatType: "reverse",
+                                                },
+                                            }}
+                                        >
+                                            {dotPositions.map((pos, i) => (
+                                                <motion.div
+                                                    key={i}
+                                                    className="absolute w-2 h-2 rounded-full bg-game-cyan"
+                                                    style={{ top: pos.top, left: pos.left }}
+                                                    animate={{
+                                                        opacity: [0.2, 1, 0.2],
+                                                        scale: [0.8, 1.2, 0.8],
+                                                    }}
+                                                    transition={{
+                                                        duration: 2,
+                                                        repeat: Number.POSITIVE_INFINITY,
+                                                        delay: i * 0.3,
+                                                    }}
+                                                />
+                                            ))}
+                                        </motion.div>
+                                    </motion.div>
+                                </AnimatePresence>
+                            </motion.div>
                         </div>
                     </div>
                 </div>
@@ -489,7 +590,7 @@ export default function Articles() {
                 </div>
             </section>
 
-            {/* Newsletter Section */}
+            {/* Newsletter Section 
             <section className="bg-game-purple py-12">
                 <div className="max-w-3xl mx-auto px-6 text-center">
                     <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Stay Updated with Gaming News</h2>
@@ -509,31 +610,7 @@ export default function Articles() {
                         By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.
                     </p>
                 </div>
-            </section>
-
-            {/* Community Stats Section */}
-            <section className="bg-game-dark py-12 border-t border-gray-800">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                        <div className="p-6">
-                            <p className="text-3xl md:text-4xl font-bold text-game-cyan">1.2M+</p>
-                            <p className="text-gray-400 mt-2">Community Members</p>
-                        </div>
-                        <div className="p-6">
-                            <p className="text-3xl md:text-4xl font-bold text-game-cyan">10K+</p>
-                            <p className="text-gray-400 mt-2">Game Reviews</p>
-                        </div>
-                        <div className="p-6">
-                            <p className="text-3xl md:text-4xl font-bold text-game-cyan">5K+</p>
-                            <p className="text-gray-400 mt-2">Gaming Guides</p>
-                        </div>
-                        <div className="p-6">
-                            <p className="text-3xl md:text-4xl font-bold text-game-cyan">24/7</p>
-                            <p className="text-gray-400 mt-2">Support</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            </section>*/}
 
             {/* Footer */}
             <footer className="bg-game-dark py-8 mt-auto border-t border-gray-800">
@@ -541,22 +618,27 @@ export default function Articles() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Contact Info */}
                         <div className="space-y-4">
-                            <div className="flex items-center gap-2">
+                            <div>
+                                <Link href="/" className="flex items-center gap-2 mb-4">
+                                    <Image
+                                        src="/images/logo.png"
+                                        alt="Game Tested Tech Logo"
+                                        width={40}
+                                        height={40}
+                                        className="object-contain"
+                                    />
+                                    <span className="text-game-white text-sm font-bold">
+                                        GAME<br />TESTED TECH
+                                    </span>
+                                </Link>
+                                <p className="text-gray-400 text-sm">
+                                    Your trusted source for honest gaming hardware reviews, guides, and tech insights.
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-2 pt-4">
                                 <span className="text-gray-400">✉</span>
                                 <a href="mailto:contact@gametestedtech.com" className="text-gray-400 hover:text-white">
                                     contact@gametestedtech.com
-                                </a>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-gray-400">✉</span>
-                                <a href="mailto:marketing@gametestedtech.com" className="text-gray-400 hover:text-white">
-                                    marketing@gametestedtech.com
-                                </a>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-gray-400">✉</span>
-                                <a href="mailto:partnerships@gametestedtech.com" className="text-gray-400 hover:text-white">
-                                    partnerships@gametestedtech.com
                                 </a>
                             </div>
                             <div className="flex items-center gap-2">
@@ -569,28 +651,24 @@ export default function Articles() {
 
                         {/* Navigation Links */}
                         <div className="space-y-4">
+                            <div className="text-white font-bold mb-4">Quick Links</div>
                             <Link href="/" className="block text-gray-400 hover:text-white">
-                                Inicio
+                                Home
                             </Link>
                             <Link href="/articles" className="block text-gray-400 hover:text-white">
-                                Artículos
+                                Articles
                             </Link>
                             <Link href="/about" className="block text-gray-400 hover:text-white">
-                                About
+                                About Us
                             </Link>
                             <Link href="/contact" className="block text-gray-400 hover:text-white">
                                 Contact
-                            </Link>
-                            <Link href="/legal" className="block text-gray-400 hover:text-white">
-                                Legal Notice
-                            </Link>
-                            <Link href="/legal/privacy" className="block text-gray-400 hover:text-white">
-                                Privacy Policy
                             </Link>
                         </div>
 
                         {/* Social Media Links */}
                         <div className="space-y-4">
+                            <div className="text-white font-bold mb-4">Follow Us</div>
                             <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
                                 <Youtube className="h-5 w-5" />
                                 <span>Youtube</span>
@@ -612,6 +690,11 @@ export default function Articles() {
                                 <span>Facebook</span>
                             </a>
                         </div>
+                    </div>
+                    <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
+                        <p>
+                            © {new Date().getFullYear()} Game Tested Tech. All rights reserved.
+                        </p>
                     </div>
                 </div>
             </footer>
