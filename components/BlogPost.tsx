@@ -91,8 +91,6 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
     const safeHtml = convertMarkdownToHTML(article.content || "")
     const { htmlWithIds, toc: tableOfContents } = processHtmlAndExtractTOC(safeHtml);
 
-
-
     const post = {
         ...article,
         likes: article.likes ?? 0,
@@ -208,7 +206,7 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                 });
         }
     }, [article.id]);
-    
+
     return (
         <div className="min-h-screen bg-[#0a0a14] text-gray-200">
             <Header />

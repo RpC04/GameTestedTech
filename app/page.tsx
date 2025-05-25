@@ -47,6 +47,7 @@ export default function Home() {
               ),
               category:categories ( id, name )
         `)
+        .eq('status', 'published')
         .order("created_at", { ascending: false })
         .limit(6)
 
