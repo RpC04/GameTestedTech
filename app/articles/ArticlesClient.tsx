@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import DatePicker from "react-datepicker"
+import DatePicker from "react-datepicker" 
 import { Search, Youtube, Instagram, Twitter, DiscIcon as Discord, Facebook, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -356,9 +356,6 @@ export default function Articles() {
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex justify-between items-center mb-8">
                         <h2 className="text-2xl font-bold text-white">Featured</h2>
-                        <Link href="/games" className="text-game-cyan hover:text-white flex items-center gap-1 transition-colors">
-                            View all <ArrowRight className="h-4 w-4" />
-                        </Link>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -500,6 +497,7 @@ export default function Articles() {
                                                                 }}
                                                                 className="appearance-none w-4 h-4 border-2 border-gray-500 rounded-sm bg-[#1a1a1a] checked:bg-[#9d8462] checked:border-[#9d8462] focus:outline-none transition-all duration-150"
                                                             />
+                                                            <span className="text-xl">{category.icon}</span>
                                                             {category.name}
                                                         </label>
                                                     ))}
