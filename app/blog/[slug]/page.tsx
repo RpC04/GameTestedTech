@@ -20,7 +20,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const cookieStore = cookies()
   const supabase = createServerComponentClient({ cookies: () => cookieStore })
 
-  // --- 1. Traer el artículo principal ---
+  // 1. Trae el artículo principal
   const { data: article, error } = await supabase
     .from("articles")
     .select(`
@@ -37,55 +37,57 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     return <div className="text-white p-8">Article not found.</div>
   }
 
-  // --- 2. Traer los tags del artículo principal ---
-  const { data: tags } = await supabase
-    .from("tags")
-    .select("name")
-    .in("id", article.tags || [])
-
-  // --- 3. OBTENER ARTÍCULOS RELACIONADOS ---
-  const tagIds = Array.isArray(article.tags) ? article.tags : [];
-
-  let articlesByTags: RelatedArticle[] = [];
-if (tagIds.length) {
-  // 1. IDs de artículos relacionados por tags
-  const { data: tagArticles } = await supabase
+  // 2. Busca los tags (ids)
+  const { data: articleTags } = await supabase
     .from('article_tags')
-    .select('article_id')
-    .in('tag_id', tagIds);
+    .select('tag_id')
+    .eq('article_id', article.id)
 
-  const articleIds = (tagArticles || [])
-    .map(r => r.article_id)
-    .filter(id => id && id !== article.id);
+  const tagIds = (articleTags || []).map(t => t.tag_id)
 
-  // 2. Ahora, filtra solo los publicados (status = 'published')
-  if (articleIds.length) {
-    const { data: articles } = await supabase
-      .from('articles')
-      .select('id, title, slug, excerpt, featured_image, category_id, author_id, created_at, status')
-      .in('id', articleIds)
-      .eq('status', 'published');
-    articlesByTags = articles || [];
+  // 3. Busca los nombres de los tags
+  let tagNames: string[] = []
+  if (tagIds.length > 0) {
+    const { data: tags } = await supabase
+      .from('tags')
+      .select('name')
+      .in('id', tagIds)
+    tagNames = tags?.map(t => t.name) || []
   }
-}
 
-
-
-
+  // 4. Busca artículos relacionados por categoría
   const { data: articlesByCategory } = await supabase
     .from('articles')
     .select('id, title, slug, excerpt, featured_image, category_id, author_id, created_at')
     .eq('category_id', article.category_id)
     .neq('id', article.id)
-    .eq('status', 'published');
+    .eq('status', 'published')
 
-  const articlesByTagsIds = articlesByTags.map(a => a.id);
-  const relatedArticles: RelatedArticle[] = [
-    ...articlesByTags,
-    ...((articlesByCategory || []).filter(a => !articlesByTagsIds.includes(a.id))),
-  ].slice(0, 6);
+  // 5. Busca artículos relacionados por tags
+  let articlesByTags: RelatedArticle[] = []
+  if (tagIds.length > 0) {
+    const { data: articleTagRows } = await supabase
+      .from('article_tags')
+      .select('article_id')
+      .in('tag_id', tagIds)
+      .neq('article_id', article.id)
+    const relatedIds = [...new Set((articleTagRows || []).map(row => row.article_id))]
+    if (relatedIds.length) {
+      const { data: articles } = await supabase
+        .from('articles')
+        .select('id, title, slug, excerpt, featured_image, category_id, author_id, created_at')
+        .in('id', relatedIds)
+        .eq('status', 'published')
+      articlesByTags = articles || []
+    }
+  }
 
-  // --- 4. RETURN: pasa relatedArticles como prop ---
+  // 6. Junta, filtra duplicados y limita
+  const allArticles = [...(articlesByCategory || []), ...articlesByTags]
+  const uniqueArticles: Record<number, RelatedArticle> = {}
+  allArticles.forEach(a => { uniqueArticles[a.id] = a })
+  const relatedArticles = Object.values(uniqueArticles).slice(0, 6)
+
   return (
     <BlogPost
       article={{
@@ -100,7 +102,7 @@ if (tagIds.length) {
           followers: 0
         },
         categories: [article.categories?.name ?? "Uncategorized"],
-        tags: tags?.map(tag => tag.name) || [],
+        tags: tagNames,
         comments: article.comments?.length ?? 0
       }}
       relatedArticles={relatedArticles}
