@@ -109,6 +109,7 @@ export default function Articles() {
             `)
                 .order("created_at", { ascending: false })
 
+            query = query.eq("status", "published");
             // Filtro por categorías (asume que tienes category_id en la tabla articles)
             if (selectedCategories.length > 0) {
                 query = query.in("category_id", selectedCategories)

@@ -146,19 +146,19 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
       }
 
       if (isNewArticle) {
-        // 🔐 Obtener usuario autenticado
+        // Obtener usuario autenticado
         const {
           data: { user },
           error: userError,
         } = await supabase.auth.getUser()
         if (userError || !user) throw new Error("No se pudo obtener el usuario.")
 
-        // 🔁 Buscar el autor correspondiente (relacionado con ese usuario)
+        // Buscar el autor correspondiente (relacionado con ese usuario)
         const { data: author, error: authorError } = await supabase.from("authors").select("id").limit(1).single()
 
         if (authorError || !author) throw new Error("No se encontró un autor vinculado al usuario.")
 
-        // 📝 Insertar el artículo con author_id incluido
+        // Insertar el artículo con author_id incluido
         const { data, error } = await supabase
           .from("articles")
           .insert([
@@ -182,6 +182,8 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
           const { error: tagError } = await supabase.from("article_tags").insert(tagInserts)
           if (tagError) throw tagError
         }
+        router.push(`/admin/articles/${newArticleId}`)
+        return
       } else {
         const article_id = Number.parseInt(articleId)
         if (Number.isNaN(article_id)) throw new Error("Invalid article ID")
@@ -282,29 +284,35 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
           <button onClick={() => router.push("/admin/articles")} className="text-gray-400 hover:text-white">
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <h1 className="text-2xl font-bold text-white">{isNewArticle ? "Create New Article" : "Edit Article"}</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-white">{isNewArticle ? "Create New Article" : "Edit Article"}</h1>
+            <span className={`
+                ml-3 px-3 py-1 rounded-full text-xs font-semibold 
+                ${article.status === "draft" ? "bg-yellow-900/30 text-yellow-400" : ""}
+                ${article.status === "published" ? "bg-green-900/30 text-green-400" : ""}
+                ${article.status === "archived" ? "bg-gray-900/30 text-gray-400" : ""}
+              `}>
+              {article.status.charAt(0).toUpperCase() + article.status.slice(1)}
+            </span>
+          </div>
         </div>
 
+
         <div className="flex items-center gap-2">
+          {/* Preview/Edit toggle */}
           <Button
             variant="outline"
             size="sm"
             onClick={() => setActiveTab(activeTab === "editor" ? "preview" : "editor")}
-            className="flex items-center gap-1"
+            className={`flex items-center gap-1
+      ${activeTab === "editor"
+                ? "bg-white text-black border border-gray-300 hover:bg-gray-100"
+                : "bg-transparent text-white border border-white hover:bg-white hover:text-black"}`}
           >
-            {activeTab === "editor" ? (
-              <>
-                <Eye className="h-4 w-4" />
-                Preview
-              </>
-            ) : (
-              <>
-                <EyeOff className="h-4 w-4" />
-                Edit
-              </>
-            )}
+            {activeTab === "editor" ? (<><Eye className="h-4 w-4" />Preview</>) : (<><EyeOff className="h-4 w-4" />Edit</>)}
           </Button>
 
+          {/* Delete */}
           {!isNewArticle && (
             <Button variant="destructive" size="sm" onClick={handleDelete} className="flex items-center gap-1">
               <Trash2 className="h-4 w-4" />
@@ -312,27 +320,56 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
             </Button>
           )}
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleSave("draft")}
-            disabled={isSaving}
-            className="flex items-center gap-1"
-          >
-            <Save className="h-4 w-4" />
-            Save Draft
-          </Button>
+          {/* Condiciones por status */}
+          {article.status === "draft" && (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleSave("draft")}
+                disabled={isSaving}
+                className="flex items-center gap-1 bg-white text-black border border-gray-300 hover:bg-gray-100"
+              >
+                <Save className="h-4 w-4" />
+                Save Draft
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => handleSave("published")}
+                disabled={isSaving}
+                className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700"
+              >
+                <Save className="h-4 w-4" />
+                Publish
+              </Button>
+            </>
+          )}
 
-          <Button
-            size="sm"
-            onClick={() => handleSave("published")}
-            disabled={isSaving}
-            className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700"
-          >
-            <Save className="h-4 w-4" />
-            {article.status === "published" ? "Update" : "Publish"}
-          </Button>
+          {article.status === "published" && (
+            <Button
+              size="sm"
+              onClick={() => handleSave("published")}
+              disabled={isSaving}
+              className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700"
+            >
+              <Save className="h-4 w-4" />
+              Update
+            </Button>
+          )}
+
+          {article.status === "archived" && (
+            <Button
+              size="sm"
+              onClick={() => handleSave("archived")}
+              disabled={isSaving}
+              className="flex items-center gap-1 bg-gray-600 hover:bg-gray-700"
+            >
+              <Save className="h-4 w-4" />
+              Update Archived
+            </Button>
+          )}
         </div>
+
       </div>
 
       {error && (
@@ -488,15 +525,6 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
 
             {/* ...dentro de la sección Featured Image... */}
             <div className="space-y-4">
-              <input
-                type="text"
-                id="featured_image"
-                name="featured_image"
-                value={article.featured_image ?? ""}
-                onChange={handleChange}
-                className="w-full bg-slate-950 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Image URL"
-              />
 
               {/* Input de archivo oculto */}
               <input
@@ -525,6 +553,16 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
                       ; (e.target as HTMLImageElement).src = "/placeholder.svg?height=200&width=400"
                     }}
                   />
+                  {/* Botón para quitar imagen (opcional) */}
+                  <button
+                    type="button"
+                    className="absolute top-2 right-2 bg-red-700 hover:bg-red-800 text-white text-xs px-2 py-1 rounded"
+                    onClick={() =>
+                      setArticle(prev => ({ ...prev, featured_image: "" }))
+                    }
+                  >
+                    Remove
+                  </button>
                 </div>
               )}
             </div>
