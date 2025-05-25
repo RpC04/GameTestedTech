@@ -30,6 +30,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       comments (id)
     `)
     .eq("slug", slug)
+    .eq("status", "published")
     .single()
 
   if (error || !article) {
@@ -46,22 +47,37 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const tagIds = Array.isArray(article.tags) ? article.tags : [];
 
   let articlesByTags: RelatedArticle[] = [];
-  if (tagIds.length) {
-    const { data: tagArticles } = await supabase
-      .from('article_tags')
-      .select('article_id, articles:article_id(id, title, slug, excerpt, featured_image, category_id, author_id, created_at)')
-      .in('tag_id', tagIds);
-    articlesByTags = (tagArticles || [])
-      .map(r => r.articles)
-      .flat()
-      .filter(a => a && a.id !== article.id);
+if (tagIds.length) {
+  // 1. IDs de artículos relacionados por tags
+  const { data: tagArticles } = await supabase
+    .from('article_tags')
+    .select('article_id')
+    .in('tag_id', tagIds);
+
+  const articleIds = (tagArticles || [])
+    .map(r => r.article_id)
+    .filter(id => id && id !== article.id);
+
+  // 2. Ahora, filtra solo los publicados (status = 'published')
+  if (articleIds.length) {
+    const { data: articles } = await supabase
+      .from('articles')
+      .select('id, title, slug, excerpt, featured_image, category_id, author_id, created_at, status')
+      .in('id', articleIds)
+      .eq('status', 'published');
+    articlesByTags = articles || [];
   }
+}
+
+
+
 
   const { data: articlesByCategory } = await supabase
     .from('articles')
     .select('id, title, slug, excerpt, featured_image, category_id, author_id, created_at')
     .eq('category_id', article.category_id)
-    .neq('id', article.id);
+    .neq('id', article.id)
+    .eq('status', 'published');
 
   const articlesByTagsIds = articlesByTags.map(a => a.id);
   const relatedArticles: RelatedArticle[] = [
