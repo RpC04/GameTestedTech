@@ -1,4 +1,4 @@
-import ArticlesClient from "./ArticlesClient"
+import ArticlesClient from "./articles-client"
 import "react-datepicker/dist/react-datepicker.css"
 
 export const metadata = {

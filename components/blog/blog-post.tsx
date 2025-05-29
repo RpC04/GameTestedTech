@@ -11,6 +11,7 @@ import { Heart, Eye, Send, Clock } from "lucide-react"
 import { Header } from "@/components/header"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Twitter, Linkedin, Instagram, Facebook, Youtube, DiscIcon as Discord } from "lucide-react"
+import Footer from "../footer";
 
 const supabase = createClientComponentClient()
 
@@ -440,80 +441,7 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
             </div>
 
             {/* Footer */}
-            <footer className="bg-game-dark py-8 mt-auto border-t border-gray-800">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {/* Contact Info */}
-                        <div className="space-y-4">
-                            <Link href="/" className="flex items-center gap-2 mb-4">
-                                <Image
-                                    src="/images/logo.png"
-                                    alt="Game Tested Tech Logo"
-                                    width={40}
-                                    height={40}
-                                    className="object-contain"
-                                />
-                                <span className="text-game-white text-sm font-bold">
-                                    GAME
-                                    <br />
-                                    TESTED TECH
-                                </span>
-                            </Link>
-                            <p className="text-gray-400 text-sm">
-                                Your trusted source for honest gaming hardware reviews, guides, and tech insights.
-                            </p>
-                        </div>
-
-                        {/* Navigation Links */}
-                        <div className="space-y-4">
-                            <h3 className="text-white font-bold mb-4">Quick Links</h3>
-                            <Link href="/" className="block text-gray-400 hover:text-white transition-colors">
-                                Home
-                            </Link>
-                            <Link href="/articles" className="block text-gray-400 hover:text-white transition-colors">
-                                Articles
-                            </Link>
-                            <Link href="/about" className="block text-gray-400 hover:text-white transition-colors">
-                                About Us
-                            </Link>
-                            <Link href="/contact" className="block text-gray-400 hover:text-white transition-colors">
-                                Contact
-                            </Link>
-                            <Link href="/legal/privacy" className="block text-gray-400 hover:text-white transition-colors">
-                                Privacy Policy
-                            </Link>
-                        </div>
-
-                        {/* Social Media Links */}
-                        <div className="space-y-4">
-                            <div className="text-white font-bold mb-4">Follow Us</div>
-                            <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                                <Youtube className="h-5 w-5" />
-                                <span>Youtube</span>
-                            </a>
-                            <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                                <Instagram className="h-5 w-5" />
-                                <span>Instagram</span>
-                            </a>
-                            <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                                <Twitter className="h-5 w-5" />
-                                <span>Twitter</span>
-                            </a>
-                            <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                                <Discord className="h-5 w-5" />
-                                <span>Discord</span>
-                            </a>
-                            <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                                <Facebook className="h-5 w-5" />
-                                <span>Facebook</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
-                        <p>© {new Date().getFullYear()} Game Tested Tech. All rights reserved.</p>
-                    </div>
-                </div>
-            </footer>
+            <Footer />
         </div>
     )
 }

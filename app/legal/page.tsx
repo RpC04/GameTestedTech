@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import Footer from "@/components/footer"
 
 const ContactPage = () => {
   const [formState, setFormState] = useState({
@@ -743,93 +744,7 @@ const ContactPage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-game-dark py-8 mt-auto border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Contact Info */}
-            <div className="space-y-4">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <Image
-                  src="/images/logo.png"
-                  alt="Game Tested Tech Logo"
-                  width={40}
-                  height={40}
-                  className="object-contain"
-                />
-                <span className="text-game-white text-sm font-bold">
-                  GAME
-                  <br />
-                  TESTED TECH
-                </span>
-              </Link>
-              <p className="text-gray-400 text-sm">
-                Your trusted source for honest gaming hardware reviews, guides, and tech insights.
-              </p>
-              <div className="flex items-center gap-2 pt-4">
-                <span className="text-gray-400">✉</span>
-                <a
-                  href="mailto:contact@gametestedtech.com"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  contact@gametestedtech.com
-                </a>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-gray-400">📞</span>
-                <a href="tel:+11223456789" className="text-gray-400 hover:text-white transition-colors">
-                  +1-1223-456-7890
-                </a>
-              </div>
-            </div>
-
-            {/* Navigation Links */}
-            <div className="space-y-4">
-              <h3 className="text-white font-bold mb-4">Quick Links</h3>
-              <Link href="/" className="block text-gray-400 hover:text-white transition-colors">
-                Home
-              </Link>
-              <Link href="/articles" className="block text-gray-400 hover:text-white transition-colors">
-                Articles
-              </Link>
-              <Link href="/categories" className="block text-gray-400 hover:text-white transition-colors">
-                Categories
-              </Link>
-              <Link href="/about" className="block text-gray-400 hover:text-white transition-colors">
-                About Us
-              </Link>
-              <Link href="/contact" className="block text-gray-400 hover:text-white transition-colors">
-                Contact
-              </Link>
-              <Link href="/privacy" className="block text-gray-400 hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-            </div>
-
-            {/* Social Media Links */}
-            <div className="space-y-4">
-              <h3 className="text-white font-bold mb-4">Follow Us</h3>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Youtube
-              </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Instagram
-              </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Twitter
-              </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Discord
-              </a>
-              <a href="#" className="block text-gray-400 hover:text-white transition-colors">
-                Facebook
-              </a>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
-            <p>© {new Date().getFullYear()} Game Tested Tech. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

@@ -26,15 +26,10 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import type { RichTextEditorProps } from "@/types/article"
 
 // Crear una instancia de lowlight con los lenguajes comunes
 const lowlight = createLowlight(common)
-
-interface RichTextEditorProps {
-  content: string
-  onChange: (content: string) => void
-  placeholder?: string
-}
 
 export default function RichTextEditor({
   content,

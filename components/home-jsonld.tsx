@@ -1,13 +1,5 @@
 import type { Article, WithContext } from "schema-dts"
-
-interface HomeJsonLdProps {
-  articles: {
-    title: string
-    description: string
-    date: string
-    author: string
-  }[]
-}
+import type { HomeJsonLdProps } from "@/types/article"
 
 export function HomeJsonLd({ articles }: HomeJsonLdProps) {
   // Create structured data for the organization
