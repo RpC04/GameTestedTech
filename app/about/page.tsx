@@ -3,9 +3,8 @@ import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ChevronDown, ChevronUp, Mail, Phone, MapPin, ExternalLink } from "lucide-react"
+import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react"
 import { Header } from "@/components/header"
-import { Button } from "@/components/ui/button"
 import { Twitter, Linkedin, Instagram, Facebook, Youtube, DiscIcon as Discord } from "lucide-react"
 
 export default function AboutPage() {

@@ -35,6 +35,38 @@ export interface Author {
     updated_at: string
 }
 
+export interface HomeJsonLdProps {
+    articles: {
+        title: string
+        description: string
+        date: string
+        author: string
+    }[]
+}
+
+export interface HorizontalArticleCardProps {
+    article: any
+    reverse?: boolean
+    className?: string
+}
+
+export interface RichTextEditorProps {
+    content: string
+    onChange: (content: string) => void
+    placeholder?: string
+}
+
+export interface RelatedArticle {
+    id: any
+    title: any
+    slug: any
+    excerpt: any
+    featured_image: any
+    category_id: any
+    author_id: any
+    created_at: any
+}
+
 export interface Category {
     id: number
     name: string
