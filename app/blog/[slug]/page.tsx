@@ -1,19 +1,9 @@
 import { cookies } from "next/headers"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
-import BlogPost from "@/components/BlogPost"
+import BlogPost from "@/components/blog/blog-post"
+import type { RelatedArticle } from "@/types/article"
 
 export const dynamic = "force-dynamic"
-
-export interface RelatedArticle {
-  id: any
-  title: any
-  slug: any
-  excerpt: any
-  featured_image: any
-  category_id: any
-  author_id: any
-  created_at: any
-}
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params

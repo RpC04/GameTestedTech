@@ -1,12 +1,6 @@
-// components/HorizontalArticleCard.tsx
 import Image from "next/image"
 import Link from "next/link"
-
-interface HorizontalArticleCardProps {
-  article: any
-  reverse?: boolean
-  className?: string
-}
+import type { HorizontalArticleCardProps } from "@/types/article"
 
 export function HorizontalArticleCard({
   article,

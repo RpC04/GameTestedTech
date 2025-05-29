@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Search } from "lucide-react"
+import ArticlesDropdown from "@/components/articles/articles-dropdown";
 
 export function Header() {
   return (
@@ -13,6 +13,7 @@ export function Header() {
         backgroundRepeat: "no-repeat",
       }}
     >
+      {/* Overlay */}
       <div className="bg-black/50 py-4 px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-8">
@@ -45,9 +46,9 @@ export function Header() {
             <Link href="/" className="text-game-white hover:text-game-cyan transition">
               Home
             </Link>
-            <Link href="/articles" className="text-game-white hover:text-game-cyan transition">
-              Articles
-            </Link> 
+            <div className="relative">
+              <ArticlesDropdown />
+            </div>
             <Link href="/about" className="text-game-white hover:text-game-cyan transition">
               About Us
             </Link>
