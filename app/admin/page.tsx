@@ -3,7 +3,6 @@ import { useState, useEffect } from "react"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { FileText, Tag, Users, Eye, MessageSquare, TrendingUp, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
-import SetupGuide from "./setup-guide"
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -79,11 +78,6 @@ export default function AdminDashboard() {
 
     fetchDashboardData()
   }, [supabase, isMissingEnvVars])
-
-  // Si no está configurado, mostrar la guía de configuración
-  if (!isConfigured) {
-    return <SetupGuide />
-  }
 
   // Resto del código sin cambios...
 
