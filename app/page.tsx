@@ -295,7 +295,7 @@ export default function Home() {
               <motion.div className="flex gap-4" variants={itemVariants}>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link href="/articles">
-                    <Button className="bg-[#9d8462] hover:bg-[#9d8462] text-white rounded-md transition-all duration-300 border-0">
+                    <Button className="bg-[#ff6b35] hover:bg-[#ff8c5a] text-white rounded-md transition-all duration-300 border-0">
                       Explore Now
                     </Button>
                   </Link>
@@ -303,8 +303,7 @@ export default function Home() {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link href="/contact">
                     <Button variant="outline"
-                      className="bg-transparent hover:bg-transparent border-2 border-[#9d8462] hover:border-[#9d8462]
-                    text-white hover:text-white rounded-md transition-all duration-300">
+                      className="bg-transparent border border-gray-600 hover:border-white text-white px-6 py-3 rounded-md transition-all transform hover:scale-105">
                       Contact Us
                     </Button>
                   </Link>
@@ -610,10 +609,21 @@ export default function Home() {
             variants={container}
           >
             {stats.map((stat, i) => (
-              <motion.div key={i} className="p-6" variants={item}>
-                <p className="text-3xl md:text-4xl font-bold text-game-cyan">{stat.value}</p>
-                <p className="text-gray-400 mt-2">{stat.label}</p>
-              </motion.div>
+                <motion.div key={i} className="p-6" variants={item}>
+                  <p
+                      className={
+                          "text-3xl md:text-4xl font-bold " +
+                          (i === 0
+                              ? "text-white"
+                              : i === 2
+                                  ? "text-[#ff6b35]"
+                                  : "text-game-cyan")
+                      }
+                  >
+                    {stat.value}
+                  </p>
+                  <p className="text-gray-400 mt-2">{stat.label}</p>
+                </motion.div>
             ))}
           </motion.div>
         </div>
