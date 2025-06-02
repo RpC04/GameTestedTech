@@ -114,16 +114,6 @@ export default function Home() {
       subtitle: "Where Gaming Meets Innovation. Tech for Gamers, By Gamers",
       image: "/images/game-controller-logo.png",
     },
-    {
-      title: "Discover the Latest Gaming Tech",
-      subtitle: "Stay ahead with cutting-edge reviews and insights",
-      image: "/images/game-controller-logo.png",
-    },
-    {
-      title: "Join Our Gaming Community",
-      subtitle: "Connect with fellow gamers and tech enthusiasts",
-      image: "/images/game-controller-logo.png",
-    },
   ]
 
   // Variantes de animación para Framer Motion
@@ -165,30 +155,16 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-game-dark">
+    <div className="min-h-screen flex flex-col bg-[#0f0f23]">
       {/* Header completo con imagen de fondo */}
       <div className="relative">
         {/* Imagen de fondo para todo el header con efecto parallax */}
-        <motion.div
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          initial={{ scale: 1.1 }}
-          animate={{ scale: isLoaded ? 1 : 1.1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-        >
-          <img src="/images/cyberpunk-bg.png" alt="Cyberpunk background" className="w-full h-full object-cover" />
-          <motion.div
-            className="absolute inset-0 bg-black/30"
-            initial={{ opacity: 0.5 }}
-            animate={{ opacity: 0.3 }}
-            transition={{ duration: 1.2 }}
-          ></motion.div>
-        </motion.div>
 
         {/* Navbar */}
         <motion.div
-          className="relative z-50 border-b border-gray-800"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          className="relative z-50 border-b border-gray-800 bg-[#0f0f23]"
+          initial={{  opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <div className="max-w-7xl mx-auto py-4 px-6">
@@ -265,7 +241,29 @@ export default function Home() {
         </motion.div>
 
         {/* Hero Section - Con slider animado */}
-        <div className="relative z-10 py-16 overflow-hidden">
+        <div className="relative w-full bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23] overflow-hidden">
+          {/* Decorative blobs/fondo */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-full opacity-10">
+              <div className="absolute top-10 left-10 w-40 h-40 rounded-full bg-[#ff6b35] blur-3xl"></div>
+              <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-[#8fc9ff] blur-3xl"></div>
+            </div>
+          </div>
+          <motion.div
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              initial={{ scale: 1.1 }}
+              animate={{ scale: isLoaded ? 1 : 1.1 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+          >
+
+            <motion.div
+                className="absolute inset-0 bg-black/30"
+                initial={{ opacity: 0.5 }}
+                animate={{ opacity: 0.3 }}
+                transition={{ duration: 1.2 }}
+            ></motion.div>
+          </motion.div>
+          <div className="relative z-10 py-16 overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
             <motion.div
               className="space-y-6"
@@ -286,10 +284,10 @@ export default function Home() {
                   className="space-y-2"
                 >
                   <motion.h1 className="text-4xl md:text-5xl font-bold text-game-white" variants={itemVariants}>
-                    {heroSlides[activeSlide].title}
+                    {heroSlides[0].title}
                   </motion.h1>
                   <motion.p className="text-gray-300 mt-4" variants={itemVariants}>
-                    {heroSlides[activeSlide].subtitle}
+                    {heroSlides[0].subtitle}
                   </motion.p>
                 </motion.div>
               </AnimatePresence>
@@ -339,25 +337,6 @@ export default function Home() {
                   <p className="text-sm text-gray-400">Categories</p>
                 </motion.div>
               </motion.div>
-
-              <motion.div className="flex gap-2 pt-4" variants={itemVariants}>
-                <motion.button
-                  className="w-8 h-8 rounded-full bg-white flex items-center justify-center"
-                  whileHover={{ scale: 1.1, backgroundColor: "#8fc9ff" }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={prevSlide}
-                >
-                  <ChevronLeft className="h-4 w-4 text-black" />
-                </motion.button>
-                <motion.button
-                  className="w-8 h-8 rounded-full bg-white flex items-center justify-center"
-                  whileHover={{ scale: 1.1, backgroundColor: "#8fc9ff" }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={nextSlide}
-                >
-                  <ChevronRight className="h-4 w-4 text-black" />
-                </motion.button>
-              </motion.div>
             </motion.div>
 
             <motion.div
@@ -383,30 +362,7 @@ export default function Home() {
                       height={350}
                       className="object-contain z-10 relative"
                     />
-                    <motion.div
-                      className="absolute inset-0 rounded-full bg-game-cyan/20 blur-xl"
-                      animate={{
-                        scale: [1, 1.05, 1],
-                        opacity: [0.5, 0.3, 0.5],
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Number.POSITIVE_INFINITY,
-                        repeatType: "reverse",
-                      }}
-                    />
-                    <motion.div
-                      className="absolute inset-0 rounded-full bg-game-pink/20 blur-xl"
-                      animate={{
-                        scale: [1.05, 1, 1.05],
-                        opacity: [0.3, 0.5, 0.3],
-                      }}
-                      transition={{
-                        duration: 4,
-                        repeat: Number.POSITIVE_INFINITY,
-                        repeatType: "reverse",
-                      }}
-                    />
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full bg-blue-500/30 blur-2xl -z-10"></div>
                   </div>
                   <motion.div
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full"
@@ -448,58 +404,30 @@ export default function Home() {
               </AnimatePresence>
             </motion.div>
           </div>
+            <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#0a0a14] to-transparent"></div>
         </div>
-      </div>
-
-      {/* Text Banner  with animation for the move and blur effect*/}
-      <div className="relative py-8 overflow-hidden">
-        <div className="absolute inset-0 bg-game-dark"></div>
-        <div className="relative z-10 flex justify-center">
-          <motion.div
-            className="max-w-5xl w-[95%] mx-auto bg-gray-800/60 backdrop-blur-md rounded-lg py-6 px-8 text-center text-gray-200 overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1 }}
-          >
-            <motion.div
-              animate={{
-                x: [5, 0, 5],
-              }}
-              transition={{
-                duration: 20,
-                repeat: Number.POSITIVE_INFINITY,
-                repeatType: "reverse",
-              }}
-            >
-              <p className="text-base md:text-lg font-medium mb-2">
-                Game Tested Tech: Your Trusted Source for Honest Gaming Hardware Reviews & Recommendations
-              </p>
-              <p className="text-sm md:text-base text-gray-300">
-                Explore in-depth reviews and guides to optimize your gaming setups.
-              </p>
-            </motion.div>
-          </motion.div>
         </div>
       </div>
 
       {/* Main Blog Content Section with Tabs */}
-      <motion.section className="py-12 bg-[#0f0a1e]">
+      <motion.section className="py-12 bg-[#0a0a14]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-1">
             {/* Main Content - 3 columns */}
             <div className="lg:col-span-3">
-              {/* Tabs for different post categories */}
+              {/* Tabs for different post-categories */}
               <motion.div
-                className="flex border-b border-gray-700 mb-8"
+                className="flex mb-8"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
               >
                 <div
-                  className={`py-3 px-5 font-medium text-sm transition-colors ${activeTab === "recent"
-                    ? "text-game-cyan border-b-2 border-game-cyan"
-                    : "text-gray-400 hover:text-white"
+                  className={`py-3 px-5 font-medium text-2xl transition-colors ${
+                    activeTab === "recent"
+                    ? "text-game-cyan"
+                    : "text-gray-400"
                     }`}
                 >
                   Recent Posts
@@ -517,16 +445,15 @@ export default function Home() {
                     transition={{ duration: 0.3 }}
                   >
                     <div className="space-y-10">
-                      {/* 1. Artículo a la izquierda + 2 apilados a la derecha */}
-                      <ArticleCard article={latestArticles[0]} large className="w-full" />
-
                       <div className="grid md:grid-cols-2 gap-6 mt-6">
+                        <ArticleCard article={latestArticles[0]} />
                         <ArticleCard article={latestArticles[1]} />
-                        <ArticleCard article={latestArticles[2]} />
                       </div>
 
-                      {/* 2. Artículo horizontal */}
-                      <ArticleCard article={latestArticles[3]} large className="w-full" />
+                      <div className="grid md:grid-cols-2 gap-6 mt-6">
+                        <ArticleCard article={latestArticles[2]} />
+                        <ArticleCard article={latestArticles[3]} />
+                      </div>
 
                       {/* Blocks */}
                       <div className="space-y-12">
@@ -615,7 +542,6 @@ export default function Home() {
         </div>
       </motion.section>
 
-
       {/* Newsletter Section 
       <section className="py-16 bg-game-purple">
         <motion.div
@@ -672,7 +598,7 @@ export default function Home() {
       </section>*/}
       {/* Community Stats Section */}
       <motion.section
-        className="bg-game-dark py-12 border-t border-gray-800"
+        className="bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23] py-12 border-t border-gray-800"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
