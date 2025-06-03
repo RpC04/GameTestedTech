@@ -49,7 +49,7 @@ export default function FooterAnimated() {
                         <motion.div variants={itemVariants}>
                             <Link href="/" className="flex items-center gap-2 mb-4">
                                 <Image
-                                    src="/images/logo.png"
+                                    src="/images/KyleLogoNoText.png"
                                     alt="Game Tested Tech Logo"
                                     width={40}
                                     height={40}
