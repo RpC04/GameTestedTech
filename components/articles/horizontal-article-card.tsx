@@ -10,8 +10,8 @@ export function HorizontalArticleCard({
   if (!article) return null
 
   return (
-    <div className={`flex flex-col md:flex-row ${reverse ? "md:flex-row-reverse" : ""} gap-6 bg-[#1f0032] rounded-lg overflow-hidden ${className}`}>
-      {/* Imagen */}
+    <div className={`flex flex-col md:flex-row ${reverse ? "md:flex-row-reverse" : ""} gap-6 bg-[#1a1a2e] rounded-lg border border-gray-800 overflow-hidden ${className}`}>
+      {/* Image */}
       <div className="relative w-full md:w-[40%] h-[200px] md:h-auto min-h-[200px]">
         <Image
           src={article.featured_image || "/placeholder.svg"}
@@ -19,11 +19,16 @@ export function HorizontalArticleCard({
           fill
           className="object-cover"
         />
+        {article.category?.name && (
+            <div className="absolute top-2 left-2 bg-[#ff6b35] text-[#FFFFFF] text-xs font-semibold px-3 py-1 rounded-full text-center">
+              {article.category.name}
+            </div>
+        )}
       </div>
 
-      {/* Contenido */}
+      {/* Content */}
       <div className="flex-1 p-6 flex flex-col justify-center space-y-2">
-        <time dateTime={article.created_at} className="text-game-cyan text-xs">
+        <time dateTime={article.created_at} className="text-[#3b82f6] text-xs">
           {new Date(article.created_at).toLocaleDateString("en-US", {
             weekday: "long",
             year: "numeric",

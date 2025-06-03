@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 export function ArticleCard({ article, large = false, className = "" }) {
     if (!article) return null
     return (
-        <article className={`bg-[#1f0032] rounded-lg overflow-hidden ${className}`}>
+        <article className={`bg-[#1a1a2e] rounded-lg border border-gray-800 overflow-hidden ${className}`}>
             <div className={`relative w-full ${large ? "h-[400px]" : "h-[240px]"}`}>
                 <Image
                     src={article.featured_image || "/placeholder.svg"}
@@ -15,13 +15,13 @@ export function ArticleCard({ article, large = false, className = "" }) {
                     className="object-cover"
                 />
                 {article.category?.name && (
-                    <div className="absolute top-2 left-2 bg-[#FDF2FA] text-[#C11574] text-xs font-semibold px-3 py-1 rounded-full text-center">
+                    <div className="absolute top-2 left-2 bg-[#ff6b35] text-[#FFFFFF] text-xs font-semibold px-3 py-1 rounded-full text-center">
                         {article.category.name}
                     </div>
                 )}
             </div>
             <div className="p-4 space-y-2">
-                <time dateTime={article.created_at} className="text-game-cyan text-xs">
+                <time dateTime={article.created_at} className="text-[#3b82f6] text-xs">
                     {new Date(article.created_at).toLocaleDateString("en-US", {
                         weekday: "long",
                         year: "numeric",
@@ -43,7 +43,7 @@ export function ArticleCard({ article, large = false, className = "" }) {
                         <Link
                             key={idx}
                             href={`/articles?tag=${tag.name.toLowerCase().replace(/\s+/g, "-")}`}
-                            className="category-tag hover:bg-game-blue transition-colors"
+                            className="category-tag bg-game-blue transition-colors"
                         >
                             {tag.name}
                         </Link>
