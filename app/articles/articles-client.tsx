@@ -160,14 +160,9 @@ export default function Articles() {
 
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col bg-[#0f0f23]">
             {/* Complete header with background image */}
             <div className="relative">
-                {/* Imagen de fondo para todo el header */}
-                <div className="absolute inset-0 w-full h-full">
-                    <img src="/images/articlepage-background.png" alt="Article background" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-black/30"></div>
-                </div>
 
                 {/* Navbar */}
                 <div className="relative z-10 border-b border-gray-800">
@@ -218,12 +213,18 @@ export default function Articles() {
                 </div>
 
                 {/* Hero Section - Sin formas geométricas */}
-                <div className="relative z-10 py-16 overflow-hidden">
+                <div className="relative z-10 py-16 overflow-hidden bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23]">
+                    <div className="absolute inset-0 overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-full opacity-10">
+                            <div className="absolute top-10 left-10 w-40 h-40 rounded-full bg-[#ff6b35] blur-3xl"></div>
+                            <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-[#8fc9ff] blur-3xl"></div>
+                        </div>
+                    </div>
                     <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
                         <div className="space-y-6">
                             <div>
                                 <h1 className="text-4xl font-bold text-game-white">
-                                    Your Ultimate <span className="text-game-pink">Gaming</span> Resource
+                                    Your Ultimate <span className="text-[#ff6b35]">Gaming</span> Resource
                                 </h1>
                                 <p className="text-gray-300 mt-2">Discover the latest games, reviews, and gaming tech insights.</p>
                             </div>
@@ -273,7 +274,12 @@ export default function Articles() {
                                 transition={{ duration: 0.7, delay: 0.5 }}>
 
                                 <AnimatePresence mode="wait">
-                                    <motion.div
+                                    <motion.div 
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="relative"
                                     >
                                         <div className="relative w-[400px] h-[400px] flex items-center justify-center">
                                             <Image
@@ -283,30 +289,7 @@ export default function Articles() {
                                                 height={350}
                                                 className="object-contain z-10 relative"
                                             />
-                                            <motion.div
-                                                className="absolute inset-0 rounded-full bg-game-cyan/20 blur-xl"
-                                                animate={{
-                                                    scale: [1, 1.05, 1],
-                                                    opacity: [0.5, 0.3, 0.5],
-                                                }}
-                                                transition={{
-                                                    duration: 3,
-                                                    repeat: Number.POSITIVE_INFINITY,
-                                                    repeatType: "reverse",
-                                                }}
-                                            />
-                                            <motion.div
-                                                className="absolute inset-0 rounded-full bg-game-pink/20 blur-xl"
-                                                animate={{
-                                                    scale: [1.05, 1, 1.05],
-                                                    opacity: [0.3, 0.5, 0.3],
-                                                }}
-                                                transition={{
-                                                    duration: 4,
-                                                    repeat: Number.POSITIVE_INFINITY,
-                                                    repeatType: "reverse",
-                                                }}
-                                            />
+                                            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full bg-blue-500/30 blur-2xl -z-10"></div>
                                         </div>
                                         <motion.div
                                             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full"
@@ -353,7 +336,7 @@ export default function Articles() {
             </div>
 
             {/* Featured Games Section */}
-            <section className="bg-game-purple py-12">
+            <section className="bg-[#0a0a14] py-12">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex justify-between items-center mb-8">
                         <h2 className="text-2xl font-bold text-white">Featured</h2>
@@ -361,7 +344,7 @@ export default function Articles() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {featuredGames.map((game, index) => (
-                            <Card key={game.id} className="bg-[#1f0032] border-none overflow-hidden">
+                            <Card key={game.id} className="bg-[#0f0f23] border-none overflow-hidden">
                                 <div className="aspect-video relative">
                                     <Image
                                         src={game.featured_image || "/placeholder.svg"}
@@ -401,7 +384,7 @@ export default function Articles() {
             </section>
 
             {/* Latest Articles & Categories Section */}
-            <section className="bg-game-dark py-12">
+            <section className="bg-[#0a0a14] py-12">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                         {/* Latest Articles - 3 columns */}
@@ -409,7 +392,7 @@ export default function Articles() {
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                                 {latestArticles.map((article, index) => (
-                                    <article key={article.id} className="bg-[#1f0032] border-none overflow-hidden rounded-lg">
+                                    <article key={article.id} className="bg-[#0f0f23] border-none overflow-hidden rounded-lg">
                                         <div className="aspect-video relative">
                                             <Image
                                                 src={article.featured_image || "/placeholder.svg?height=200&width=300"}
@@ -467,7 +450,7 @@ export default function Articles() {
                         {/* Sidebar - Categories & Upcoming */}
                         <div className="lg:col-span-1 space-y-8">
                             {/*Categories */}
-                            <div className="bg-[#1f0032] rounded-lg p-6">
+                            <div className="bg-[#0f0f23] rounded-lg p-6">
                                 <h3 className="text-xl font-bold text-white mb-4">Categories</h3>
                                 <div className="space-y-3">
                                     {/* CATEGORY FILTER */}

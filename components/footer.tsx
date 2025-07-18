@@ -30,7 +30,7 @@ const itemVariants = {
 export default function FooterAnimated() {
     return (
         <motion.footer
-            className="bg-game-dark py-8 mt-auto border-t border-gray-800"
+            className="bg-[#0a0a14] py-8 mt-auto border-t border-gray-800"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}

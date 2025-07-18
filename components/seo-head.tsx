@@ -18,7 +18,7 @@ export function SeoHead({ canonicalUrl }: SeoHeadProps) {
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
 
       {/* Additional meta tags */}
-      <meta name="theme-color" content="#10061e" />
+      <meta name="theme-color" content="#0f0f23" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
