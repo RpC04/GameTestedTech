@@ -106,16 +106,7 @@ export default function Home() {
 
     return () => clearInterval(interval)
   }, [isHovering])
-
-  // Datos para el slider
-  const heroSlides = [
-    {
-      title: "Tech for Gamers, By Gamers.",
-      subtitle: "Where Gaming Meets Innovation. Tech for Gamers, By Gamers",
-      image: "/images/game-controller-logo.png",
-    },
-  ]
-
+ 
   // Variantes de animación para Framer Motion
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -273,23 +264,15 @@ export default function Home() {
               onHoverStart={() => setIsHovering(true)}
               onHoverEnd={() => setIsHovering(false)}
             >
-              <AnimatePresence mode="wait" custom={activeSlide}>
-                <motion.div
-                  key={activeSlide}
-                  custom={activeSlide}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  className="space-y-2"
-                >
-                  <motion.h1 className="text-4xl md:text-5xl font-bold text-game-white" variants={itemVariants}>
-                    {heroSlides[0].title}
-                  </motion.h1>
-                  <motion.p className="text-gray-300 mt-4" variants={itemVariants}>
-                    {heroSlides[0].subtitle}
-                  </motion.p>
-                </motion.div>
+              <AnimatePresence>
+                <div className="space-y-2"> 
+                  <h1 className="text-4xl md:text-5xl font-bold text-game-white">
+                   Tech for Gamers, By Gamers.
+                  </h1>
+                  <p className="text-gray-300 mt-4" >
+                    Where Gaming Meets Innovation. Tech for Gamers, By Gamers
+                  </p>
+                </div>
               </AnimatePresence>
 
               <motion.div className="flex gap-4" variants={itemVariants}>
@@ -610,8 +593,7 @@ export default function Home() {
           >
             {stats.map((stat, i) => (
                 <motion.div key={i} className="p-6" variants={item}>
-                  <p
-                      className={
+                  <p className={
                           "text-3xl md:text-4xl font-bold " +
                           (i === 0
                               ? "text-white"

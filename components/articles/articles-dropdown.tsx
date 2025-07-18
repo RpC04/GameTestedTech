@@ -46,28 +46,30 @@ export default function ArticlesDropdown() {
             }}
         >
             <button
-                className="flex items-center gap-1 px-4 py-2 text-white font-semibold hover:text-game-cyan transition"
+                className="flex items-center gap-1 px-4 py-2 text-white hover:text-game-cyan transition"
                 aria-haspopup="true"
                 aria-expanded={open}
                 tabIndex={0}
             >
-                Explore
+                <Link href="/articles" className="text-game-white hover:text-game-cyan transition">
+                    Articles
+                </Link>
+
                 <ChevronDown className={`w-4 h-4 ml-1 transition-transform ${open ? "rotate-180" : ""}`} />
             </button>
             {open && (
                 <div
-                    className={`absolute left-0 top-full flex bg-[#1f0032] shadow-2xl rounded-xl z-50 ${
-                        hoveredIndex === null ? "w-[256px]" : ""
-                    }`}
+                    className={`absolute left-0 top-full flex bg-[#0f0f23] shadow-2xl rounded-xl z-50 ${hoveredIndex === null ? "w-[256px]" : ""
+                        }`}
                     style={{ minHeight: 0 }}
                 >
                     {/*categories */}
-                    <ul className="w-64 py-4 px-2 space-y-1 border-r border-purple-900">
+                    <ul className="w-64 py-4 px-2 space-y-1 border-r border-[#0f0f23]">
                         {menuData.map((cat, i) => (
                             <li
                                 key={cat.label}
                                 className={`flex items-center px-4 py-2 rounded-lg cursor-pointer gap-2 transition
-                                  ${hoveredIndex === i ? "bg-purple-900 text-white" : "text-purple-200 hover:bg-purple-800"}
+                                  ${hoveredIndex === i ? "bg-[#ff6b35] text-white" : "text-purple-200 hover:bg-[#ff6b35]"}
                                 `}
                                 onMouseEnter={() => setHoveredIndex(i)}
                                 tabIndex={0}
@@ -88,7 +90,7 @@ export default function ArticlesDropdown() {
                                 <li key={sub.label}>
                                     <Link
                                         href={sub.href}
-                                        className="block px-3 py-2 rounded-lg text-purple-100 hover:bg-purple-800 hover:text-white transition"
+                                        className="block px-3 py-2 rounded-lg text-purple-100 hover:bg-[#ff6b35] hover:text-white transition"
                                     >
                                         {sub.label}
                                     </Link>
