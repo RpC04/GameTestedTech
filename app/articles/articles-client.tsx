@@ -13,6 +13,7 @@ import { ChevronDown } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import ArticlesDropdown from "@/components/articles/articles-dropdown";
 import Footer from "@/components/footer"
+import { useSearchParams } from 'next/navigation'
 
 export default function Articles() {
     // Sample latest articles data
@@ -20,10 +21,14 @@ export default function Articles() {
     const [featuredGames, setFeaturedGames] = useState<any[]>([])
     const [categories, setCategories] = useState<{ id: number; name: string; icon?: string }[]>([])
     const [selectedCategories, setSelectedCategories] = useState<number[]>([])
+    const [subcategories, setSubcategories] = useState<{ id: number; name: string; parent_id: number | null }[]>([])
+    const [selectedSubcategories, setSelectedSubcategories] = useState<number[]>([])
     const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null])
     const [startDate, endDate] = dateRange
     const [tags, setTags] = useState<{ id: number; name: string }[]>([])
     const [selectedTags, setSelectedTags] = useState<number[]>([])
+    const searchParams = useSearchParams()
+    const categorySlug = searchParams.get('category')
 
     const dotPositions = [
         { top: "11.028856%", left: "27.500000%" },
@@ -34,11 +39,38 @@ export default function Articles() {
         { top: "11.028856%", left: "72.500000%" },
     ];
 
+    // Effect to activate category filter based on URL slug
+    useEffect(() => {
+        async function activateCategoryFilter() {
+            if (categorySlug) { 
+                // First search in all categories (parents and children)
+                const { data, error } = await supabase
+                    .from("categories")
+                    .select("id, parent_id")
+                    .eq("slug", categorySlug)
+                    .single()
+
+                if (data && !error) {
+                    // If it has a parent_id it's a subcategory
+                    if (data.parent_id) {
+                        setSelectedSubcategories([data.id])
+                    } else {
+                        // If it doesn't have a parent_id it's a parent category
+                        setSelectedCategories([data.id])
+                    }
+                }
+            }
+        }
+
+        activateCategoryFilter()
+    }, [categorySlug])  // Without dependencies on categories or subcategories
+
     useEffect(() => {
         async function fetchCategories() {
             const { data, error } = await supabase
                 .from("categories")
-                .select("id, name, icon")
+                .select("id, name")
+                .is("parent_id", null)
                 .order("name")
 
             if (!error && data) {
@@ -47,6 +79,22 @@ export default function Articles() {
         }
 
         fetchCategories()
+    }, [])
+
+    useEffect(() => {
+        async function fetchSubcategories() {
+            const { data, error } = await supabase
+                .from("categories")
+                .select("id, name, parent_id")
+                .not("parent_id", "is", null) // Solo subcategorías
+                .order("name")
+
+            if (!error && data) {
+                setSubcategories(data)
+            }
+        }
+
+        fetchSubcategories()
     }, [])
 
     useEffect(() => {
@@ -64,6 +112,7 @@ export default function Articles() {
         fetchTags()
     }, [])
 
+
     useEffect(() => {
         async function fetchFeaturedGames() {
             const { data, error } = await supabase
@@ -78,12 +127,12 @@ export default function Articles() {
                 .order("created_at", { ascending: false })
 
             if (!error && data) {
-                // Filtra los artículos que tienen al menos un tag destacado
+                // Filter articles that have at least one featured tag
                 const filtered = data.filter((article) =>
                     (article.article_tags || []).some(({ tag }) => tag?.is_featured)
                 )
 
-                setFeaturedGames(filtered.slice(0, 3)) // Muestra máximo 3 destacados
+                setFeaturedGames(filtered.slice(0, 3)) // Show only maximum 3 featured articles
             }
         }
 
@@ -111,12 +160,13 @@ export default function Articles() {
                 .order("created_at", { ascending: false })
 
             query = query.eq("status", "published");
-            // Filtro por categorías (asume que tienes category_id en la tabla articles)
-            if (selectedCategories.length > 0) {
-                query = query.in("category_id", selectedCategories)
+            // Filter by categories (assumes you have category_id in the articles table)
+            const allSelectedCategories = [...selectedCategories, ...selectedSubcategories]
+            if (allSelectedCategories.length > 0) {
+                query = query.in("category_id", allSelectedCategories)
             }
 
-            // Filtro por fechas
+            // Filter by dates
             if (startDate)
                 query = query.gte("created_at", startDate.toISOString().split("T")[0])
 
@@ -129,7 +179,7 @@ export default function Articles() {
             const { data, error } = await query
 
             if (!error && data) {
-                // Filtro manual por tags (relación muchos a muchos)
+                // Manual filter by tags (many-to-many relationship)
                 const filteredByTags =
                     selectedTags.length > 0
                         ? data.filter((article) =>
@@ -141,10 +191,11 @@ export default function Articles() {
         }
 
         fetchFilteredArticles()
-    }, [selectedCategories, selectedTags, startDate, endDate])
+    }, [selectedCategories, selectedSubcategories, selectedTags, startDate, endDate])
 
     function handleClearFilters() {
         setSelectedCategories([])
+        setSelectedSubcategories([])
         setSelectedTags([])
         setDateRange([null, null])
     }
@@ -162,29 +213,27 @@ export default function Articles() {
     return (
         <div className="min-h-screen flex flex-col bg-[#0f0f23]">
             {/* Complete header with background image */}
-            <div className="relative">
-
-                {/* Navbar */}
-                <div className="relative z-10 border-b border-gray-800">
-                    <div className="max-w-7xl mx-auto py-4 px-6">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-8">
-                                <Link href="/" className="flex items-center gap-2">
-                                    <Image
-                                        src="/images/KyleLogoNoText.png"
-                                        alt="Game Tested Tech Logo"
-                                        width={40}
-                                        height={40}
-                                        className="object-contain"
-                                    />
-                                    <span className="text-game-white text-sm font-bold hidden sm:inline">
-                                        GAME
-                                        <br />
-                                        TESTED TECH
-                                    </span>
-                                </Link>
-                            </div>
-                            {/*
+            {/* Navbar */}
+            <div className="relative z-[1000] border-b border-gray-800">
+                <div className="max-w-7xl mx-auto py-4 px-6">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-8">
+                            <Link href="/" className="flex items-center gap-2">
+                                <Image
+                                    src="/images/KyleLogoNoText.png"
+                                    alt="Game Tested Tech Logo"
+                                    width={40}
+                                    height={40}
+                                    className="object-contain"
+                                />
+                                <span className="text-game-white text-sm font-bold hidden sm:inline">
+                                    GAME
+                                    <br />
+                                    TESTED TECH
+                                </span>
+                            </Link>
+                        </div>
+                        {/*
                             <div className="relative flex-1 max-w-xl mx-8">
                                 <input
                                     type="text"
@@ -194,46 +243,44 @@ export default function Articles() {
                                 <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
                             </div>
 */}
-                            <nav className="hidden md:flex items-center gap-6">
-                                <Link href="/" className="text-game-white hover:text-game-cyan transition">
-                                    Home
-                                </Link>
-                                <Link href="/articles" className="text-game-white hover:text-game-cyan transition">
-                                    Articles
-                                </Link>
-                                <Link href="/about" className="text-game-white hover:text-game-cyan transition">
-                                    About Us
-                                </Link>
-                                <Link href="/contact" className="text-game-white hover:text-game-cyan transition">
-                                    Contact
-                                </Link>
-                            </nav>
-                        </div>
+                        <nav className="hidden md:flex items-center gap-6">
+                            <Link href="/" className="text-game-white hover:text-game-cyan transition">
+                                Home
+                            </Link>
+                            <ArticlesDropdown />
+                            <Link href="/about" className="text-game-white hover:text-game-cyan transition">
+                                About Us
+                            </Link>
+                            <Link href="/contact" className="text-game-white hover:text-game-cyan transition">
+                                Contact
+                            </Link>
+                        </nav>
                     </div>
                 </div>
-
-                {/* Hero Section - Sin formas geométricas */}
-                <div className="relative z-10 py-16 overflow-hidden bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23]">
+            </div>
+            <div className="relative">
+                {/* Hero Section - Without geometric shapes */}
+                <div className="relative py-16 bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23]">
                     <div className="absolute inset-0 overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-full opacity-10">
                             <div className="absolute top-10 left-10 w-40 h-40 rounded-full bg-[#ff6b35] blur-3xl"></div>
                             <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-[#8fc9ff] blur-3xl"></div>
                         </div>
                     </div>
-                    <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
-                        <div className="space-y-6">
-                            <div>
-                                <h1 className="text-4xl font-bold text-game-white">
-                                    Your Ultimate <span className="text-[#ff6b35]">Gaming</span> Resource
-                                </h1>
-                                <p className="text-gray-300 mt-2">Discover the latest games, reviews, and gaming tech insights.</p>
-                            </div>
+                    <div className="relative z-10">
+                        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
+                            <div className="space-y-6">
+                                <div>
+                                    <h1 className="text-4xl font-bold text-game-white">
+                                        Your Ultimate <span className="text-[#ff6b35]">Gaming</span> Resource
+                                    </h1>
+                                    <p className="text-gray-300 mt-2">Discover the latest games, reviews, and gaming tech insights.</p>
+                                </div>
 
-                            <div className="flex gap-4">
                                 <motion.div className="flex gap-4" variants={itemVariants}>
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                         <Link href="/about">
-                                            <Button className="bg-[#9d8462] hover:bg-[#9d8462] text-white rounded-md transition-all duration-300 border-0">
+                                            <Button className="bg-[#ff6b35] hover:bg-[#ff8c5a] text-white rounded-md transition-all duration-300 border-0">
                                                 About Us
                                             </Button>
                                         </Link>
@@ -241,101 +288,100 @@ export default function Articles() {
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                         <Link href="/contact">
                                             <Button variant="outline"
-                                                className="bg-transparent hover:bg-transparent border-2 border-[#9d8462] hover:border-[#9d8462]
-                                                text-white hover:text-white rounded-md transition-all duration-300">
+                                                className="bg-transparent border border-gray-600 hover:border-white text-white px-6 py-3 rounded-md transition-all transform hover:scale-105">
                                                 Contact Us
                                             </Button>
                                         </Link>
                                     </motion.div>
                                 </motion.div>
+
+                                <div className="flex gap-8 pt-4">
+                                    <div className="text-center">
+                                        <p className="text-2xl font-bold">666K</p>
+                                        <p className="text-sm text-gray-400">Users</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-2xl font-bold">6666K</p>
+                                        <p className="text-sm text-gray-400">Articles</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-2xl font-bold">666K</p>
+                                        <p className="text-sm text-gray-400">Games</p>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="flex gap-8 pt-4">
-                                <div className="text-center">
-                                    <p className="text-2xl font-bold">666K</p>
-                                    <p className="text-sm text-gray-400">Users</p>
-                                </div>
-                                <div className="text-center">
-                                    <p className="text-2xl font-bold">6666K</p>
-                                    <p className="text-sm text-gray-400">Articles</p>
-                                </div>
-                                <div className="text-center">
-                                    <p className="text-2xl font-bold">666K</p>
-                                    <p className="text-sm text-gray-400">Games</p>
-                                </div>
-                            </div>
-                        </div>
+                            <div className="relative hidden md:block overflow-hidden">
+                                <motion.div
+                                    className="relative"
+                                    initial={{ x: 100, opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    transition={{ duration: 0.7, delay: 0.5 }}>
 
-                        <div className="relative hidden md:block">
-                            <motion.div
-                                className="relative hidden md:block"
-                                initial={{ x: 100, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ duration: 0.7, delay: 0.5 }}>
-
-                                <AnimatePresence mode="wait">
-                                    <motion.div 
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.9 }}
-                                        transition={{ duration: 0.5 }}
-                                        className="relative"
-                                    >
-                                        <div className="relative w-[400px] h-[400px] flex items-center justify-center">
-                                            <Image
-                                                src="/images/game-controller-logo.png"
-                                                alt="Game Controller Logo"
-                                                width={350}
-                                                height={350}
-                                                className="object-contain z-10 relative"
-                                            />
-                                            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full bg-blue-500/30 blur-2xl -z-10"></div>
-                                        </div>
+                                    <AnimatePresence mode="wait">
                                         <motion.div
-                                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full"
-                                            animate={{
-                                                rotate: 360,
-                                                scale: [1, 1.02, 1],
-                                            }}
-                                            transition={{
-                                                rotate: {
-                                                    duration: 20,
-                                                    repeat: Number.POSITIVE_INFINITY,
-                                                    ease: "linear",
-                                                },
-                                                scale: {
-                                                    duration: 3,
-                                                    repeat: Number.POSITIVE_INFINITY,
-                                                    repeatType: "reverse",
-                                                },
-                                            }}
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.9 }}
+                                            transition={{ duration: 0.5 }}
+                                            className="relative"
                                         >
-                                            {dotPositions.map((pos, i) => (
-                                                <motion.div
-                                                    key={i}
-                                                    className="absolute w-2 h-2 rounded-full bg-game-cyan"
-                                                    style={{ top: pos.top, left: pos.left }}
-                                                    animate={{
-                                                        opacity: [0.2, 1, 0.2],
-                                                        scale: [0.8, 1.2, 0.8],
-                                                    }}
-                                                    transition={{
-                                                        duration: 2,
-                                                        repeat: Number.POSITIVE_INFINITY,
-                                                        delay: i * 0.3,
-                                                    }}
+                                            <div className="relative w-[400px] h-[400px] flex items-center justify-center">
+                                                <Image
+                                                    src="/images/game-controller-logo.png"
+                                                    alt="Game Controller Logo"
+                                                    width={350}
+                                                    height={350}
+                                                    className="object-contain z-10 relative"
                                                 />
-                                            ))}
+                                                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full bg-blue-500/30 blur-2xl -z-10"></div>
+                                            </div>
+                                            <motion.div
+                                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full"
+                                                animate={{
+                                                    rotate: 360,
+                                                    scale: [1, 1.02, 1],
+                                                }}
+                                                transition={{
+                                                    rotate: {
+                                                        duration: 20,
+                                                        repeat: Number.POSITIVE_INFINITY,
+                                                        ease: "linear",
+                                                    },
+                                                    scale: {
+                                                        duration: 3,
+                                                        repeat: Number.POSITIVE_INFINITY,
+                                                        repeatType: "reverse",
+                                                    },
+                                                }}
+                                            >
+                                                {dotPositions.map((pos, i) => (
+                                                    <motion.div
+                                                        key={i}
+                                                        className="absolute w-2 h-2 rounded-full bg-game-cyan"
+                                                        style={{ top: pos.top, left: pos.left }}
+                                                        animate={{
+                                                            opacity: [0.2, 1, 0.2],
+                                                            scale: [0.8, 1.2, 0.8],
+                                                        }}
+                                                        transition={{
+                                                            duration: 2,
+                                                            repeat: Number.POSITIVE_INFINITY,
+                                                            delay: i * 0.3,
+                                                        }}
+                                                    />
+                                                ))}
+                                            </motion.div>
                                         </motion.div>
-                                    </motion.div>
-                                </AnimatePresence>
-                            </motion.div>
+                                    </AnimatePresence>
+                                </motion.div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Featured Games Section */}
+            {/* Featured Games Section 
             <section className="bg-[#0a0a14] py-12">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex justify-between items-center mb-8">
@@ -343,7 +389,7 @@ export default function Articles() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {featuredGames.map((game, index) => (
+                        {featuredGames.map((game) => (
                             <Card key={game.id} className="bg-[#0f0f23] border-none overflow-hidden">
                                 <div className="aspect-video relative">
                                     <Image
@@ -353,26 +399,31 @@ export default function Articles() {
                                         className="object-cover"
                                     />
                                     <div className="absolute top-2 left-2 flex flex-wrap gap-2">
-                                        {(game.article_tags?.[0]?.tag?.is_featured) && (
-                                            <div className="bg-game-tag-blue text-white text-xs px-3 py-1 rounded-full">
-                                                {game.article_tags[0].tag.name}
-                                            </div>
-                                        )}
+                                        {game.article_tags?.map(({ tag }) => {
+                                            if (tag?.is_featured) {
+                                                return (
+                                                    <div key={tag.id} className="bg-game-tag-blue text-white text-xs px-3 py-1 rounded-full">
+                                                        {tag.name}
+                                                    </div>
+                                                );
+                                            }
+                                            return null;
+                                        })}
                                         {game.category?.name && (
                                             <div className="bg-[#FDF2FA] text-[#C11574] text-xs px-3 py-1 rounded-full font-semibold">
                                                 {game.category.name}
                                             </div>
                                         )}
                                     </div>
-                                    {/*<div className="absolute top-2 right-2 bg-[#9d8462] text-white text-xs px-3 py-1 rounded-full flex items-center">
+                                    <div className="absolute top-2 right-2 bg-[#9d8462] text-white text-xs px-3 py-1 rounded-full flex items-center">
                                         ★ {game.rating || "4.5"}
-                                    </div>*/}
+                                    </div>
                                 </div>
                                 <div className="p-4 space-y-2">
                                     <h3 className="font-bold text-white text-lg">{game.title}</h3>
                                     <p className="text-sm text-gray-400">{game.excerpt}</p>
                                     <Link href={`/blog/${game.slug}`}>
-                                        <Button className="w-full bg-[#9d8462] hover:bg-[#8d7452] text-white mt-2">
+                                        <Button className="w-full bg-[#ff6b35] hover:bg-[#8d7452] text-white mt-2">
                                             View Details
                                         </Button>
                                     </Link>
@@ -382,6 +433,7 @@ export default function Articles() {
                     </div>
                 </div>
             </section>
+            */}
 
             {/* Latest Articles & Categories Section */}
             <section className="bg-[#0a0a14] py-12">
@@ -490,7 +542,42 @@ export default function Articles() {
                                         )}
                                     </Disclosure>
 
-                                    {/* TAG FILTER */}
+                                    {/* SUBCATEGORY FILTER */}
+                                    <Disclosure>
+                                        {({ open }) => (
+                                            <div>
+                                                <Disclosure.Button className="flex w-full justify-between items-center text-white font-medium py-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-white">Subcategories</span>
+                                                    </div>
+                                                    <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
+                                                </Disclosure.Button>
+                                                <Disclosure.Panel className="mt-2 space-y-2 max-h-64 overflow-y-auto pr-2">
+                                                    {subcategories.map((subcategory) => (
+                                                        <label
+                                                            key={subcategory.id}
+                                                            className="flex items-center gap-2 text-sm text-white cursor-pointer select-none"
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                value={subcategory.id}
+                                                                checked={selectedSubcategories.includes(subcategory.id)}
+                                                                onChange={(e) => {
+                                                                    const id = parseInt(e.target.value)
+                                                                    setSelectedSubcategories((prev) =>
+                                                                        e.target.checked ? [...prev, id] : prev.filter((cid) => cid !== id)
+                                                                    )
+                                                                }}
+                                                                className="appearance-none w-4 h-4 border-2 border-gray-500 rounded-sm bg-[#1a1a1a] checked:bg-[#9d8462] checked:border-[#9d8462] focus:outline-none transition-all duration-150"
+                                                            />
+                                                            {subcategory.name}
+                                                        </label>
+                                                    ))}
+                                                </Disclosure.Panel>
+                                            </div>
+                                        )}
+                                    </Disclosure>
+                                    {/* TAG FILTER 
                                     <Disclosure>
                                         {({ open }) => (
                                             <div>
@@ -524,7 +611,7 @@ export default function Articles() {
                                                 </Disclosure.Panel>
                                             </div>
                                         )}
-                                    </Disclosure>
+                                    </Disclosure>*/}
 
                                     {/* DATE FILTER */}
                                     <Disclosure>
@@ -563,7 +650,7 @@ export default function Articles() {
 
                                 <Button
                                     onClick={handleClearFilters}
-                                    className="w-full mt-4 bg-[#9d8462] hover:bg-[#8d7452] text-white"
+                                    className="w-full mt-4 bg-[#ff6b35] hover:bg-[#8d7452] text-white"
                                 >
                                     Clean Filters
                                 </Button>
