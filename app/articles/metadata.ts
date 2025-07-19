@@ -1,4 +1,4 @@
 export const metadata = {
-    title: "Artículos - Game Tested Tech",
-    description: "Descubre los últimos artículos de gaming, reseñas y conocimientos técnicos de Game Tested Tech.",
+    title: "Articles - Game Tested Tech",
+    description: "Discover insightful articles on game development, technology, and industry trends. Stay updated with the latest in gaming tech.",
 }
