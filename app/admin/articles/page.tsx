@@ -15,6 +15,7 @@ import {
   ArrowUpDown,
   MoreHorizontal,
   CheckCircle,
+  ChevronDown,
   XCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -38,7 +39,7 @@ export default function ArticlesPage() {
   const [sortField, setSortField] = useState("created_at")
   const [sortDirection, setSortDirection] = useState("desc")
   const [selectedArticles, setSelectedArticles] = useState<number[]>([])
-  const [isDeleting, setIsDeleting] = useState(false) 
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const supabase = createClientComponentClient()
 
@@ -146,10 +147,10 @@ export default function ArticlesPage() {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
-              <option value="all">All Status</option>
-              <option value="published">Published</option>
-              <option value="draft">Draft</option>
-              <option value="archived">Archived</option>
+              <option value="all" className="bg-[#1a1a2e]">All Status</option>
+              <option value="published" className="bg-[#1a1a2e]">Published</option>
+              <option value="draft" className="bg-[#1a1a2e]">Draft</option>
+              <option value="archived" className="bg-[#1a1a2e]">Archived</option>
             </select>
           </div>
 
@@ -260,13 +261,12 @@ export default function ArticlesPage() {
                     <td className="px-4 py-3 font-medium text-white">{article.title}</td>
                     <td className="px-4 py-3">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          article.status === "published"
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${article.status === "published"
                             ? "bg-green-900/30 text-green-400"
                             : article.status === "draft"
                               ? "bg-yellow-900/30 text-yellow-400"
                               : "bg-gray-900/30 text-gray-400"
-                        }`}
+                          }`}
                       >
                         {article.status === "published" && <CheckCircle className="mr-1 h-3 w-3" />}
                         {article.status === "draft" && <XCircle className="mr-1 h-3 w-3" />}

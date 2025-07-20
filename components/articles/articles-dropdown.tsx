@@ -114,7 +114,7 @@ export default function ArticlesDropdown() {
                             <li
                                 key={cat.id}
                                 className={`flex items-center px-4 py-2 rounded-lg cursor-pointer gap-2 transition
-                                  ${hoveredIndex === i ? "bg-[#ff6b35] text-white" : "text-purple-200 hover:bg-[#ff6b35]"}
+                                  ${hoveredIndex === i ? "bg-[#ff6b35] text-white" : "text-white-200 hover:bg-[#ff6b35]"}
                                 `}
                                 onMouseEnter={() => setHoveredIndex(i)}
                                 onClick={() => {
@@ -140,7 +140,7 @@ export default function ArticlesDropdown() {
                                 <li key={sub.id}>
                                     <Link
                                         href={`/articles?category=${sub.slug}`}
-                                        className="block px-3 py-2 rounded-lg text-purple-100 hover:bg-[#ff6b35] hover:text-white transition"
+                                        className="block px-3 py-2 rounded-lg text-white-100 hover:bg-[#ff6b35] hover:text-white transition"
                                     >
                                         {sub.name}
                                     </Link>
