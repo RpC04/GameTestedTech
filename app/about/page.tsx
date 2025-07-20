@@ -5,6 +5,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react"
 import { Header } from "@/components/header"
+import Footer from "@/components/footer"
 import { Twitter, Linkedin, Instagram, Facebook, Youtube, DiscIcon as Discord } from "lucide-react"
 
 export default function AboutPage() {
@@ -66,20 +67,13 @@ export default function AboutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a14] text-gray-200">
+    <div className="min-h-screen bg-[#0f0f23] text-gray-200">
       <Header />
 
       {/* Hero Section */}
       <div className="relative">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e]/80 to-[#0a0a14]"></div>
-          <Image
-            src="/images/cyberpunk-bg.png?height=800&width=1600"
-            alt="Colorful abstract background"
-            fill
-            className="object-cover"
-            priority
-          />
         </div>
 
         <div className="relative pt-20 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -95,10 +89,11 @@ export default function AboutPage() {
             </p>
           </motion.div>
         </div>
+        <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#0a0a14] to-transparent"></div>
       </div>
 
       {/* Our Mission Section */}
-      <section className="py-16 bg-[#0f0a1e]">
+      <section className="py-16 bg-[#0f0f23]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -248,10 +243,10 @@ export default function AboutPage() {
               transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <div className="w-12 h-12 bg-[#c11574]/20 rounded-full flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-[#ff8c5a]/20 rounded-full flex items-center justify-center mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-[#c11574]"
+                  className="h-6 w-6 text-[#ff8c5a]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -275,7 +270,7 @@ export default function AboutPage() {
       </section>
 
       {/* Meet Our Team Section */}
-      <section className="py-16 bg-[#0f0a1e]">
+      <section className="py-16 bg-[#0f0f23]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
@@ -365,7 +360,7 @@ export default function AboutPage() {
               <div className="hidden lg:block">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 bg-[#9d8462] hover:bg-[#9d8462] text-white px-6 py-3 rounded-md transition-all transform hover:scale-105"
+                  className="inline-flex items-center gap-2 bg-[#ff6b35] hover:bg-[#ff8c5a] text-white px-6 py-3 rounded-md transition-all transform hover:scale-105"
                 >
                   Have more questions? <ExternalLink className="h-4 w-4" />
                 </Link>
@@ -405,7 +400,7 @@ export default function AboutPage() {
             <div className="lg:hidden col-span-1 text-center">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 bg-[#9d8462] hover:bg-[#9d8462] text-white px-6 py-3 rounded-md transition-all transform hover:scale-105"
+                className="inline-flex items-center gap-2 bg-[#ff6b35] hover:bg-[#ff8c5a] text-white px-6 py-3 rounded-md transition-all duration-300 border-0 transform hover:scale-105"
               >
                 Have more questions? <ExternalLink className="h-4 w-4" />
               </Link>
@@ -544,91 +539,7 @@ export default function AboutPage() {
       </section>
 */}
       {/* Footer */}
-      <footer className="bg-game-dark py-8 mt-auto border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Contact Info */}
-            <div className="space-y-4">
-              <div>
-                <Link href="/" className="flex items-center gap-2 mb-4">
-                  <Image
-                    src="/images/KyleLogoNoText.png"
-                    alt="Game Tested Tech Logo"
-                    width={40}
-                    height={40}
-                    className="object-contain"
-                  />
-                  <span className="text-game-white text-sm font-bold">
-                    GAME<br />TESTED TECH
-                  </span>
-                </Link>
-                <p className="text-gray-400 text-sm">
-                  Your trusted source for honest gaming hardware reviews, guides, and tech insights.
-                </p>
-              </div>
-              <div className="flex items-center gap-2 pt-4">
-                <span className="text-gray-400">✉</span>
-                <a href="mailto:contact@gametestedtech.com" className="text-gray-400 hover:text-white">
-                  contact@gametestedtech.com
-                </a>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-gray-400">📞</span>
-                <a href="tel:+11223456789" className="text-gray-400 hover:text-white">
-                  +1-1223-456-7890
-                </a>
-              </div>
-            </div>
-
-            {/* Navigation Links */}
-            <div className="space-y-4">
-              <div className="text-white font-bold mb-4">Quick Links</div>
-              <Link href="/" className="block text-gray-400 hover:text-white">
-                Home
-              </Link>
-              <Link href="/articles" className="block text-gray-400 hover:text-white">
-                Articles
-              </Link>
-              <Link href="/about" className="block text-gray-400 hover:text-white">
-                About Us
-              </Link>
-              <Link href="/contact" className="block text-gray-400 hover:text-white">
-                Contact
-              </Link>
-            </div>
-
-            {/* Social Media Links */}
-            <div className="space-y-4">
-              <div className="text-white font-bold mb-4">Follow Us</div>
-              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                <Youtube className="h-5 w-5" />
-                <span>Youtube</span>
-              </a>
-              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                <Instagram className="h-5 w-5" />
-                <span>Instagram</span>
-              </a>
-              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                <Twitter className="h-5 w-5" />
-                <span>Twitter</span>
-              </a>
-              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                <Discord className="h-5 w-5" />
-                <span>Discord</span>
-              </a>
-              <a href="#" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                <Facebook className="h-5 w-5" />
-                <span>Facebook</span>
-              </a>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
-            <p>
-              © {new Date().getFullYear()} Game Tested Tech. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

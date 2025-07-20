@@ -30,19 +30,20 @@ export default function Articles() {
     const searchParams = useSearchParams()
     const categorySlug = searchParams.get('category')
 
-    const dotPositions = [
-        { top: "11.028856%", left: "27.500000%" },
-        { top: "50.000000%", left: "5.000000%" },
-        { top: "88.971144%", left: "27.500000%" },
-        { top: "88.971144%", left: "72.500000%" },
-        { top: "50.000000%", left: "95.000000%" },
-        { top: "11.028856%", left: "72.500000%" },
-    ];
+    const floatAnimation = {
+        y: [0, -15, 0],
+        rotate: [0, 2, 0, -2, 0],
+        transition: {
+            duration: 6,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+        },
+    }
 
     // Effect to activate category filter based on URL slug
     useEffect(() => {
         async function activateCategoryFilter() {
-            if (categorySlug) { 
+            if (categorySlug) {
                 // First search in all categories (parents and children)
                 const { data, error } = await supabase
                     .from("categories")
@@ -295,20 +296,32 @@ export default function Articles() {
                                     </motion.div>
                                 </motion.div>
 
-                                <div className="flex gap-8 pt-4">
-                                    <div className="text-center">
+                                <motion.div className="flex gap-8 pt-4" variants={itemVariants}>
+                                    <motion.div
+                                        className="text-center"
+                                        whileHover={{ y: -5 }}
+                                        transition={{ type: "spring", stiffness: 300 }}
+                                    >
                                         <p className="text-2xl font-bold">666K</p>
                                         <p className="text-sm text-gray-400">Users</p>
-                                    </div>
-                                    <div className="text-center">
+                                    </motion.div>
+                                    <motion.div
+                                        className="text-center"
+                                        whileHover={{ y: -5 }}
+                                        transition={{ type: "spring", stiffness: 300 }}
+                                    >
                                         <p className="text-2xl font-bold">6666K</p>
                                         <p className="text-sm text-gray-400">Articles</p>
-                                    </div>
-                                    <div className="text-center">
+                                    </motion.div>
+                                    <motion.div
+                                        className="text-center"
+                                        whileHover={{ y: -5 }}
+                                        transition={{ type: "spring", stiffness: 300 }}
+                                    >
                                         <p className="text-2xl font-bold">666K</p>
                                         <p className="text-sm text-gray-400">Games</p>
-                                    </div>
-                                </div>
+                                    </motion.div>
+                                </motion.div> 
                             </div>
 
                             <div className="relative hidden md:block overflow-hidden">
@@ -318,122 +331,42 @@ export default function Articles() {
                                     animate={{ x: 0, opacity: 1 }}
                                     transition={{ duration: 0.7, delay: 0.5 }}>
 
-                                    <AnimatePresence mode="wait">
+                                    {/* Imagen del controlador con animación de flotación mejorada */}
+                                    <div className="hidden md:flex justify-center items-center">
                                         <motion.div
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.9 }}
-                                            transition={{ duration: 0.5 }}
+                                            animate={floatAnimation}
                                             className="relative"
                                         >
-                                            <div className="relative w-[400px] h-[400px] flex items-center justify-center">
-                                                <Image
-                                                    src="/images/game-controller-logo.png"
-                                                    alt="Game Controller Logo"
-                                                    width={350}
-                                                    height={350}
-                                                    className="object-contain z-10 relative"
-                                                />
-                                                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full bg-blue-500/30 blur-2xl -z-10"></div>
-                                            </div>
-                                            <motion.div
-                                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full"
-                                                animate={{
-                                                    rotate: 360,
-                                                    scale: [1, 1.02, 1],
-                                                }}
-                                                transition={{
-                                                    rotate: {
-                                                        duration: 20,
-                                                        repeat: Number.POSITIVE_INFINITY,
-                                                        ease: "linear",
-                                                    },
-                                                    scale: {
-                                                        duration: 3,
-                                                        repeat: Number.POSITIVE_INFINITY,
-                                                        repeatType: "reverse",
-                                                    },
-                                                }}
-                                            >
-                                                {dotPositions.map((pos, i) => (
-                                                    <motion.div
-                                                        key={i}
-                                                        className="absolute w-2 h-2 rounded-full bg-game-cyan"
-                                                        style={{ top: pos.top, left: pos.left }}
-                                                        animate={{
-                                                            opacity: [0.2, 1, 0.2],
-                                                            scale: [0.8, 1.2, 0.8],
-                                                        }}
-                                                        transition={{
-                                                            duration: 2,
-                                                            repeat: Number.POSITIVE_INFINITY,
-                                                            delay: i * 0.3,
-                                                        }}
-                                                    />
-                                                ))}
-                                            </motion.div>
+                                            <AnimatePresence mode="wait">
+                                                <motion.div
+                                                    initial={{ opacity: 0, scale: 0.9 }}
+                                                    animate={{ opacity: 1, scale: 1 }}
+                                                    exit={{ opacity: 0, scale: 0.9 }}
+                                                    transition={{ duration: 0.5 }}
+                                                    className="relative"
+                                                >
+                                                    <div className="relative w-[400px] h-[400px] flex items-center justify-center">
+                                                        <Image
+                                                            src="/images/game-controller-logo.png"
+                                                            alt="Game Controller Logo"
+                                                            width={350}
+                                                            height={350}
+                                                            className="object-contain z-10 relative"
+                                                            priority
+                                                        />
+                                                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full bg-blue-500/30 blur-2xl -z-10"></div>
+                                                    </div>
+                                                </motion.div>
+                                            </AnimatePresence>
                                         </motion.div>
-                                    </AnimatePresence>
+                                    </div>
                                 </motion.div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#0a0a14] to-transparent"></div>
             </div>
-
-            {/* Featured Games Section 
-            <section className="bg-[#0a0a14] py-12">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="flex justify-between items-center mb-8">
-                        <h2 className="text-2xl font-bold text-white">Featured</h2>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {featuredGames.map((game) => (
-                            <Card key={game.id} className="bg-[#0f0f23] border-none overflow-hidden">
-                                <div className="aspect-video relative">
-                                    <Image
-                                        src={game.featured_image || "/placeholder.svg"}
-                                        alt={`Thumbnail for article: ${game.title}`}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                    <div className="absolute top-2 left-2 flex flex-wrap gap-2">
-                                        {game.article_tags?.map(({ tag }) => {
-                                            if (tag?.is_featured) {
-                                                return (
-                                                    <div key={tag.id} className="bg-game-tag-blue text-white text-xs px-3 py-1 rounded-full">
-                                                        {tag.name}
-                                                    </div>
-                                                );
-                                            }
-                                            return null;
-                                        })}
-                                        {game.category?.name && (
-                                            <div className="bg-[#FDF2FA] text-[#C11574] text-xs px-3 py-1 rounded-full font-semibold">
-                                                {game.category.name}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="absolute top-2 right-2 bg-[#9d8462] text-white text-xs px-3 py-1 rounded-full flex items-center">
-                                        ★ {game.rating || "4.5"}
-                                    </div>
-                                </div>
-                                <div className="p-4 space-y-2">
-                                    <h3 className="font-bold text-white text-lg">{game.title}</h3>
-                                    <p className="text-sm text-gray-400">{game.excerpt}</p>
-                                    <Link href={`/blog/${game.slug}`}>
-                                        <Button className="w-full bg-[#ff6b35] hover:bg-[#8d7452] text-white mt-2">
-                                            View Details
-                                        </Button>
-                                    </Link>
-                                </div>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            </section>
-            */}
 
             {/* Latest Articles & Categories Section */}
             <section className="bg-[#0a0a14] py-12">

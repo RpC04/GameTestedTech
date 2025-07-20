@@ -15,7 +15,7 @@ export function Header() {
       }}
     >
       {/* Overlay */}
-      <div className="bg-black/50 py-4 px-6">
+      <div className="bg-[#0f0f23] py-4 px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2">
