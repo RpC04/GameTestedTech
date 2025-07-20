@@ -10,7 +10,7 @@ import { motion } from "framer-motion"
 import { Heart, Eye, Send, Clock } from "lucide-react"
 import { Header } from "@/components/header"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
-import { Twitter, Linkedin, Instagram, Facebook, Youtube, DiscIcon as Discord } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import Footer from "../footer";
 
 const supabase = createClientComponentClient()
@@ -407,35 +407,83 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                 </div>*/}
 
                 {/* Articles relacionados */}
-                {/* Articles relacionados */}
                 <div className="mt-16 mb-16">
-                    <h3 className="text-2xl font-bold text-white mb-8 text-center">Related Articles</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {relatedArticles.length === 0 && (
-                            <div className="col-span-3 text-gray-400 text-center">No related articles found.</div>
-                        )}
-                        {relatedArticles.map((rel) => (
-                            <div key={rel.id} className="bg-[#1a1a2e] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all">
-                                <div className="relative aspect-video">
-                                    <Image
-                                        src={rel.featured_image || "/placeholder.svg"}
-                                        alt={rel.title}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                </div>
-                                <div className="p-4">
-                                    <h4 className="text-lg font-bold text-white mb-2 line-clamp-2">{rel.title}</h4>
-                                    <p className="text-gray-300 text-sm line-clamp-3">{rel.excerpt}</p>
-                                    <div className="mt-4">
-                                        <Link href={`/blog/${rel.slug}`} className="text-[#9d8462] hover:text-[#ff6b35] transition-colors">
-                                            Read More →
-                                        </Link>
+                    {relatedArticles.length > 0 && (
+                        <>
+                            <h3 className="text-2xl font-bold text-white mb-8 text-center">Related Articles</h3>
+
+                            {/* Estilos para ocultar scrollbar */}
+                            <style jsx>{`
+                                .scrollbar-hide {
+                                    -ms-overflow-style: none;
+                                    scrollbar-width: none;
+                                }
+                                .scrollbar-hide::-webkit-scrollbar {
+                                    display: none;
+                                }
+                            `}</style>
+
+                            {/* Carousel con botones fuera */}
+                            <div className="relative">
+                                {/* Botón izquierda - siempre visible y fuera */}
+                                <button
+                                    onClick={() => {
+                                        const container = document.getElementById('carousel-container')
+                                        if (container) container.scrollLeft -= 400
+                                    }}
+                                    className="absolute -left-8 md:-left-16 top-1/2 -translate-y-1/2 z-10 bg-[#1a1a2e] hover:bg-[#2a2a4e] text-white p-3 rounded-full transition-colors"
+                                >
+                                    <ChevronLeft className="w-6 h-6" />
+                                </button>
+
+                                {/* Carousel container */}
+                                <div className="overflow-hidden">
+                                    <div
+                                        id="carousel-container"
+                                        className="overflow-x-auto scrollbar-hide scroll-smooth"
+                                    >
+                                        <div className="flex gap-6">
+                                            {relatedArticles.map((rel) => (
+                                                <div
+                                                    key={rel.id}
+                                                    className="flex-none w-full md:w-[calc(33.333%-1rem)] bg-[#1a1a2e] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all"
+                                                >
+                                                    <div className="relative aspect-video">
+                                                        <Image
+                                                            src={rel.featured_image || "/placeholder.svg"}
+                                                            alt={rel.title}
+                                                            fill
+                                                            className="object-cover"
+                                                        />
+                                                    </div>
+                                                    <div className="p-4">
+                                                        <h4 className="text-lg font-bold text-white mb-2 line-clamp-2">{rel.title}</h4>
+                                                        <p className="text-gray-300 text-sm line-clamp-3">{rel.excerpt}</p>
+                                                        <div className="mt-10 flex flex-wrap justify-center md:justify-start gap-4">
+                                                            <Link href={`/blog/${rel.slug}`} className="inline-flex items-center gap-2 bg-[#ff6b35] hover:bg-[#ff8c5a] text-white px-4 py-2 rounded-md transition-all transform hover:scale-105">
+                                                                Read More →
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
+
+                                {/* Botón derecha - siempre visible y fuera */}
+                                <button
+                                    onClick={() => {
+                                        const container = document.getElementById('carousel-container')
+                                        if (container) container.scrollLeft += 400
+                                    }}
+                                    className="absolute -right-8 md:-right-16 top-1/2 -translate-y-1/2 z-10 bg-[#1a1a2e] hover:bg-[#2a2a4e] text-white p-3 rounded-full transition-colors"
+                                >
+                                    <ChevronRight className="w-6 h-6" />
+                                </button>
                             </div>
-                        ))}
-                    </div>
+                        </>
+                    )}
                 </div>
 
             </div>
