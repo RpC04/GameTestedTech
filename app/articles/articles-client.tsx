@@ -45,27 +45,46 @@ export default function Articles() {
     useEffect(() => {
         async function activateCategoryFilter() {
             if (categorySlug) {
-                // First search in all categories (parents and children)
+                // Dividir el parámetro por comas para manejar múltiples categorías
+                const categorySlugs = categorySlug.split(',').map(slug => slug.trim());
+
+                // Buscar todas las categorías que coincidan con los slugs
                 const { data, error } = await supabase
                     .from("categories")
-                    .select("id, parent_id")
-                    .eq("slug", categorySlug)
-                    .single()
+                    .select("id, parent_id, slug")
+                    .in("slug", categorySlugs); // Usar 'in' en lugar de 'eq' para múltiples valores
 
                 if (data && !error) {
-                    // If it has a parent_id it's a subcategory
-                    if (data.parent_id) {
-                        setSelectedSubcategories([data.id])
-                    } else {
-                        // If it doesn't have a parent_id it's a parent category
-                        setSelectedCategories([data.id])
+                    const parentCategoryIds: number[] = [];
+                    const subcategoryIds: number[] = [];
+
+                    data.forEach(category => {
+                        // Si tiene parent_id es una subcategoría
+                        if (category.parent_id) {
+                            subcategoryIds.push(category.id);
+                        } else {
+                            // Si no tiene parent_id es una categoría padre
+                            parentCategoryIds.push(category.id);
+                        }
+                    });
+
+                    // Actualizar los estados con todas las categorías encontradas
+                    if (parentCategoryIds.length > 0) {
+                        setSelectedCategories(parentCategoryIds);
+                    }
+                    if (subcategoryIds.length > 0) {
+                        setSelectedSubcategories(subcategoryIds);
                     }
                 }
+            } else {
+                // Si no hay categorySlug, limpiar los filtros de categorías
+                setSelectedCategories([]);
+                setSelectedSubcategories([]);
             }
         }
 
-        activateCategoryFilter()
-    }, [categorySlug])  // Without dependencies on categories or subcategories
+        activateCategoryFilter();
+    }, [categorySlug]);
 
     useEffect(() => {
         async function fetchCategories() {
@@ -213,7 +232,7 @@ export default function Articles() {
 
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#0f0f23]"> 
+        <div className="min-h-screen flex flex-col bg-[#0f0f23]">
             {/* Navbar */}
             <Header />
             <div className="relative">
@@ -278,7 +297,7 @@ export default function Articles() {
                                         <p className="text-2xl font-bold">666K</p>
                                         <p className="text-sm text-gray-400">Games</p>
                                     </motion.div>
-                                </motion.div> 
+                                </motion.div>
                             </div>
 
                             <div className="relative hidden md:block overflow-hidden">

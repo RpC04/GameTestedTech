@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link"
 import Image from "next/image"
 import ArticlesDropdown from "@/components/articles/articles-dropdown";
@@ -5,9 +6,24 @@ import { Search, Menu, X } from "lucide-react";
 import { SearchBar } from "@/components/ui/search-bar"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react";
+import { useAnalytics } from '@/hooks/use-analytics';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { trackEvent } = useAnalytics();
+
+  const handleNavigationClick = (destination: string, location: 'desktop' | 'mobile') => {
+    trackEvent('navigation_click', 'header', `${destination}_${location}`);
+  };
+
+  const handleLogoClick = () => {
+    trackEvent('logo_click', 'navigation', 'header');
+  };
+
+  const handleMobileMenuToggle = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+    trackEvent('mobile_menu_toggle', 'interaction', mobileMenuOpen ? 'close' : 'open');
+  };
 
   return (
     <div
@@ -19,7 +35,6 @@ export function Header() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Overlay */}
       <div className="bg-[#0f0f23] py-4 px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <motion.div
@@ -27,7 +42,11 @@ export function Header() {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            <Link href="/" className="flex items-center gap-2">
+            <Link
+              href="/"
+              className="flex items-center gap-2"
+              onClick={handleLogoClick}
+            >
               <Image
                 src="/images/KyleLogoNoText.png"
                 alt="Game Tested Tech Logo"
@@ -43,29 +62,38 @@ export function Header() {
             </Link>
           </motion.div>
 
-          {/* Search Bar - Responsive */}
           <SearchBar />
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6 flex-shrink-0">
-            <Link href="/" className="text-game-white hover:text-game-cyan transition">
+            <Link
+              href="/"
+              className="text-game-white hover:text-game-cyan transition"
+              onClick={() => handleNavigationClick('home', 'desktop')}
+            >
               Home
             </Link>
             <div className="relative">
               <ArticlesDropdown />
             </div>
-            <Link href="/about" className="text-game-white hover:text-game-cyan transition">
+            <Link
+              href="/about"
+              className="text-game-white hover:text-game-cyan transition"
+              onClick={() => handleNavigationClick('about', 'desktop')}
+            >
               About Us
             </Link>
-            <Link href="/contact" className="text-game-white hover:text-game-cyan transition">
+            <Link
+              href="/contact"
+              className="text-game-white hover:text-game-cyan transition"
+              onClick={() => handleNavigationClick('contact', 'desktop')}
+            >
               Contact
             </Link>
           </nav>
 
-          {/* Mobile Menu Button */}
           <motion.button
             className="md:hidden relative z-50 p-2 rounded-lg bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 hover:border-[#ff6b35] transition-all flex-shrink-0"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={handleMobileMenuToggle}
             whileTap={{ scale: 0.95 }}
           >
             <motion.div
@@ -82,20 +110,20 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                trackEvent('mobile_menu_backdrop_click', 'interaction', 'close');
+              }}
             />
 
-            {/* Mobile Menu Panel */}
             <motion.div
               className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-gradient-to-b from-[#0f0f23] to-[#1a1a2e] shadow-2xl z-50 md:hidden overflow-y-auto"
               initial={{ x: "100%" }}
@@ -103,7 +131,6 @@ export function Header() {
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
             >
-              {/* Header del menú */}
               <div className="p-6 border-b border-gray-700">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -119,7 +146,10 @@ export function Header() {
                     </span>
                   </div>
                   <button
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      trackEvent('mobile_menu_close', 'interaction', 'x_button');
+                    }}
                     className="p-2 hover:bg-gray-800 rounded-lg transition"
                   >
                     <X className="w-5 h-5 text-white" />
@@ -127,7 +157,6 @@ export function Header() {
                 </div>
               </div>
 
-              {/* Navigation Items */}
               <div className="p-6 space-y-4">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -137,7 +166,10 @@ export function Header() {
                   <Link
                     href="/"
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#ff6b35]/20 hover:border-l-4 hover:border-[#ff6b35] transition-all group"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleNavigationClick('home', 'mobile');
+                    }}
                   >
                     <div className="w-2 h-2 bg-[#ff6b35] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span className="text-white font-medium">Home</span>
@@ -152,12 +184,15 @@ export function Header() {
                   <Link
                     href="/articles"
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#ff6b35]/20 hover:border-l-4 hover:border-[#ff6b35] transition-all group"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleNavigationClick('articles', 'mobile');
+                    }}
                   >
                     <div className="w-2 h-2 bg-[#ff6b35] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span className="text-white font-medium">Articles</span>
                   </Link>
-                </motion.div> 
+                </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -167,7 +202,10 @@ export function Header() {
                   <Link
                     href="/about"
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#ff6b35]/20 hover:border-l-4 hover:border-[#ff6b35] transition-all group"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleNavigationClick('about', 'mobile');
+                    }}
                   >
                     <div className="w-2 h-2 bg-[#ff6b35] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span className="text-white font-medium">About Us</span>
@@ -182,7 +220,10 @@ export function Header() {
                   <Link
                     href="/contact"
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#ff6b35]/20 hover:border-l-4 hover:border-[#ff6b35] transition-all group"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleNavigationClick('contact', 'mobile');
+                    }}
                   >
                     <div className="w-2 h-2 bg-[#ff6b35] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span className="text-white font-medium">Contact</span>
@@ -190,7 +231,6 @@ export function Header() {
                 </motion.div>
               </div>
 
-              {/* Footer del menú */}
               <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-700 bg-[#0f0f23]/90">
                 <div className="text-center">
                   <p className="text-gray-400 text-sm">
