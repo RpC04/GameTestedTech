@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Youtube, Instagram, Twitter, DiscIcon as Discord, Facebook } from "lucide-react";
+import { useAnalytics } from '@/hooks/use-analytics';
 
 const containerVariants = {
     hidden: { opacity: 0, y: 40 },
@@ -28,6 +29,20 @@ const itemVariants = {
 };
 
 export default function FooterAnimated() {
+    const { trackEvent } = useAnalytics();
+
+    const handleLogoClick = () => {
+        trackEvent('logo_click', 'navigation', 'footer');
+    };
+
+    const handleNavigationClick = (destination: string) => {
+        trackEvent('navigation_click', 'footer', destination);
+    };
+
+    const handleSocialClick = (platform: string) => {
+        trackEvent('social_click', 'footer', platform);
+    };
+
     return (
         <motion.footer
             className="bg-[#0a0a14] py-8 mt-auto border-t border-gray-800"
@@ -38,7 +53,6 @@ export default function FooterAnimated() {
         >
             <div className="max-w-7xl mx-auto px-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {/* Contact Info */}
                     <motion.div
                         className="space-y-4"
                         variants={containerVariants}
@@ -47,7 +61,11 @@ export default function FooterAnimated() {
                         viewport={{ once: true }}
                     >
                         <motion.div variants={itemVariants}>
-                            <Link href="/" className="flex items-center gap-2 mb-4">
+                            <Link 
+                                href="/" 
+                                className="flex items-center gap-2 mb-4"
+                                onClick={handleLogoClick}
+                            >
                                 <Image
                                     src="/images/KyleLogoNoText.png"
                                     alt="Game Tested Tech Logo"
@@ -65,27 +83,8 @@ export default function FooterAnimated() {
                                 Your trusted source for honest gaming hardware reviews, guides, and tech insights.
                             </p>
                         </motion.div>
-                        {/* Si deseas los contactos, descomenta aquí */}
-                        {/*
-            <motion.div className="flex items-center gap-2 pt-4" variants={itemVariants}>
-              <span className="text-gray-400">✉</span>
-              <a
-                href="mailto:contact@gametestedtech.com"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                contact@gametestedtech.com
-              </a>
-            </motion.div>
-            <motion.div className="flex items-center gap-2" variants={itemVariants}>
-              <span className="text-gray-400">📞</span>
-              <a href="tel:+11223456789" className="text-gray-400 hover:text-white transition-colors">
-                +1-1223-456-7890
-              </a>
-            </motion.div>
-            */}
                     </motion.div>
 
-                    {/* Navigation Links */}
                     <motion.div
                         className="space-y-4"
                         variants={containerVariants}
@@ -97,33 +96,52 @@ export default function FooterAnimated() {
                             Quick Links
                         </motion.h3>
                         <motion.div variants={itemVariants}>
-                            <Link href="/" className="block text-gray-400 hover:text-white transition-colors">
+                            <Link 
+                                href="/" 
+                                className="block text-gray-400 hover:text-white transition-colors"
+                                onClick={() => handleNavigationClick('home')}
+                            >
                                 Home
                             </Link>
                         </motion.div>
                         <motion.div variants={itemVariants}>
-                            <Link href="/articles" className="block text-gray-400 hover:text-white transition-colors">
+                            <Link 
+                                href="/articles" 
+                                className="block text-gray-400 hover:text-white transition-colors"
+                                onClick={() => handleNavigationClick('articles')}
+                            >
                                 Articles
                             </Link>
                         </motion.div>
                         <motion.div variants={itemVariants}>
-                            <Link href="/about" className="block text-gray-400 hover:text-white transition-colors">
+                            <Link 
+                                href="/about" 
+                                className="block text-gray-400 hover:text-white transition-colors"
+                                onClick={() => handleNavigationClick('about')}
+                            >
                                 About Us
                             </Link>
                         </motion.div>
                         <motion.div variants={itemVariants}>
-                            <Link href="/contact" className="block text-gray-400 hover:text-white transition-colors">
+                            <Link 
+                                href="/contact" 
+                                className="block text-gray-400 hover:text-white transition-colors"
+                                onClick={() => handleNavigationClick('contact')}
+                            >
                                 Contact
                             </Link>
                         </motion.div>
                         <motion.div variants={itemVariants}>
-                            <Link href="/legal" className="block text-gray-400 hover:text-white transition-colors">
+                            <Link 
+                                href="/legal" 
+                                className="block text-gray-400 hover:text-white transition-colors"
+                                onClick={() => handleNavigationClick('legal')}
+                            >
                                 Legal
                             </Link>
                         </motion.div>
                     </motion.div>
 
-                    {/* Social Media Links */}
                     <motion.div
                         className="space-y-4"
                         variants={containerVariants}
@@ -138,6 +156,7 @@ export default function FooterAnimated() {
                             href="#"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
+                            onClick={() => handleSocialClick('youtube')}
                         >
                             <Youtube className="h-5 w-5" />
                             <span>Youtube</span>
@@ -146,6 +165,7 @@ export default function FooterAnimated() {
                             href="#"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
+                            onClick={() => handleSocialClick('instagram')}
                         >
                             <Instagram className="h-5 w-5" />
                             <span>Instagram</span>
@@ -154,6 +174,7 @@ export default function FooterAnimated() {
                             href="#"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
+                            onClick={() => handleSocialClick('twitter')}
                         >
                             <Twitter className="h-5 w-5" />
                             <span>Twitter</span>
@@ -162,6 +183,7 @@ export default function FooterAnimated() {
                             href="#"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
+                            onClick={() => handleSocialClick('discord')}
                         >
                             <Discord className="h-5 w-5" />
                             <span>Discord</span>
@@ -170,6 +192,7 @@ export default function FooterAnimated() {
                             href="#"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
+                            onClick={() => handleSocialClick('facebook')}
                         >
                             <Facebook className="h-5 w-5" />
                             <span>Facebook</span>

@@ -32,9 +32,8 @@ export default function ArticlesDropdown() {
             if (dropdownRef.current && open) {
                 const rect = dropdownRef.current.getBoundingClientRect();
                 const viewportWidth = window.innerWidth;
-                const dropdownWidth = 256 + 288; // ancho base + ancho subcategorías
+                const dropdownWidth = 256 + 288;
                 
-                // Si no hay espacio suficiente, cambiar a vertical
                 if (rect.left + dropdownWidth > viewportWidth || viewportWidth < 640) {
                     setDropdownStyle('vertical');
                 } else {
@@ -92,8 +91,23 @@ export default function ArticlesDropdown() {
         fetchCategories();
     }, []);
 
-    const handleCategoryClick = (category: Category) => {
-        router.push(`/articles?category=${category.slug}`);
+    const handleCategoryClick = (category: Category | CategoryWithSubs) => {
+        let categoryParams: string[] = [];
+        
+        // Si es una categoría padre (tiene subcategorías), incluir todas
+        if ('subcategories' in category && category.subcategories.length > 0) {
+            // Agregar la categoría padre
+            categoryParams.push(category.slug);
+            // Agregar todas las subcategorías
+            categoryParams.push(...category.subcategories.map(sub => sub.slug));
+        } else {
+            // Si es una subcategoría individual, solo agregar esa
+            categoryParams.push(category.slug);
+        }
+
+        // Construir la URL con múltiples categorías
+        const categoryQuery = categoryParams.join(',');
+        router.push(`/articles?category=${categoryQuery}`);
         setOpen(false);
         setHoveredIndex(null);
     };
@@ -127,7 +141,7 @@ export default function ArticlesDropdown() {
             {open && (
                 <>
                     {dropdownStyle === 'horizontal' ? (
-                        // Layout horizontal (cuando hay espacio)
+                        // Layout horizontal
                         <div className="absolute left-0 top-full flex bg-[#0f0f23] shadow-2xl rounded-xl z-[9999] min-w-[256px] max-w-[544px]">
                             <ul className="w-64 py-4 px-2 space-y-1 border-r border-gray-700">
                                 {categories.map((cat, i) => (
@@ -161,7 +175,7 @@ export default function ArticlesDropdown() {
                             )}
                         </div>
                     ) : (
-                        // Layout vertical (cuando no hay espacio)
+                        // Layout vertical
                         <div className="absolute left-0 top-full bg-[#0f0f23] shadow-2xl rounded-xl z-[9999] w-80 max-w-[90vw] max-h-[70vh] overflow-y-auto">
                             <div className="py-4 px-2">
                                 {categories.map((cat, i) => (
@@ -177,7 +191,6 @@ export default function ArticlesDropdown() {
                                             <ChevronDown className={`w-4 h-4 transition-transform ${hoveredIndex === i ? 'rotate-180' : ''}`} />
                                         </div>
                                         
-                                        {/* Subcategorías expandidas debajo */}
                                         {hoveredIndex === i && cat.subcategories.length > 0 && (
                                             <div className="mt-1 ml-4 space-y-1">
                                                 {cat.subcategories.map((sub) => (
