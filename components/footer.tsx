@@ -116,6 +116,11 @@ export default function FooterAnimated() {
                                 Contact
                             </Link>
                         </motion.div>
+                        <motion.div variants={itemVariants}>
+                            <Link href="/legal" className="block text-gray-400 hover:text-white transition-colors">
+                                Legal
+                            </Link>
+                        </motion.div>
                     </motion.div>
 
                     {/* Social Media Links */}

@@ -3,8 +3,6 @@
 import Image from "next/image"
 import Link from "next/link"
 import {
-  ChevronLeft,
-  ChevronRight,
   Search
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -14,25 +12,26 @@ import { supabase } from "@/lib/supabase"
 import { ArticleCard } from "@/components/articles/article-card"
 import { HorizontalArticleCard } from "@/components/articles/horizontal-article-card"
 import ArticlesDropdown from "@/components/articles/articles-dropdown";
+import { Header } from "@/components/header"
 import Footer from "@/components/footer";
 
 
 export default function Home() {
   // Estado para controlar las animaciones
   const [isLoaded, setIsLoaded] = useState(false)
-  const [activeSlide, setActiveSlide] = useState(0)
   const [isHovering, setIsHovering] = useState(false)
   const [activeTab] = useState("recent")
   const [latestArticles, setLatestArticles] = useState<any[]>([])
 
-  const dotPositions = [
-    { top: "11.028856%", left: "27.500000%" },
-    { top: "50.000000%", left: "5.000000%" },
-    { top: "88.971144%", left: "27.500000%" },
-    { top: "88.971144%", left: "72.500000%" },
-    { top: "50.000000%", left: "95.000000%" },
-    { top: "11.028856%", left: "72.500000%" },
-  ];
+  const floatAnimation = {
+    y: [0, -15, 0],
+    rotate: [0, 2, 0, -2, 0],
+    transition: {
+      duration: 6,
+      repeat: Number.POSITIVE_INFINITY,
+      ease: "easeInOut",
+    },
+  }
 
   useEffect(() => {
     async function fetchArticles() {
@@ -87,26 +86,6 @@ export default function Home() {
     setIsLoaded(true)
   }, [])
 
-  // Función para cambiar slides
-  const nextSlide = () => {
-    setActiveSlide((prev) => (prev + 1) % 3)
-  }
-
-  const prevSlide = () => {
-    setActiveSlide((prev) => (prev - 1 + 3) % 3)
-  }
-
-  // Efecto para cambiar slides automáticamente
-  useEffect(() => {
-    if (isHovering) return
-
-    const interval = setInterval(() => {
-      nextSlide()
-    }, 5000)
-
-    return () => clearInterval(interval)
-  }, [isHovering])
- 
   // Variantes de animación para Framer Motion
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -128,108 +107,12 @@ export default function Home() {
     },
   }
 
-  const slideVariants = {
-    enter: (direction) => ({
-      x: direction > 0 ? 300 : -300,
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 300, damping: 30 },
-    },
-    exit: (direction) => ({
-      x: direction < 0 ? 300 : -300,
-      opacity: 0,
-      transition: { duration: 0.2 },
-    }),
-  }
-
   return (
     <div className="min-h-screen flex flex-col bg-[#0f0f23]">
       {/* Header completo con imagen de fondo */}
+      
       <div className="relative">
-        {/* Imagen de fondo para todo el header con efecto parallax */}
-
-        {/* Navbar */}
-        <motion.div
-          className="relative z-50 border-b border-gray-800 bg-[#0f0f23]"
-          initial={{  opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <div className="max-w-7xl mx-auto py-4 px-6">
-            <div className="flex items-center justify-between">
-              <motion.div
-                className="flex items-center gap-8"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              >
-                <Link href="/" className="flex items-center gap-2">
-                  <Image
-                    src="/images/KyleLogoNoText.png"
-                    alt="Game Tested Tech Logo"
-                    width={40}
-                    height={40}
-                    className="object-contain"
-                  />
-                  <span className="text-game-white text-sm font-bold hidden sm:inline">
-                    GAME
-                    <br />
-                    TESTED TECH
-                  </span>
-                </Link>
-              </motion.div>
-              {/*
-              <motion.div
-                className="relative flex-1 max-w-xl mx-8"
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
-                <input
-                  type="text"
-                  className="w-full bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 rounded-full py-2 px-4 pr-10 text-white transition-all duration-300 focus:border-game-cyan focus:ring-1 focus:ring-game-cyan"
-                  placeholder="Search..."
-                />
-                <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-              </motion.div>
-              */}
-              <motion.nav
-                className="hidden md:flex items-center gap-6"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <motion.div variants={itemVariants}>
-                  <Link
-                    href="/"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block">
-                    Home
-                  </Link>
-                </motion.div>
-                <motion.div variants={itemVariants}>
-                  <ArticlesDropdown />
-                </motion.div>
-                <motion.div variants={itemVariants}>
-                  <Link
-                    href="/about"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block"
-                  >
-                    About Us
-                  </Link>
-                </motion.div>
-                <motion.div variants={itemVariants}>
-                  <Link
-                    href="/contact"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block">
-                    Contact
-                  </Link>
-                </motion.div>
-              </motion.nav>
-            </div>
-          </div>
-        </motion.div>
+        <Header />
 
         {/* Hero Section - Con slider animado */}
         <div className="relative w-full bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23] overflow-hidden">
@@ -241,153 +124,118 @@ export default function Home() {
             </div>
           </div>
           <motion.div
-              className="absolute inset-0 w-full h-full pointer-events-none"
-              initial={{ scale: 1.1 }}
-              animate={{ scale: isLoaded ? 1 : 1.1 }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: isLoaded ? 1 : 1.1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
           >
 
             <motion.div
-                className="absolute inset-0 bg-black/30"
-                initial={{ opacity: 0.5 }}
-                animate={{ opacity: 0.3 }}
-                transition={{ duration: 1.2 }}
+              className="absolute inset-0 bg-black/30"
+              initial={{ opacity: 0.5 }}
+              animate={{ opacity: 0.3 }}
+              transition={{ duration: 1.2 }}
             ></motion.div>
           </motion.div>
           <div className="relative z-10 py-16 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
-            <motion.div
-              className="space-y-6"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              onHoverStart={() => setIsHovering(true)}
-              onHoverEnd={() => setIsHovering(false)}
-            >
-              <AnimatePresence>
-                <div className="space-y-2"> 
-                  <h1 className="text-4xl md:text-5xl font-bold text-game-white">
-                   Tech for Gamers, By Gamers.
-                  </h1>
-                  <p className="text-gray-300 mt-4" >
-                    Where Gaming Meets Innovation. Tech for Gamers, By Gamers
-                  </p>
-                </div>
-              </AnimatePresence>
-
-              <motion.div className="flex gap-4" variants={itemVariants}>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link href="/articles">
-                    <Button className="bg-[#ff6b35] hover:bg-[#ff8c5a] text-white rounded-md transition-all duration-300 border-0">
-                      Explore Now
-                    </Button>
-                  </Link>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link href="/contact">
-                    <Button variant="outline"
-                      className="bg-transparent border border-gray-600 hover:border-white text-white px-6 py-3 rounded-md transition-all transform hover:scale-105">
-                      Contact Us
-                    </Button>
-                  </Link>
-                </motion.div>
-              </motion.div>
-
-              <motion.div className="flex gap-8 pt-4" variants={itemVariants}>
-                <motion.div
-                  className="text-center"
-                  whileHover={{ y: -5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <p className="text-2xl font-bold">500+</p>
-                  <p className="text-sm text-gray-400">Articles</p>
-                </motion.div>
-                <motion.div
-                  className="text-center"
-                  whileHover={{ y: -5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <p className="text-2xl font-bold">50K+</p>
-                  <p className="text-sm text-gray-400">Readers</p>
-                </motion.div>
-                <motion.div
-                  className="text-center"
-                  whileHover={{ y: -5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <p className="text-2xl font-bold">20+</p>
-                  <p className="text-sm text-gray-400">Categories</p>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-
-            <motion.div
-              className="relative hidden md:block"
-              initial={{ x: 100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.5 }}>
-
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeSlide}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.5 }}
-                  className="relative"
-                >
-                  <div className="relative w-[400px] h-[400px] flex items-center justify-center">
-                    <Image
-                      src="/images/game-controller-logo.png"
-                      alt="Game Controller Logo"
-                      width={350}
-                      height={350}
-                      className="object-contain z-10 relative"
-                    />
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full bg-blue-500/30 blur-2xl -z-10"></div>
+            <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
+              <motion.div
+                className="space-y-6"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                onHoverStart={() => setIsHovering(true)}
+                onHoverEnd={() => setIsHovering(false)}
+              >
+                <AnimatePresence>
+                  <div className="space-y-2">
+                    <h1 className="text-4xl md:text-5xl font-bold text-game-white">
+                      Tech for Gamers, By Gamers.
+                    </h1>
+                    <p className="text-gray-300 mt-4" >
+                      Where Gaming Meets Innovation. Tech for Gamers, By Gamers
+                    </p>
                   </div>
-                  <motion.div
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full"
-                    animate={{
-                      rotate: 360,
-                      scale: [1, 1.02, 1],
-                    }}
-                    transition={{
-                      rotate: {
-                        duration: 20,
-                        repeat: Number.POSITIVE_INFINITY,
-                        ease: "linear",
-                      },
-                      scale: {
-                        duration: 3,
-                        repeat: Number.POSITIVE_INFINITY,
-                        repeatType: "reverse",
-                      },
-                    }}
-                  >
-                    {dotPositions.map((pos, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute w-2 h-2 rounded-full bg-game-cyan"
-                        style={{ top: pos.top, left: pos.left }}
-                        animate={{
-                          opacity: [0.2, 1, 0.2],
-                          scale: [0.8, 1.2, 0.8],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Number.POSITIVE_INFINITY,
-                          delay: i * 0.3,
-                        }}
-                      />
-                    ))}
+                </AnimatePresence>
+
+                <motion.div className="flex gap-4" variants={itemVariants}>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Link href="/articles">
+                      <Button className="bg-[#ff6b35] hover:bg-[#ff8c5a] text-white rounded-md transition-all duration-300 border-0">
+                        Explore Now
+                      </Button>
+                    </Link>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Link href="/contact">
+                      <Button variant="outline"
+                        className="bg-transparent border border-gray-600 hover:border-white text-white px-6 py-3 rounded-md transition-all transform hover:scale-105">
+                        Contact Us
+                      </Button>
+                    </Link>
                   </motion.div>
                 </motion.div>
-              </AnimatePresence>
-            </motion.div>
-          </div>
+
+                <motion.div className="flex gap-8 pt-4" variants={itemVariants}>
+                  <motion.div
+                    className="text-center"
+                    whileHover={{ y: -5 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <p className="text-2xl font-bold">500+</p>
+                    <p className="text-sm text-gray-400">Articles</p>
+                  </motion.div>
+                  <motion.div
+                    className="text-center"
+                    whileHover={{ y: -5 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <p className="text-2xl font-bold">50K+</p>
+                    <p className="text-sm text-gray-400">Readers</p>
+                  </motion.div>
+                  <motion.div
+                    className="text-center"
+                    whileHover={{ y: -5 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <p className="text-2xl font-bold">20+</p>
+                    <p className="text-sm text-gray-400">Categories</p>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
+
+              {/* Imagen del controlador con animación de flotación mejorada */}
+              <div className="hidden md:flex justify-center items-center">
+                <motion.div
+                  animate={floatAnimation}
+                  className="relative"
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.5 }}
+                      className="relative"
+                    >
+                      <div className="relative w-[400px] h-[400px] flex items-center justify-center">
+                        <Image
+                          src="/images/game-controller-logo.png"
+                          alt="Game Controller Logo"
+                          width={350}
+                          height={350}
+                          className="object-contain z-10 relative"
+                          priority
+                        />
+                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full bg-blue-500/30 blur-2xl -z-10"></div>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </motion.div>
+              </div>
+            </div>
             <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#0a0a14] to-transparent"></div>
-        </div>
+          </div>
         </div>
       </div>
 
@@ -406,10 +254,9 @@ export default function Home() {
                 viewport={{ once: true }}
               >
                 <div
-                  className={`py-3 px-5 font-medium text-2xl transition-colors ${
-                    activeTab === "recent"
-                    ? "text-game-cyan"
-                    : "text-gray-400"
+                  className={`py-3 px-5 font-medium text-2xl transition-colors ${activeTab === "recent"
+                      ? "text-game-cyan"
+                      : "text-gray-400"
                     }`}
                 >
                   Recent Posts
@@ -523,61 +370,6 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
-
-      {/* Newsletter Section 
-      <section className="py-16 bg-game-purple">
-        <motion.div
-          className="max-w-4xl mx-auto px-6 text-center"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          <motion.h2
-            className="text-3xl font-bold text-white mb-4"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            Join Our Gaming Tech Community
-          </motion.h2>
-          <motion.p
-            className="text-gray-300 mb-8 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            Subscribe to our newsletter and be the first to receive our latest articles, reviews, and exclusive content.
-            Stay ahead of the curve with Game Tested Tech.
-          </motion.p>
-
-          <motion.div
-            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-1 bg-[#1a1a1a] border border-gray-700 rounded-md py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-game-cyan"
-            />
-            <Button className="bg-[#9d8462] hover:bg-[#9d8462] text-white py-3 px-6">Subscribe</Button>
-          </motion.div>
-          <motion.p
-            className="text-xs text-gray-500 mt-3"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.
-          </motion.p>
-        </motion.div>
-      </section>*/}
       {/* Community Stats Section */}
       <motion.section
         className="bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23] py-12 border-t border-gray-800"
@@ -592,20 +384,20 @@ export default function Home() {
             variants={container}
           >
             {stats.map((stat, i) => (
-                <motion.div key={i} className="p-6" variants={item}>
-                  <p className={
-                          "text-3xl md:text-4xl font-bold " +
-                          (i === 0
-                              ? "text-white"
-                              : i === 2
-                                  ? "text-[#ff6b35]"
-                                  : "text-game-cyan")
-                      }
-                  >
-                    {stat.value}
-                  </p>
-                  <p className="text-gray-400 mt-2">{stat.label}</p>
-                </motion.div>
+              <motion.div key={i} className="p-6" variants={item}>
+                <p className={
+                  "text-3xl md:text-4xl font-bold " +
+                  (i === 0
+                    ? "text-white"
+                    : i === 2
+                      ? "text-[#ff6b35]"
+                      : "text-game-cyan")
+                }
+                >
+                  {stat.value}
+                </p>
+                <p className="text-gray-400 mt-2">{stat.label}</p>
+              </motion.div>
             ))}
           </motion.div>
         </div>
