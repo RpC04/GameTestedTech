@@ -2,6 +2,8 @@ import { cookies } from "next/headers"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import BlogPost from "@/components/blog/blog-post"
 import type { RelatedArticle } from "@/types/article"
+import { useEffect, useState } from 'react'
+import { useAnalytics } from '@/hooks/use-analytics'
 
 export const dynamic = "force-dynamic"
 

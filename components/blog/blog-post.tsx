@@ -7,10 +7,11 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Heart, Eye, Send, Clock } from "lucide-react"
+import { Heart, Eye, Clock } from "lucide-react"
 import { Header } from "@/components/header"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useAnalytics } from '@/hooks/use-analytics'
 import Footer from "../footer";
 
 const supabase = createClientComponentClient()
@@ -91,6 +92,8 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
     const [localArticle, setLocalArticle] = useState(article)
     const safeHtml = convertMarkdownToHTML(article.content || "")
     const { htmlWithIds, toc: tableOfContents } = processHtmlAndExtractTOC(safeHtml);
+    const { trackEvent, trackConversion } = useAnalytics()
+    const [readingStartTime, setReadingStartTime] = useState<number>(0)
 
     const post = {
         ...article,
@@ -208,6 +211,75 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
         }
     }, [article.id]);
 
+    {/* Google Analytics */ }
+    // Analytics tracking cuando se monta el componente
+    useEffect(() => {
+        // Marcar inicio de lectura
+        setReadingStartTime(Date.now())
+
+        // Trackear visualización del artículo
+        trackEvent('article_view', 'content', article.title)
+
+        // Trackear scroll profundo (75% del artículo)
+        const handleScroll = () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
+
+            if (scrolled > 75) {
+                trackEvent('deep_scroll', 'engagement', article.title, Math.round(scrolled))
+                window.removeEventListener('scroll', handleScroll)
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll)
+
+        // Timer para artículo "leído" (30 segundos)
+        const readTimer = setTimeout(() => {
+            trackConversion('article_read_30s', {
+                article_title: article.title,
+                article_category: article.categories?.[0] || 'uncategorized',
+                article_id: article.id
+            })
+        }, 30000)
+
+        // Timer para artículo "completado" (2 minutos)
+        const completeTimer = setTimeout(() => {
+            trackConversion('article_completed', {
+                article_title: article.title,
+                article_category: article.categories?.[0] || 'uncategorized',
+                reading_time_seconds: Math.round((Date.now() - readingStartTime) / 1000)
+            })
+        }, 120000)
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+            clearTimeout(readTimer)
+            clearTimeout(completeTimer)
+        }
+    }, [article, trackEvent, trackConversion])
+
+    // Trackear abandono de página
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            if (readingStartTime > 0) {
+                const timeSpent = Math.round((Date.now() - readingStartTime) / 1000)
+                trackEvent('article_exit', 'engagement', article.title, timeSpent)
+            }
+        }
+
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+    }, [readingStartTime, trackEvent, article.title])
+
+    // Función para trackear clicks en artículos relacionados
+    const handleRelatedArticleClick = (relatedArticleTitle: string) => {
+        trackEvent('related_article_click', 'navigation', relatedArticleTitle)
+    }
+
+    // Función para trackear compartir
+    const handleShareClick = (platform: string) => {
+        trackEvent('share_click', 'social', `${article.title} - ${platform}`)
+    }
+
     return (
         <div className="min-h-screen bg-[#0a0a14] text-gray-200">
             <Header />
@@ -268,7 +340,10 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                         <div className="flex justify-end gap-4 mb-8">
                             <button
                                 className={`flex items-center gap-2 px-4 py-2 rounded-full ${liked ? "bg-[#ff6b35]/20 text-[#ff6b35]" : "bg-[#1a1a2e] text-gray-400"} transition-colors`}
-                                onClick={handleLike}
+                                onClick={() => {
+                                    handleLike();
+                                    trackEvent(liked ? 'unlike' : 'like', 'engagement', post.title, post.id);
+                                }}
                             >
                                 <Heart className={`h-5 w-5 ${liked ? "fill-[#ff6b35]" : ""}`} />
                                 <span>{localArticle.likes}</span>
@@ -299,6 +374,9 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                                         key={idx}
                                         href={`/articles?tag=${tag.toLowerCase().replace(/\s+/g, "-")}`}
                                         className="bg-[#1a1a2e] text-gray-300 text-sm px-3 py-1 rounded-full hover:bg-[#2a2a4e] transition-colors"
+                                        onClick={() => {
+                                            trackEvent('tag_click', 'navigation', tag, post.id);
+                                        }}
                                     >
                                         {tag}
                                     </Link>
@@ -350,7 +428,12 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                                     <ul className="space-y-3">
                                         {tableOfContents.map((item) => (
                                             <li key={item.id}>
-                                                <a href={`#${item.id}`} className="text-gray-300 hover:text-white">
+                                                <a
+                                                    href={`#${item.id}`}
+                                                    className="text-gray-300 hover:text-white"
+                                                    onClick={() => {
+                                                        trackEvent('toc_click', 'navigation', item.title, post.id);
+                                                    }}>
                                                     {item.title}
                                                 </a>
                                             </li>
@@ -379,7 +462,12 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                                 </div>
                                 <p className="text-gray-300 text-sm">{post.author.bio}</p>
                                 <Link href="/about" className="mt-4 w-full block">
-                                    <button className="w-full bg-[#9d8462] hover:bg-[#9d8462] text-white py-2 rounded-md transition-colors">
+                                    <button
+                                        className="w-full bg-[#9d8462] hover:bg-[#9d8462] text-white py-2 rounded-md transition-colors"
+                                        onClick={() => {
+                                            trackEvent('author_details_click', 'navigation', post.author.name, post.id);
+                                        }}
+                                    >
                                         More details
                                     </button>
                                 </Link>
@@ -429,7 +517,10 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                                 <button
                                     onClick={() => {
                                         const container = document.getElementById('carousel-container')
-                                        if (container) container.scrollLeft -= 400
+                                        if (container) {
+                                            container.scrollLeft -= 400;
+                                            trackEvent('carousel_left', 'interaction', 'related_articles', post.id);
+                                        }
                                     }}
                                     className="absolute -left-8 md:-left-16 top-1/2 -translate-y-1/2 z-10 bg-[#1a1a2e] hover:bg-[#2a2a4e] text-white p-3 rounded-full transition-colors"
                                 >
@@ -460,7 +551,13 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                                                         <h4 className="text-lg font-bold text-white mb-2 line-clamp-2">{rel.title}</h4>
                                                         <p className="text-gray-300 text-sm line-clamp-3">{rel.excerpt}</p>
                                                         <div className="mt-10 flex flex-wrap justify-center md:justify-start gap-4">
-                                                            <Link href={`/blog/${rel.slug}`} className="inline-flex items-center gap-2 bg-[#ff6b35] hover:bg-[#ff8c5a] text-white px-4 py-2 rounded-md transition-all transform hover:scale-105">
+                                                            <Link
+                                                                href={`/blog/${rel.slug}`}
+                                                                className="inline-flex items-center gap-2 bg-[#ff6b35] hover:bg-[#ff8c5a] text-white px-4 py-2 rounded-md transition-all transform hover:scale-105"
+                                                                onClick={() => {
+                                                                    trackEvent('related_article_click', 'navigation', rel.title, rel.id);
+                                                                }}
+                                                            >
                                                                 Read More →
                                                             </Link>
                                                         </div>
@@ -475,7 +572,10 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                                 <button
                                     onClick={() => {
                                         const container = document.getElementById('carousel-container')
-                                        if (container) container.scrollLeft += 400
+                                        if (container) {
+                                            container.scrollLeft += 400; 
+                                            trackEvent('carousel_right', 'interaction', 'related_articles', post.id);
+                                        }
                                     }}
                                     className="absolute -right-8 md:-right-16 top-1/2 -translate-y-1/2 z-10 bg-[#1a1a2e] hover:bg-[#2a2a4e] text-white p-3 rounded-full transition-colors"
                                 >
