@@ -479,8 +479,8 @@ export default function ContactMessagesPage() {
                 Delete Message
               </Button>
               <Button
-                onClick={() => setViewingMessage(null)}
-                variant="outline"
+                onClick={() => setViewingMessage(null)} 
+                className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
               >
                 Close
               </Button>

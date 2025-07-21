@@ -12,6 +12,7 @@ import { supabase } from "@/lib/supabase"
 import { ArticleCard } from "@/components/articles/article-card"
 import { HorizontalArticleCard } from "@/components/articles/horizontal-article-card"
 import ArticlesDropdown from "@/components/articles/articles-dropdown";
+import { Header } from "@/components/header"
 import Footer from "@/components/footer";
 
 
@@ -109,86 +110,9 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-[#0f0f23]">
       {/* Header completo con imagen de fondo */}
+      
       <div className="relative">
-        {/* Navbar */}
-        <motion.div
-          className="relative z-50 border-b border-gray-800 bg-[#0f0f23]"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <div className="max-w-7xl mx-auto py-4 px-6">
-            <div className="flex items-center justify-between">
-              <motion.div
-                className="flex items-center gap-8"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              >
-                <Link href="/" className="flex items-center gap-2">
-                  <Image
-                    src="/images/KyleLogoNoText.png"
-                    alt="Game Tested Tech Logo"
-                    width={40}
-                    height={40}
-                    className="object-contain"
-                  />
-                  <span className="text-game-white text-sm font-bold hidden sm:inline">
-                    GAME
-                    <br />
-                    TESTED TECH
-                  </span>
-                </Link>
-              </motion.div>
-
-              <motion.div
-                className="relative flex-1 max-w-xl mx-8"
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
-                <input
-                  type="text"
-                  className="w-full bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 rounded-full py-2 px-4 pr-10 text-white transition-all duration-300 focus:border-game-cyan focus:ring-1 focus:ring-game-cyan"
-                  placeholder="Search..."
-                />
-                <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-              </motion.div>
-
-              <motion.nav
-                className="hidden md:flex items-center gap-6"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <motion.div variants={itemVariants}>
-                  <Link
-                    href="/"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block">
-                    Home
-                  </Link>
-                </motion.div>
-                <motion.div variants={itemVariants}>
-                  <ArticlesDropdown />
-                </motion.div>
-                <motion.div variants={itemVariants}>
-                  <Link
-                    href="/about"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block"
-                  >
-                    About Us
-                  </Link>
-                </motion.div>
-                <motion.div variants={itemVariants}>
-                  <Link
-                    href="/contact"
-                    className="text-game-white hover:text-game-cyan transition-all duration-300 hover:scale-105 inline-block">
-                    Contact
-                  </Link>
-                </motion.div>
-              </motion.nav>
-            </div>
-          </div>
-        </motion.div>
+        <Header />
 
         {/* Hero Section - Con slider animado */}
         <div className="relative w-full bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23] overflow-hidden">

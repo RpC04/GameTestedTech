@@ -11,7 +11,8 @@ import { useEffect, useState } from "react"
 import { Disclosure } from "@headlessui/react"
 import { ChevronDown } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import ArticlesDropdown from "@/components/articles/articles-dropdown";
+import ArticlesDropdown from "@/components/articles/articles-dropdown"
+import { Header } from "@/components/header"
 import Footer from "@/components/footer"
 import { useSearchParams } from 'next/navigation'
 
@@ -212,53 +213,9 @@ export default function Articles() {
 
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#0f0f23]">
-            {/* Complete header with background image */}
+        <div className="min-h-screen flex flex-col bg-[#0f0f23]"> 
             {/* Navbar */}
-            <div className="relative z-[1000] border-b border-gray-800">
-                <div className="max-w-7xl mx-auto py-4 px-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-8">
-                            <Link href="/" className="flex items-center gap-2">
-                                <Image
-                                    src="/images/KyleLogoNoText.png"
-                                    alt="Game Tested Tech Logo"
-                                    width={40}
-                                    height={40}
-                                    className="object-contain"
-                                />
-                                <span className="text-game-white text-sm font-bold hidden sm:inline">
-                                    GAME
-                                    <br />
-                                    TESTED TECH
-                                </span>
-                            </Link>
-                        </div>
-                        {/*
-                            <div className="relative flex-1 max-w-xl mx-8">
-                                <input
-                                    type="text"
-                                    className="w-full bg-[#1a1a1a]/80 backdrop-blur-sm border border-gray-700 rounded-full py-2 px-4 pr-10 text-white"
-                                    placeholder="Search..."
-                                />
-                                <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
-                            </div>
-*/}
-                        <nav className="hidden md:flex items-center gap-6">
-                            <Link href="/" className="text-game-white hover:text-game-cyan transition">
-                                Home
-                            </Link>
-                            <ArticlesDropdown />
-                            <Link href="/about" className="text-game-white hover:text-game-cyan transition">
-                                About Us
-                            </Link>
-                            <Link href="/contact" className="text-game-white hover:text-game-cyan transition">
-                                Contact
-                            </Link>
-                        </nav>
-                    </div>
-                </div>
-            </div>
+            <Header />
             <div className="relative">
                 {/* Hero Section - Without geometric shapes */}
                 <div className="relative py-16 bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23]">
