@@ -6,7 +6,7 @@ import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
-import { LayoutDashboard, Tags, FileText, Tag, Inbox, Users, Settings, LogOut, Menu, X, AlertCircle } from "lucide-react"
+import { LayoutDashboard, Tags, FileText, Tag, Inbox, Users, UserRoundPen,  Settings, LogOut, Menu, X, AlertCircle } from "lucide-react"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -116,7 +116,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const navItems = [
     
     { name: "Articles", href: "/admin/articles", icon: <FileText className="h-5 w-5" /> },
-    { name: "Categories", href: "/admin/categories", icon: <Tag className="h-5 w-5" /> }, 
+    { name: "Profile", href: "/admin/profile", icon: <UserRoundPen className="h-5 w-5" /> },
+    { name: "Categories", href: "/admin/categories", icon: <Tag className="h-5 w-5" /> },
     { name: "Contact", href: "/admin/contact", icon: <Inbox className="h-5 w-5" /> },
     { name: "Tags", href: "/admin/tags", icon: <Tags className="h-5 w-5" /> }, 
   ]

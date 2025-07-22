@@ -15,6 +15,11 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
   const isNewArticle = articleId === "new"
   const numericId = isNewArticle ? null : Number.parseInt(articleId)
 
+  const extractFilePathFromUrl = (url: string): string | null => {
+    const parts = url.split('/storage/v1/object/public/imagesblog/')
+    return parts.length > 1 ? parts[1] : null
+  }
+
   const [article, setArticle] = useState<ArticleFormWithTags>({
     title: "",
     slug: "",
@@ -214,7 +219,15 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
 
   const handleDelete = async () => {
     if (!articleId || !confirm("Are you sure you want to delete this article?")) return
+
     try {
+      if (article.featured_image) {
+        const oldFilePath = extractFilePathFromUrl(article.featured_image)
+        if (oldFilePath) {
+          await supabase.storage.from("imagesblog").remove([oldFilePath])
+        }
+      }
+
       const { error } = await supabase.from("articles").delete().eq("id", articleId)
       if (error) throw error
       router.push("/admin/articles")
@@ -228,44 +241,62 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const filePath = `featured-images/${Date.now()}-${file.name}`;
-    const { error } = await supabase
-      .storage
-      .from("imagesblog")
-      .upload(filePath, file);
+    try {
+      if (article.featured_image) {
+        try {
+          const oldFilePath = extractFilePathFromUrl(article.featured_image); // ✅ Usar la función helper
+          console.log("Path a borrar:", oldFilePath); // Debug
 
-    if (error) {
-      setError("Error uploading image: " + error.message);
-      return;
-    }
+          if (oldFilePath) {
+            const { error: deleteError } = await supabase.storage
+              .from("imagesblog")
+              .remove([oldFilePath]);
 
-    // Get public URL
-    const { data: publicUrlData } = supabase.storage.from("imagesblog").getPublicUrl(filePath);
-    const publicUrl = publicUrlData?.publicUrl;
-
-    /******
-      If dont want to update immediatly the image of the article, just comment the lines below or remove it 2/2,
-      and change for this:
-
-      setArticle((prev) => ({
-        ...prev,
-        featured_image: publicUrl || "",
-      }))
-    ******/
-    setArticle(prev => ({
-      ...prev,
-      featured_image: publicUrl,
-    }));
-
-    // If existing article, update the featured image in the database
-    if (!isNewArticle && article.id) {
-      const { error: updateError } = await supabase
-        .from("articles")
-        .update({ featured_image: publicUrl })
-        .eq("id", article.id);
-      if (updateError) {
-        setError("Error updating article image: " + updateError.message);
+            if (deleteError) {
+              console.error("Error borrando:", deleteError);
+            } else {
+              console.log("✅ Imagen anterior borrada exitosamente");
+            }
+          }
+        } catch (error) {
+          console.log("No se pudo borrar imagen anterior:", error)
+        }
       }
+
+      const filePath = `featured-images/${Date.now()}-${file.name}`;
+      const { error } = await supabase
+        .storage
+        .from("imagesblog")
+        .upload(filePath, file);
+
+      if (error) {
+        setError("Error uploading image: " + error.message);
+        return;
+      }
+
+
+      // Get public URL
+      const { data: publicUrlData } = supabase.storage.from("imagesblog").getPublicUrl(filePath);
+      const publicUrl = publicUrlData?.publicUrl;
+
+      setArticle(prev => ({
+        ...prev,
+        featured_image: publicUrl,
+      }));
+
+      // If existing article, update the featured image in the database
+      if (!isNewArticle && article.id) {
+        const { error: updateError } = await supabase
+          .from("articles")
+          .update({ featured_image: publicUrl })
+          .eq("id", article.id);
+        if (updateError) {
+          setError("Error updating article image: " + updateError.message);
+        }
+      }
+    } catch (error: any) {
+      console.error("Error uploading image:", error)
+      setError("Error uploading image: " + (error.message || "Unknown error"))
     }
   };
 
