@@ -296,15 +296,15 @@ export default function Home() {
                         >
                           <img
                             src="/images/unsplash.png"
-                            alt="Unfiltered Reviews"
+                            alt="Honest Reviews"
                             className="w-full h-40 md:w-[360px] md:h-[240px] object-cover rounded-xl"
                           />
                           <div>
                             <h3 className="text-xl font-bold mb-2 text-white">
-                              Unfiltered Reviews: Honest Opinions You Can Trust
+                              Honest Reviews: Opinions You Can Trust
                             </h3>
                             <p className="text-gray-300">
-                              At Game Tested Tech, we provide high-quality, truthful reviews to empower you with the knowledge you need to make informed decisions about gaming hardware and peripherals. Whether you're researching your next upgrade, seeking validation after a purchase, or simply curious about the latest tech, we're here to guide you. Our in-depth analyses cover everything from performance and features to value and user experience, ensuring you find the perfect gear for your gaming setup.
+                              At Game Tested Tech, we provide truthful reviews to empower you with the knowledge needed to make informed decisions about gaming hardware and peripherals. Whether you’re researching your next upgrade, seeking validation after a purchase, or simply curious about the latest tech, we’re here to guide you. Our in-depth analyses cover performance, features, value, and user experience, ensuring you find the perfect gear for your gaming setup.
                             </p>
                           </div>
                         </motion.div>
@@ -322,7 +322,7 @@ export default function Home() {
                               Unlock True Gaming Potential: Expert Guides
                             </h3>
                             <p className="text-gray-300">
-                              Game Tested Tech strives to provide a wealth of diverse and helpful information to empower gamers of all levels, from enthusiasts to casual players. This includes comprehensive guides covering a wide range of topics, such as troubleshooting common errors, optimizing performance, overclocking components, and building powerful gaming PCs. Our guides are designed to be easy to understand and follow, making it simple for anyone to learn and apply the knowledge.
+                              Game Tested Tech strives to provide diverse, helpful information to empower gamers of all levels. This includes comprehensive guides covering topics like troubleshooting common errors, optimizing performance, overclocking components, and building powerful gaming PCs. Our guides are easy to understand and follow, making it simple to learn and apply the knowledge.
                             </p>
                           </div>
                           <img
@@ -347,10 +347,10 @@ export default function Home() {
                           />
                           <div>
                             <h3 className="text-xl font-bold mb-2 text-white">
-                              The Game Tested Way: Our Rigorous Methodology
+                              The Game Tested Way: Our Methodology
                             </h3>
                             <p className="text-gray-300">
-                              Benchmarking products requires meticulous care, time, and unwavering honesty. At GTT, we prioritize accuracy and take all necessary precautions to ensure the integrity of our data. We acknowledge that unforeseen circumstances or human error can occasionally lead to inaccuracies, and we take full responsibility for rectifying any such issues. Game Tested Tech cares about providing you with reliable and trustworthy information.
+                              Benchmarking products requires meticulous care, time, and unwavering honesty. At Game Tested Tech, we prioritize accuracy and take precautions to ensure data integrity. We acknowledge that unforeseen circumstances or human error can occasionally lead to inaccuracies, and we take full responsibility for rectifying any such issues. Game Tested Tech cares about providing reliable, trustworthy information.
                             </p>
                           </div>
                         </motion.div>
