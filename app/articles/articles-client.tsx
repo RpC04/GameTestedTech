@@ -365,10 +365,10 @@ export default function Articles() {
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                         {/* Latest Articles - 3 columns */}
                         <div className="col-span-1 lg:col-span-3">
-
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                                 {latestArticles.map((article, index) => (
-                                    <article key={article.id} className="bg-[#0f0f23] border-none overflow-hidden rounded-lg">
+                                    <article key={article.id} className="bg-[#0f0f23] border-none overflow-hidden rounded-lg cursor-pointer hover:bg-[#1a1a2e] transition-all duration-300 transform hover:scale-[1.02]"
+                                        onClick={() => window.location.href = `/blog/${article.slug}`}>
                                         <div className="aspect-video relative">
                                             <Image
                                                 src={article.featured_image || "/placeholder.svg?height=200&width=300"}
@@ -392,12 +392,7 @@ export default function Articles() {
                                                 })}
                                             </time>
                                             <h3 className="font-bold text-white">
-                                                <a
-                                                    href={`/blog/${article.slug}`}
-                                                    className="hover:underline focus:outline-none focus:ring-2 focus:ring-game-cyan rounded"
-                                                >
-                                                    {article.title}
-                                                </a>
+                                                {article.title}
                                             </h3>
                                             <p className="text-sm text-gray-400">{article.excerpt}</p>
                                             <div className="flex gap-2 pt-1">
@@ -406,20 +401,18 @@ export default function Articles() {
                                                         key={idx}
                                                         href={`/articles?tag=${tag.name.toLowerCase().replace(/\s+/g, "-")}`}
                                                         className="category-tag hover:bg-game-blue transition-colors"
+                                                        onClick={(e) => e.stopPropagation()}
                                                     >
                                                         {tag.name}
                                                     </a>
                                                 ))}
-
                                             </div>
-
                                             <p className="text-xs text-gray-400 pt-1">
                                                 By <span className="font-medium">{article.author?.name || "Unknown"}</span>
                                             </p>
                                         </div>
                                     </article>
                                 ))}
-
                             </div>
                         </div>
 

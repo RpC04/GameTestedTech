@@ -304,7 +304,7 @@ export default function Home() {
                               Unfiltered Reviews: Honest Opinions You Can Trust
                             </h3>
                             <p className="text-gray-300">
-                              At Game Tested Tech, we provide high-quality, truthful reviews to empower you with the knowledge you need to make informed decisions about gaming hardware and peripherals. Whether you’re researching your next upgrade, seeking validation after a purchase, or simply curious about the latest tech, we’re here to guide you. Our in-depth analyses cover everything from performance and features to value and user experience, ensuring you find the perfect gear for your gaming setup.
+                              At Game Tested Tech, we provide high-quality, truthful reviews to empower you with the knowledge you need to make informed decisions about gaming hardware and peripherals. Whether you're researching your next upgrade, seeking validation after a purchase, or simply curious about the latest tech, we're here to guide you. Our in-depth analyses cover everything from performance and features to value and user experience, ensuring you find the perfect gear for your gaming setup.
                             </p>
                           </div>
                         </motion.div>
