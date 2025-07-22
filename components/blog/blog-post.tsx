@@ -15,6 +15,12 @@ import { useAnalytics } from '@/hooks/use-analytics'
 import MobileTOC from "@/components/blog/mobile-toc"
 import Footer from "../footer";
 
+marked.setOptions({
+    mangle: false,
+    headerIds: false,
+    headerPrefix: ''
+})
+
 const supabase = createClientComponentClient()
 
 
@@ -215,11 +221,16 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
     {/* Google Analytics */ }
     // Analytics tracking cuando se monta el componente
     useEffect(() => {
-        // Marcar inicio de lectura
-        setReadingStartTime(Date.now())
+        // Usar useLayoutEffect o setTimeout para evitar el conflicto de rendering
+        const initAnalytics = () => {
+            setReadingStartTime(Date.now())
 
-        // Trackear visualización del artículo
-        trackEvent('article_view', 'content', article.title)
+            // Trackear visualización del artículo
+            trackEvent('article_view', 'content', article.title)
+        }
+
+        // Diferir la inicialización para evitar el error
+        const timeoutId = setTimeout(initAnalytics, 0)
 
         // Trackear scroll profundo (75% del artículo)
         const handleScroll = () => {
@@ -244,32 +255,34 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
 
         // Timer para artículo "completado" (2 minutos)
         const completeTimer = setTimeout(() => {
+            const timeSpent = Math.round((Date.now() - readingStartTime) / 1000) || 120
             trackConversion('article_completed', {
                 article_title: article.title,
                 article_category: article.categories?.[0] || 'uncategorized',
-                reading_time_seconds: Math.round((Date.now() - readingStartTime) / 1000)
+                reading_time_seconds: timeSpent
             })
         }, 120000)
 
         return () => {
+            clearTimeout(timeoutId)
             window.removeEventListener('scroll', handleScroll)
             clearTimeout(readTimer)
             clearTimeout(completeTimer)
         }
-    }, [article, trackEvent, trackConversion])
+    }, []) // Sin dependencias para evitar re-ejecuciones
 
-    // Trackear abandono de página
+    // Trackear abandono de página en un useEffect separado
     useEffect(() => {
+        if (readingStartTime === 0) return // No hacer nada si no se ha iniciado
+
         const handleBeforeUnload = () => {
-            if (readingStartTime > 0) {
-                const timeSpent = Math.round((Date.now() - readingStartTime) / 1000)
-                trackEvent('article_exit', 'engagement', article.title, timeSpent)
-            }
+            const timeSpent = Math.round((Date.now() - readingStartTime) / 1000)
+            trackEvent('article_exit', 'engagement', article.title, timeSpent)
         }
 
         window.addEventListener('beforeunload', handleBeforeUnload)
         return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-    }, [readingStartTime, trackEvent, article.title])
+    }, [readingStartTime]) // Solo depende de readingStartTime
 
     // Función para trackear clicks en artículos relacionados
     const handleRelatedArticleClick = (relatedArticleTitle: string) => {
@@ -306,13 +319,28 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
 
                             <div className="flex items-center justify-center gap-8">
                                 <div className="flex items-center gap-3">
-                                    <Image
-                                        src={post.author.avatar || "/placeholder.svg"}
-                                        alt={post.author.name}
-                                        width={48}
-                                        height={48}
-                                        className="rounded-full"
-                                    />
+                                    {/* Contenedor de la imagen */}
+                                    <div className="relative w-12 h-12 flex-shrink-0">
+                                        {/* Imagen de fondo con blur */}
+                                        <div className="absolute inset-0 rounded-full overflow-hidden">
+                                            <Image
+                                                src={post.author.avatar || "/placeholder.svg"}
+                                                alt=""
+                                                fill
+                                                className="object-cover blur-xl scale-110"
+                                            />
+                                        </div>
+                                        {/* Imagen principal */}
+                                        <div className="relative w-full h-full rounded-full overflow-hidden">
+                                            <Image
+                                                src={post.author.avatar || "/placeholder.svg"}
+                                                alt={post.author.name}
+                                                fill
+                                                className="object-contain"
+                                            />
+                                        </div>
+                                    </div>
+                                    {/* Texto del autor */}
                                     <div>
                                         <p className="font-medium text-white">{post.author.name}</p>
                                         <p className="text-sm text-gray-300">{formatDate(post.publishedAt)}</p>
@@ -432,7 +460,7 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                                 </div>
                             </div>
 
-                            {/* Table of Contents - Only visible on large screens*/}   
+                            {/* Table of Contents - Only visible on large screens*/}
                             <div className="hidden lg:block mb-8">
                                 <h3 className="text-xl font-bold text-white mb-4">Table of Contents</h3>
                                 <div className="bg-[#1a1a2e] rounded-lg p-6">
@@ -457,13 +485,28 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                             <div className="bg-[#1a1a2e] rounded-lg p-6">
                                 <h3 className="text-xl font-bold text-white mb-4">About the Author</h3>
                                 <div className="flex items-center gap-4 mb-4">
-                                    <Image
-                                        src={post.author.avatar || "/placeholder.svg"}
-                                        alt={post.author.name}
-                                        width={64}
-                                        height={64}
-                                        className="rounded-full"
-                                    />
+                                    {/* Contenedor de la imagen */}
+                                    <div className="relative w-16 h-16 flex-shrink-0">
+                                        {/* Imagen de fondo con blur */}
+                                        <div className="absolute inset-0 rounded-full overflow-hidden">
+                                            <Image
+                                                src={post.author.avatar || "/placeholder.svg"}
+                                                alt=""
+                                                fill
+                                                className="object-cover blur-xl scale-110"
+                                            />
+                                        </div>
+                                        {/* Imagen principal */}
+                                        <div className="relative w-full h-full rounded-full overflow-hidden">
+                                            <Image
+                                                src={post.author.avatar || "/placeholder.svg"}
+                                                alt={post.author.name}
+                                                fill
+                                                className="object-contain"
+                                            />
+                                        </div>
+                                    </div>
+                                    {/* Texto del autor - FUERA del contenedor de imagen */}
                                     <div>
                                         <p className="font-bold text-white">{post.author.name}</p>
                                         <div className="flex gap-4 text-sm text-gray-400 mt-1">
