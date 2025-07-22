@@ -12,6 +12,7 @@ import { Header } from "@/components/header"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useAnalytics } from '@/hooks/use-analytics'
+import MobileTOC from "@/components/blog/mobile-toc"
 import Footer from "../footer";
 
 const supabase = createClientComponentClient()
@@ -327,6 +328,16 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                     </div>
                 </div>
 
+                <div className="mb-8">
+                    <MobileTOC
+                        tableOfContents={tableOfContents}
+                        postId={post.id.toString()}
+                        onItemClick={(title, postId) => {
+                            trackEvent('mobile_toc_click', 'navigation', title, parseInt(postId));
+                        }}
+                    />
+                </div>
+
                 {/* Contenido principal en dos columnas */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     {/* Columna de contenido principal */}
@@ -421,8 +432,8 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                                 </div>
                             </div>
 
-                            {/* Tabla de contenidos */}
-                            <div className="mb-8">
+                            {/* Table of Contents - Only visible on large screens*/}   
+                            <div className="hidden lg:block mb-8">
                                 <h3 className="text-xl font-bold text-white mb-4">Table of Contents</h3>
                                 <div className="bg-[#1a1a2e] rounded-lg p-6">
                                     <ul className="space-y-3">
@@ -475,24 +486,6 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                         </div>
                     </motion.div>
                 </div>
-
-                {/* Sección de comentarios 
-                <div className="max-w-4xl mx-auto mt-16 pt-8 border-t border-gray-800">
-                    <h3 className="text-2xl font-bold text-white mb-6">Comments ({post.comments})</h3>
- 
-                    <div className="bg-[#1a1a2e] rounded-lg p-6 mb-8">
-                        <h4 className="text-lg font-medium text-white mb-4">Leave a Comment</h4>
-                        <textarea
-                            className="w-full bg-[#0a0a14] border border-gray-700 rounded-md p-3 text-white resize-none focus:outline-none focus:ring-1 focus:ring-[#ff6b35] min-h-[120px]"
-                            placeholder="Share your thoughts..."
-                        ></textarea>
-                        <div className="mt-3 flex justify-end">
-                            <button className="bg-[#9d8462] hover:bg-[#9d8462] text-white px-4 py-2 rounded-md transition-colors">
-                                Post Comment
-                            </button>
-                        </div>
-                    </div>
-                </div>*/}
 
                 {/* Articles relacionados */}
                 <div className="mt-16 mb-16">
@@ -573,7 +566,7 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                                     onClick={() => {
                                         const container = document.getElementById('carousel-container')
                                         if (container) {
-                                            container.scrollLeft += 400; 
+                                            container.scrollLeft += 400;
                                             trackEvent('carousel_right', 'interaction', 'related_articles', post.id);
                                         }
                                     }}
