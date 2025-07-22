@@ -436,9 +436,38 @@ export default function Articles() {
                                                                 checked={selectedCategories.includes(category.id)}
                                                                 onChange={(e) => {
                                                                     const id = parseInt(e.target.value)
-                                                                    setSelectedCategories((prev) =>
-                                                                        e.target.checked ? [...prev, id] : prev.filter((cid) => cid !== id)
-                                                                    )
+
+                                                                    if (e.target.checked) {
+                                                                        // Add the parent category
+                                                                        setSelectedCategories((prev) => [...prev, id])
+
+                                                                        // Find and add all child subcategories
+                                                                        const childSubcategories = subcategories
+                                                                            .filter(sub => sub.parent_id === id)
+                                                                            .map(sub => sub.id)
+
+                                                                        setSelectedSubcategories((prev) => {
+                                                                            const newSubcategories = [...prev]
+                                                                            childSubcategories.forEach(childId => {
+                                                                                if (!newSubcategories.includes(childId)) {
+                                                                                    newSubcategories.push(childId)
+                                                                                }
+                                                                            })
+                                                                            return newSubcategories
+                                                                        })
+                                                                    } else {
+                                                                        // Remove the parent category
+                                                                        setSelectedCategories((prev) => prev.filter((cid) => cid !== id))
+
+                                                                        // Find and remove all child subcategories
+                                                                        const childSubcategories = subcategories
+                                                                            .filter(sub => sub.parent_id === id)
+                                                                            .map(sub => sub.id)
+
+                                                                        setSelectedSubcategories((prev) =>
+                                                                            prev.filter(subId => !childSubcategories.includes(subId))
+                                                                        )
+                                                                    }
                                                                 }}
                                                                 className="appearance-none w-4 h-4 border-2 border-gray-500 rounded-sm bg-[#1a1a1a] checked:bg-[#9d8462] checked:border-[#9d8462] focus:outline-none transition-all duration-150"
                                                             />
