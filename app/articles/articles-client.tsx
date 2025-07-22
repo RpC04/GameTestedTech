@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import ArticlesDropdown from "@/components/articles/articles-dropdown"
 import { Header } from "@/components/header"
 import Footer from "@/components/footer"
+import MobileFilters from "@/components/articles/mobile-filters"
 import { useSearchParams } from 'next/navigation'
 
 export default function Articles() {
@@ -343,13 +344,27 @@ export default function Articles() {
                 </div>
                 <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#0a0a14] to-transparent"></div>
             </div>
-
+            <div className="bg-[#0a0a14] pt-6">
+                <div className="max-w-7xl mx-auto px-6">
+                    <MobileFilters
+                        categories={categories}
+                        subcategories={subcategories}
+                        selectedCategories={selectedCategories}
+                        setSelectedCategories={setSelectedCategories}
+                        selectedSubcategories={selectedSubcategories}
+                        setSelectedSubcategories={setSelectedSubcategories}
+                        dateRange={dateRange}
+                        setDateRange={setDateRange}
+                        onClearFilters={handleClearFilters}
+                    />
+                </div>
+            </div>
             {/* Latest Articles & Categories Section */}
             <section className="bg-[#0a0a14] py-12">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                         {/* Latest Articles - 3 columns */}
-                        <div className="lg:col-span-3">
+                        <div className="col-span-1 lg:col-span-3">
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                                 {latestArticles.map((article, index) => (
@@ -409,7 +424,7 @@ export default function Articles() {
                         </div>
 
                         {/* Sidebar - Categories & Upcoming */}
-                        <div className="lg:col-span-1 space-y-8">
+                        <div className="hidden lg:block lg:col-span-1 space-y-8">
                             {/*Categories */}
                             <div className="bg-[#0f0f23] rounded-lg p-6">
                                 <h3 className="text-xl font-bold text-white mb-4">Categories</h3>
@@ -598,27 +613,6 @@ export default function Articles() {
                 </div>
             </section>
 
-            {/* Newsletter Section 
-            <section className="bg-game-purple py-12">
-                <div className="max-w-3xl mx-auto px-6 text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Stay Updated with Gaming News</h2>
-                    <p className="text-gray-400 mb-6">
-                        Subscribe to our newsletter and never miss the latest gaming news, reviews, and tech insights.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
-                        <input
-                            type="email"
-                            placeholder="Your email address"
-                            className="flex-1 bg-[#1a1a1a] border border-gray-700 rounded-md py-2 px-4 text-white"
-                        />
-                        <Button className="bg-[#9d8462] hover:bg-[#8d7452] text-white">Subscribe</Button>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-2">
-                        By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.
-                    </p>
-                </div>
-            </section>*/}
 
             {/* Footer */}
             <Footer />
