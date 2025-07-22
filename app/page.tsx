@@ -153,7 +153,7 @@ export default function Home() {
                       Tech for Gamers, By Gamers.
                     </h1>
                     <p className="text-gray-300 mt-4" >
-                      Where Gaming Meets Innovation. Tech for Gamers, By Gamers
+                      Where Gaming Meets Innovation.
                     </p>
                   </div>
                 </AnimatePresence>

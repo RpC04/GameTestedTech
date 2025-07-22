@@ -6,7 +6,8 @@ import { motion } from "framer-motion"
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react"
 import { Header } from "@/components/header"
 import Footer from "@/components/footer"
-import { Twitter, Linkedin, Instagram, Facebook, Youtube, DiscIcon as Discord } from "lucide-react"
+import { Mail, Phone, MapPin, Twitter, Linkedin, Instagram, Facebook, Youtube, DiscIcon as Discord } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function AboutPage() {
   // Estado para controlar los acordeones de FAQ
@@ -34,10 +35,10 @@ export default function AboutPage() {
   // Datos para el equipo
   const teamMembers = [
     {
-      name: "Alex Rodriguez",
-      role: "Founder & Lead Hardware Reviewer",
-      bio: "Gaming hardware enthusiast with over 15 years of experience in the industry. Previously worked as a hardware engineer at major gaming companies.",
-      image: "/placeholder.svg?height=300&width=300",
+      name: "Kyle Dooley",
+      role: "Owner and Offical Writer",
+      bio: "My journey in IT and gaming spans several years, fueled by a genuine love for both. I thrive on sharing that expertise, always eager to lend a hand and empower others with the tech insights they need.",
+      image: "/images/kyle.webp?height=300&width=300",
       social: {
         twitter: "#",
         linkedin: "#",
@@ -298,7 +299,12 @@ export default function AboutPage() {
                 whileHover={{ y: -5 }}
               >
                 <div className="relative aspect-square">
-                  <Image src={member.image || "/placeholder.svg"} alt={member.name || "Team member"} fill className="object-cover" />
+                  <Image
+                    src={member.image || "/placeholder.svg"}
+                    alt={member.name || "Team member"}
+                    fill
+                    className="object-cover object-top"
+                  />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
@@ -409,135 +415,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Contact Section 
-      <section className="py-16 bg-[#0f0a1e]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl font-bold text-white mb-6">Get In Touch</h2>
-              <p className="text-gray-300 mb-8">
-                Have questions, feedback, or partnership inquiries? We'd love to hear from you. Reach out to our team
-                using the contact information below.
-              </p>
-
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#9d8462]/20 p-3 rounded-full">
-                    <Mail className="h-6 w-6 text-[#9d8462]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-white mb-2">Email</h3>
-                    <div className="space-y-1">
-                      <p className="text-gray-300">General Inquiries:</p>
-                      <a
-                        href="mailto:contact@gametestedtech.com"
-                        className="text-[#9d8462] hover:text-white transition-colors"
-                      >
-                        contact@gametestedtech.com
-                      </a>
-                    </div>
-                    <div className="space-y-1 mt-3">
-                      <p className="text-gray-300">Partnerships:</p>
-                      <a
-                        href="mailto:partnerships@gametestedtech.com"
-                        className="text-[#9d8462] hover:text-white transition-colors"
-                      >
-                        partnerships@gametestedtech.com
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#9d8462]/20 p-3 rounded-full">
-                    <Phone className="h-6 w-6 text-[#9d8462]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-white mb-2">Phone</h3>
-                    <a href="tel:+11223456789" className="text-[#9d8462] hover:text-white transition-colors">
-                      +1-1223-456-7890
-                    </a>
-                    <p className="text-gray-300 mt-1">Mon-Fri, 9AM-5PM EST</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#9d8462]/20 p-3 rounded-full">
-                    <MapPin className="h-6 w-6 text-[#9d8462]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-white mb-2">Location</h3>
-                    <p className="text-gray-300">123 Gaming Street</p>
-                    <p className="text-gray-300">Tech City, TC 10101</p>
-                    <p className="text-gray-300">United States</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="bg-[#1a1a2e] rounded-lg p-8 shadow-xl"
-            >
-              <h3 className="text-2xl font-bold text-white mb-6">Send Us a Message</h3>
-              <form className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-gray-300 mb-2">
-                      Your Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-2 px-4 text-white focus:outline-none focus:ring-1 focus:ring-[#9d8462]"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-gray-300 mb-2">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-2 px-4 text-white focus:outline-none focus:ring-1 focus:ring-[#9d8462]"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="subject" className="block text-gray-300 mb-2">
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-2 px-4 text-white focus:outline-none focus:ring-1 focus:ring-[#9d8462]"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-gray-300 mb-2">
-                    Your Message
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={5}
-                    className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-2 px-4 text-white focus:outline-none focus:ring-1 focus:ring-[#9d8462] resize-none"
-                  ></textarea>
-                </div>
-                <Button className="w-full bg-[#9d8462] hover:bg-[#9d8462] text-white py-3">Send Message</Button>
-              </form>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-*/}
       {/* Footer */}
       <Footer />
     </div>
