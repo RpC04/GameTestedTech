@@ -17,8 +17,53 @@ import {
     FileText
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { TeamMembersTab } from "@/components/admin/about/TeamMembersTab"
 
+type AboutPage = {
+    id: string
+    hero_title: string
+    hero_subtitle: string
+    mission_title: string
+    mission_content: string
+    values_title: string
+    values_subtitle: string
+    team_title: string
+    team_subtitle: string
+    faq_title: string
+    faq_subtitle: string
+    updated_at: string
+}
 
+type CoreValue = {
+    id: string
+    title: string
+    description: string
+    icon_name: string
+    color: string
+    order_position: number
+    is_active: boolean
+}
+
+type TeamMember = {
+    id: string
+    name: string
+    role: string
+    bio: string
+    image_url: string | null
+    twitter_url: string | null
+    linkedin_url: string | null
+    instagram_url: string | null
+    order_position: number
+    is_active: boolean
+}
+
+type FAQ = {
+    id: string
+    question: string
+    answer: string
+    order_position: number
+    is_active: boolean
+}
 
 export default function AboutPageSettings() {
     const [aboutPage, setAboutPage] = useState<AboutPage | null>(null)
@@ -155,42 +200,54 @@ export default function AboutPageSettings() {
         }
     }
 
-    // Función para guardar/actualizar team member
+    // Función para guardar/actualizar team member 
     const saveTeamMember = async (member: Partial<TeamMember>) => {
         try {
             if (member.id) {
-                // Update existing
+                // Update existing - mantener el ID existente
                 const { error } = await supabase
                     .from('team_members')
                     .update({
-                        ...member,
+                        name: member.name,
+                        role: member.role,
+                        bio: member.bio,
+                        image_url: member.image_url,
+                        twitter_url: member.twitter_url,
+                        linkedin_url: member.linkedin_url,
+                        instagram_url: member.instagram_url,
+                        is_active: member.is_active,
                         updated_at: new Date().toISOString()
                     })
                     .eq('id', member.id)
 
                 if (error) throw error
             } else {
-                // Create new
+                // Create new - NO incluir el campo id, que se genere automáticamente
                 const { error } = await supabase
                     .from('team_members')
                     .insert([{
-                        ...member,
+                        name: member.name,
+                        role: member.role,
+                        bio: member.bio,
+                        image_url: member.image_url,
+                        twitter_url: member.twitter_url,
+                        linkedin_url: member.linkedin_url,
+                        instagram_url: member.instagram_url,
+                        is_active: member.is_active || true,
                         order_position: teamMembers.length
+                        // NO incluir 'id' aquí - se genera automáticamente
                     }])
 
                 if (error) throw error
             }
 
             fetchAllData()
-            setShowMemberForm(false)
-            setEditingMember(null)
             setSuccess("Team member saved successfully!")
 
         } catch (error: any) {
             setError("Failed to save team member: " + error.message)
         }
     }
-
     // Función para guardar/actualizar FAQ
     const saveFaq = async (faq: Partial<FAQ>) => {
         try {
@@ -586,7 +643,7 @@ function CoreValuesTab({
                 </Button>
             </div>
             <h6 className="text-lg font-medium text-white">
-                Remember that if you want to add valid icons visit: 
+                Remember that if you want to add valid icons visit:
                 <a href="https://lucide.dev/icons" target="_blank" rel="noopener noreferrer" className="text-[#9d8462] underline">Lucide React Icons</a>
             </h6>
 
@@ -714,259 +771,6 @@ function CoreValuesTab({
                 {coreValues.length === 0 && (
                     <div className="text-center py-8 text-gray-400">
                         No core values added yet. Click "Add New Value" to get started.
-                    </div>
-                )}
-            </div>
-        </div>
-    )
-}
-
-// Componente para Team Members
-function TeamMembersTab({
-    teamMembers,
-    onSave,
-    onDelete,
-    onToggleActive
-}: {
-    teamMembers: TeamMember[]
-    onSave: (member: Partial<TeamMember>) => void
-    onDelete: (id: string) => void
-    onToggleActive: (id: string, status: boolean) => void
-}) {
-    const [showForm, setShowForm] = useState(false)
-    const [editingMember, setEditingMember] = useState<TeamMember | null>(null)
-    const supabase = createClientComponentClient()
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        const formData = new FormData(e.target as HTMLFormElement)
-
-        let imageUrl = editingMember?.image_url || null
-
-        // Handle image upload if a file was selected
-        const imageFile = formData.get('image') as File
-        if (imageFile && imageFile.size > 0) {
-            try {
-                const fileExt = imageFile.name.split('.').pop()
-                const fileName = `team-${Date.now()}.${fileExt}`
-                const filePath = `team/${fileName}`
-
-                const { error: uploadError } = await supabase.storage
-                    .from("imagesblog")
-                    .upload(filePath, imageFile)
-
-                if (uploadError) throw uploadError
-
-                const { data: publicUrlData } = supabase.storage
-                    .from("imagesblog")
-                    .getPublicUrl(filePath)
-
-                imageUrl = publicUrlData?.publicUrl
-            } catch (error) {
-                console.error('Error uploading image:', error)
-            }
-        }
-
-        const member = {
-            id: editingMember?.id,
-            name: formData.get('name') as string,
-            role: formData.get('role') as string,
-            bio: formData.get('bio') as string,
-            image_url: imageUrl,
-            twitter_url: formData.get('twitter_url') as string || null,
-            linkedin_url: formData.get('linkedin_url') as string || null,
-            instagram_url: formData.get('instagram_url') as string || null,
-            is_active: true
-        }
-
-        onSave(member)
-        setShowForm(false)
-        setEditingMember(null)
-    }
-
-    return (
-        <div className="space-y-4">
-            <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium text-white">Team Members</h3>
-                <Button
-                    onClick={() => setShowForm(true)}
-                    className="bg-[#9d8462] hover:bg-[#8d7452] text-white flex items-center gap-2"
-                >
-                    <Plus className="h-4 w-4" />
-                    Add Team Member
-                </Button>
-            </div>
-
-            {/* Form Modal */}
-            {showForm && (
-                <div className="bg-[#1a1a2e] rounded-lg p-6 shadow-md border border-gray-700">
-                    <h4 className="text-lg font-medium text-white mb-4">
-                        {editingMember ? 'Edit Team Member' : 'Add New Team Member'}
-                    </h4>
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    defaultValue={editingMember?.name || ""}
-                                    required
-                                    className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-3 px-3 text-white focus:outline-none focus:ring-2 focus:ring-[#9d8462]"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Role</label>
-                                <input
-                                    type="text"
-                                    name="role"
-                                    defaultValue={editingMember?.role || ""}
-                                    required
-                                    className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-3 px-3 text-white focus:outline-none focus:ring-2 focus:ring-[#9d8462]"
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Profile Image</label>
-                            <input
-                                type="file"
-                                name="image"
-                                accept="image/*"
-                                className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-3 px-3 text-white focus:outline-none focus:ring-2 focus:ring-[#9d8462]"
-                            />
-                            {editingMember?.image_url && (
-                                <div className="mt-2">
-                                    <img
-                                        src={editingMember.image_url}
-                                        alt="Current"
-                                        className="w-16 h-16 rounded-full object-cover"
-                                    />
-                                </div>
-                            )}
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Bio</label>
-                            <textarea
-                                name="bio"
-                                defaultValue={editingMember?.bio || ""}
-                                rows={4}
-                                className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-3 px-3 text-white focus:outline-none focus:ring-2 focus:ring-[#9d8462]"
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Twitter URL</label>
-                                <input
-                                    type="url"
-                                    name="twitter_url"
-                                    defaultValue={editingMember?.twitter_url || ""}
-                                    className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-3 px-3 text-white focus:outline-none focus:ring-2 focus:ring-[#9d8462]"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">LinkedIn URL</label>
-                                <input
-                                    type="url"
-                                    name="linkedin_url"
-                                    defaultValue={editingMember?.linkedin_url || ""}
-                                    className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-3 px-3 text-white focus:outline-none focus:ring-2 focus:ring-[#9d8462]"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Instagram URL</label>
-                                <input
-                                    type="url"
-                                    name="instagram_url"
-                                    defaultValue={editingMember?.instagram_url || ""}
-                                    className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-3 px-3 text-white focus:outline-none focus:ring-2 focus:ring-[#9d8462]"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex justify-end gap-3">
-                            <Button
-                                type="button"
-                                onClick={() => {
-                                    setShowForm(false)
-                                    setEditingMember(null)
-                                }}
-                                className="bg-gray-600 hover:bg-gray-700 text-white"
-                            >
-                                Cancel
-                            </Button>
-                            <Button type="submit" className="bg-[#9d8462] hover:bg-[#8d7452] text-white">
-                                Save Member
-                            </Button>
-                        </div>
-                    </form>
-                </div>
-            )}
-
-            {/* Members List */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {teamMembers.map((member) => (
-                    <div key={member.id} className="bg-[#1a1a2e] rounded-lg p-4">
-                        <div className="flex items-start justify-between mb-3">
-                            <div className="flex items-center gap-3">
-                                {member.image_url && (
-                                    <img
-                                        src={member.image_url}
-                                        alt={member.name}
-                                        className="w-12 h-12 rounded-full object-cover"
-                                    />
-                                )}
-                                <div>
-                                    <h4 className="text-white font-medium">{member.name}</h4>
-                                    <p className="text-[#9d8462] text-sm">{member.role}</p>
-                                </div>
-                            </div>
-
-                            <div className="flex gap-1">
-                                <Button
-                                    onClick={() => onToggleActive(member.id, member.is_active)}
-                                    className={`p-1 ${member.is_active ? 'bg-green-600' : 'bg-gray-600'}`}
-                                >
-                                    {member.is_active ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
-                                </Button>
-
-                                <Button
-                                    onClick={() => {
-                                        setEditingMember(member)
-                                        setShowForm(true)
-                                    }}
-                                    className="p-1 bg-blue-600 hover:bg-blue-700"
-                                >
-                                    <Edit3 className="h-3 w-3" />
-                                </Button>
-
-                                <Button
-                                    onClick={() => onDelete(member.id)}
-                                    className="p-1 bg-red-600 hover:bg-red-700"
-                                >
-                                    <Trash2 className="h-3 w-3" />
-                                </Button>
-                            </div>
-                        </div>
-
-                        {member.bio && (
-                            <p className="text-gray-400 text-sm mb-3">{member.bio.substring(0, 100)}...</p>
-                        )}
-
-                        <div className="flex gap-2">
-                            {member.twitter_url && <span className="text-xs bg-blue-600 px-2 py-1 rounded">Twitter</span>}
-                            {member.linkedin_url && <span className="text-xs bg-blue-800 px-2 py-1 rounded">LinkedIn</span>}
-                            {member.instagram_url && <span className="text-xs bg-pink-600 px-2 py-1 rounded">Instagram</span>}
-                        </div>
-                    </div>
-                ))}
-
-                {teamMembers.length === 0 && (
-                    <div className="col-span-full text-center py-8 text-gray-400">
-                        No team members added yet. Click "Add Team Member" to get started.
                     </div>
                 )}
             </div>
