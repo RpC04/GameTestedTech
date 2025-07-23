@@ -19,6 +19,7 @@ import { useSearchParams } from 'next/navigation'
 
 export default function Articles() {
     // Sample latest articles data
+    const [isLoaded, setIsLoaded] = useState(false)
     const [latestArticles, setLatestArticles] = useState<any[]>([])
     const [featuredGames, setFeaturedGames] = useState<any[]>([])
     const [categories, setCategories] = useState<{ id: number; name: string; icon?: string }[]>([])
@@ -41,6 +42,10 @@ export default function Articles() {
             ease: "easeInOut",
         },
     }
+
+    useEffect(() => {
+        setIsLoaded(true)
+    }, [])
 
     // Effect to activate category filter based on URL slug
     useEffect(() => {
@@ -235,24 +240,39 @@ export default function Articles() {
     return (
         <div className="min-h-screen flex flex-col bg-[#0f0f23]">
             {/* Navbar */}
-            <Header />
             <div className="relative">
+                <Header />
+
                 {/* Hero Section - Without geometric shapes */}
-                <div className="relative py-16 bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23]">
+                <div className="relative w-full bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23] overflow-hidden">
                     <div className="absolute inset-0 overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-full opacity-10">
                             <div className="absolute top-10 left-10 w-40 h-40 rounded-full bg-[#ff6b35] blur-3xl"></div>
                             <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-[#8fc9ff] blur-3xl"></div>
                         </div>
                     </div>
-                    <div className="relative z-10">
+                    <motion.div
+                        className="absolute inset-0 w-full h-full pointer-events-none"
+                        initial={{ scale: 1.1 }}
+                        animate={{ scale: isLoaded ? 1 : 1.1 }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                    >
+
+                        <motion.div
+                            className="absolute inset-0 bg-black/30"
+                            initial={{ opacity: 0.5 }}
+                            animate={{ opacity: 0.3 }}
+                            transition={{ duration: 1.2 }}
+                        ></motion.div>
+                    </motion.div>
+                    <div className="relative z-10 py-16 overflow-hidden">
                         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
                             <div className="space-y-6">
                                 <div>
                                     <h1 className="text-4xl font-bold text-game-white">
                                         Your Ultimate <span className="text-[#ff6b35]">Gaming</span> Resource
                                     </h1>
-                                    <p className="text-gray-300 mt-2">Discover the latest games, reviews, and gaming tech insights.</p>
+                                    <p className="text-gray-300 mt-2">Discover the latest reviews, helpful guides, and tech insights.</p>
                                 </div>
 
                                 <motion.div className="flex gap-4" variants={itemVariants}>
@@ -301,48 +321,39 @@ export default function Articles() {
                                 </motion.div>
                             </div>
 
-                            <div className="relative hidden md:block overflow-hidden">
+                            <div className="hidden md:flex justify-center items-center">
                                 <motion.div
+                                    animate={floatAnimation}
                                     className="relative"
-                                    initial={{ x: 100, opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    transition={{ duration: 0.7, delay: 0.5 }}>
-
-                                    {/* Imagen del controlador con animación de flotación mejorada */}
-                                    <div className="hidden md:flex justify-center items-center">
+                                >
+                                    <AnimatePresence mode="wait">
                                         <motion.div
-                                            animate={floatAnimation}
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.9 }}
+                                            transition={{ duration: 0.5 }}
                                             className="relative"
                                         >
-                                            <AnimatePresence mode="wait">
-                                                <motion.div
-                                                    initial={{ opacity: 0, scale: 0.9 }}
-                                                    animate={{ opacity: 1, scale: 1 }}
-                                                    exit={{ opacity: 0, scale: 0.9 }}
-                                                    transition={{ duration: 0.5 }}
-                                                    className="relative"
-                                                >
-                                                    <div className="relative w-[400px] h-[400px] flex items-center justify-center">
-                                                        <Image
-                                                            src="/images/game-controller-logo.png"
-                                                            alt="Game Controller Logo"
-                                                            width={350}
-                                                            height={350}
-                                                            className="object-contain z-10 relative"
-                                                            priority
-                                                        />
-                                                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full bg-blue-500/30 blur-2xl -z-10"></div>
-                                                    </div>
-                                                </motion.div>
-                                            </AnimatePresence>
+                                            <div className="relative w-[400px] h-[400px] flex items-center justify-center">
+                                                <Image
+                                                    src="/images/game-controller-logo.png"
+                                                    alt="Game Controller Logo"
+                                                    width={350}
+                                                    height={350}
+                                                    className="object-contain z-10 relative"
+                                                    priority
+                                                />
+                                                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full bg-blue-500/30 blur-2xl -z-10"></div>
+                                            </div>
                                         </motion.div>
-                                    </div>
+                                    </AnimatePresence>
                                 </motion.div>
                             </div>
                         </div>
+                        <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#0a0a14] to-transparent"></div>
                     </div>
+
                 </div>
-                <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#0a0a14] to-transparent"></div>
             </div>
             <div className="bg-[#0a0a14] pt-6">
                 <div className="max-w-7xl mx-auto px-6">
@@ -365,10 +376,10 @@ export default function Articles() {
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                         {/* Latest Articles - 3 columns */}
                         <div className="col-span-1 lg:col-span-3">
-
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                                 {latestArticles.map((article, index) => (
-                                    <article key={article.id} className="bg-[#0f0f23] border-none overflow-hidden rounded-lg">
+                                    <article key={article.id} className="bg-[#0f0f23] border-none overflow-hidden rounded-lg cursor-pointer hover:bg-[#1a1a2e] transition-all duration-300 transform hover:scale-[1.02]"
+                                        onClick={() => window.location.href = `/blog/${article.slug}`}>
                                         <div className="aspect-video relative">
                                             <Image
                                                 src={article.featured_image || "/placeholder.svg?height=200&width=300"}
@@ -392,12 +403,7 @@ export default function Articles() {
                                                 })}
                                             </time>
                                             <h3 className="font-bold text-white">
-                                                <a
-                                                    href={`/blog/${article.slug}`}
-                                                    className="hover:underline focus:outline-none focus:ring-2 focus:ring-game-cyan rounded"
-                                                >
-                                                    {article.title}
-                                                </a>
+                                                {article.title}
                                             </h3>
                                             <p className="text-sm text-gray-400">{article.excerpt}</p>
                                             <div className="flex gap-2 pt-1">
@@ -406,20 +412,18 @@ export default function Articles() {
                                                         key={idx}
                                                         href={`/articles?tag=${tag.name.toLowerCase().replace(/\s+/g, "-")}`}
                                                         className="category-tag hover:bg-game-blue transition-colors"
+                                                        onClick={(e) => e.stopPropagation()}
                                                     >
                                                         {tag.name}
                                                     </a>
                                                 ))}
-
                                             </div>
-
                                             <p className="text-xs text-gray-400 pt-1">
                                                 By <span className="font-medium">{article.author?.name || "Unknown"}</span>
                                             </p>
                                         </div>
                                     </article>
                                 ))}
-
                             </div>
                         </div>
 

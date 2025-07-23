@@ -7,20 +7,17 @@ import { createClient } from '@supabase/supabase-js'
 import {
   Mail,
   Phone,
-  MapPin,
   Send,
-  Facebook,
-  DiscIcon as Discord,
-  Youtube,
-  Github,
-  Twitter,
-  Linkedin,
+  Facebook, 
+  Youtube, 
   Instagram,
   MessageSquare,
   Clock,
   Users,
   ChevronRight,
 } from "lucide-react"
+import { AiOutlineDiscord } from "react-icons/ai";
+import { FaXTwitter } from "react-icons/fa6";
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -570,7 +567,7 @@ const ContactPage = () => {
                   </div>
                 </div>
               </div>
-
+              {/* 
               <div className="bg-[#1a1a2e] rounded-xl p-6 border border-gray-800 transform transition-all hover:translate-y-[-5px] hover:shadow-lg">
                 <div className="flex items-start gap-4">
                   <div className="bg-[#ff6b35]/10 p-3 rounded-full">
@@ -598,35 +595,51 @@ const ContactPage = () => {
                     <p className="text-gray-400 mt-1">United States</p>
                   </div>
                 </div>
-              </div>
+              </div>*/}
             </div>
 
             <div className="bg-[#1a1a2e] rounded-xl p-6 border border-gray-800">
               <h3 className="text-lg font-medium text-white mb-4">Connect With Us</h3>
               <div className="flex gap-4">
                 <Link
-                  href="#"
+                  href="https://discord.gg/hgkdMseg9n"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-[#1a1a2e] p-4 rounded-full border border-gray-700 hover:border-[#ff6b35] hover:bg-[#ff6b35]/10 transition-all transform hover:scale-110"
                 >
-                  <Twitter className="h-5 w-5 text-gray-200 hover:text-[#ff6b35]" />
+                  <AiOutlineDiscord className="h-5 w-5 text-gray-200 hover:text-[#ff6b35]" />
                 </Link>
                 <Link
-                  href="#"
+                  href="https://www.facebook.com/gametestedtech"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#1a1a2e] p-4 rounded-full border border-gray-700 hover:border-[#ff6b35] hover:bg-[#ff6b35]/10 transition-all transform hover:scale-110"
+                >
+                  <Facebook className="h-5 w-5 text-gray-200 hover:text-[#ff6b35]" />
+                </Link>
+                <Link
+                  href="https://www.instagram.com/gametestedtech"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-[#1a1a2e] p-4 rounded-full border border-gray-700 hover:border-[#ff6b35] hover:bg-[#ff6b35]/10 transition-all transform hover:scale-110"
                 >
                   <Instagram className="h-5 w-5 text-gray-200 hover:text-[#ff6b35]" />
                 </Link>
                 <Link
-                  href="#"
+                  href="https://x.com/GameTestedTech" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-[#1a1a2e] p-4 rounded-full border border-gray-700 hover:border-[#ff6b35] hover:bg-[#ff6b35]/10 transition-all transform hover:scale-110"
                 >
-                  <Linkedin className="h-5 w-5 text-gray-200 hover:text-[#ff6b35]" />
+                  <FaXTwitter className="h-5 w-5 text-gray-200 hover:text-[#ff6b35]" />
                 </Link>
                 <Link
-                  href="#"
+                  href="https://www.youtube.com/@gametestedtech"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-[#1a1a2e] p-4 rounded-full border border-gray-700 hover:border-[#ff6b35] hover:bg-[#ff6b35]/10 transition-all transform hover:scale-110"
                 >
-                  <Github className="h-5 w-5 text-gray-200 hover:text-[#ff6b35]" />
+                  <Youtube className="h-5 w-5 text-gray-200 hover:text-[#ff6b35]" />
                 </Link>
               </div>
             </div>

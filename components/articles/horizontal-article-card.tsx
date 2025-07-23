@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import type { HorizontalArticleCardProps } from "@/types/article"
 
 export function HorizontalArticleCard({
@@ -7,10 +8,19 @@ export function HorizontalArticleCard({
   reverse = false,
   className = "",
 }: HorizontalArticleCardProps) {
+  const router = useRouter()
+
   if (!article) return null
 
+  const handleCardClick = () => {
+    router.push(`/blog/${article.slug}`)
+  }
+
   return (
-    <div className={`flex flex-col md:flex-row ${reverse ? "md:flex-row-reverse" : ""} gap-6 bg-[#1a1a2e] rounded-lg border border-gray-800 overflow-hidden ${className}`}>
+    <div 
+      className={`flex flex-col md:flex-row ${reverse ? "md:flex-row-reverse" : ""} gap-6 bg-[#1a1a2e] rounded-lg border border-gray-800 overflow-hidden cursor-pointer hover:bg-[#2a2a4e] transition-colors ${className}`}
+      onClick={handleCardClick}
+    >
       {/* Image */}
       <div className="relative w-full md:w-[40%] h-[200px] md:h-auto min-h-[200px]">
         <Image
@@ -20,9 +30,9 @@ export function HorizontalArticleCard({
           className="object-cover"
         />
         {article.category?.name && (
-            <div className="absolute top-2 left-2 bg-[#ff6b35] text-[#FFFFFF] text-xs font-semibold px-3 py-1 rounded-full text-center">
-              {article.category.name}
-            </div>
+          <div className="absolute top-2 left-2 bg-[#ff6b35] text-[#FFFFFF] text-xs font-semibold px-3 py-1 rounded-full text-center">
+            {article.category.name}
+          </div>
         )}
       </div>
 
@@ -36,10 +46,8 @@ export function HorizontalArticleCard({
             day: "numeric",
           })}
         </time>
-        <h3 className="text-white text-xl font-semibold leading-snug">
-          <Link href={`/blog/${article.slug}`} className="hover:underline">
-            {article.title}
-          </Link>
+        <h3 className="text-white text-xl font-semibold leading-snug"> 
+            {article.title} 
         </h3>
         {article.excerpt && <p className="text-gray-400 text-sm">{article.excerpt}</p>}
         <div className="flex gap-2 flex-wrap pt-1">
@@ -48,6 +56,7 @@ export function HorizontalArticleCard({
               key={idx}
               href={`/articles?tag=${tag.name.toLowerCase().replace(/\s+/g, "-")}`}
               className="category-tag hover:bg-game-blue transition-colors"
+              onClick={(e) => e.stopPropagation()} // Evita que se active el click del card
             >
               {tag.name}
             </Link>

@@ -3,6 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Youtube, Instagram, Twitter, DiscIcon as Discord, Facebook } from "lucide-react";
+import { AiOutlineDiscord } from "react-icons/ai";
+import { FaXTwitter } from "react-icons/fa6";
 import { useAnalytics } from '@/hooks/use-analytics';
 
 const containerVariants = {
@@ -153,16 +155,25 @@ export default function FooterAnimated() {
                             Follow Us
                         </motion.h3>
                         <motion.a
-                            href="#"
+                            href="https://discord.gg/hgkdMseg9n"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
-                            onClick={() => handleSocialClick('youtube')}
+                            onClick={() => handleSocialClick('discord')}
                         >
-                            <Youtube className="h-5 w-5" />
-                            <span>Youtube</span>
+                            <AiOutlineDiscord className="h-5 w-5" />
+                            <span>Discord</span>
                         </motion.a>
                         <motion.a
-                            href="#"
+                            href="https://www.facebook.com/gametestedtech"
+                            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+                            variants={itemVariants}
+                            onClick={() => handleSocialClick('facebook')}
+                        >
+                            <Facebook className="h-5 w-5" />
+                            <span>Facebook</span>
+                        </motion.a>
+                        <motion.a
+                            href="https://www.instagram.com/gametestedtech"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
                             onClick={() => handleSocialClick('instagram')}
@@ -171,32 +182,23 @@ export default function FooterAnimated() {
                             <span>Instagram</span>
                         </motion.a>
                         <motion.a
-                            href="#"
+                            href="https://x.com/GameTestedTech"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
                             onClick={() => handleSocialClick('twitter')}
                         >
-                            <Twitter className="h-5 w-5" />
-                            <span>Twitter</span>
+                            <FaXTwitter className="h-5 w-5" />
+                            <span>X</span>
                         </motion.a>
                         <motion.a
-                            href="#"
+                            href="https://www.youtube.com/@gametestedtech"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
-                            onClick={() => handleSocialClick('discord')}
+                            onClick={() => handleSocialClick('youtube')}
                         >
-                            <Discord className="h-5 w-5" />
-                            <span>Discord</span>
-                        </motion.a>
-                        <motion.a
-                            href="#"
-                            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
-                            variants={itemVariants}
-                            onClick={() => handleSocialClick('facebook')}
-                        >
-                            <Facebook className="h-5 w-5" />
-                            <span>Facebook</span>
-                        </motion.a>
+                            <Youtube className="h-5 w-5" />
+                            <span>Youtube</span>
+                        </motion.a> 
                     </motion.div>
                 </div>
                 <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">

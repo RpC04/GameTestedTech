@@ -7,9 +7,10 @@ export const dynamic = "force-dynamic"
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const cookieStore = cookies()
-  const supabase = createServerComponentClient({ cookies: () => cookieStore })
-
+  const cookieStore = await cookies()
+  const supabase = createServerComponentClient({
+    cookies: () => cookieStore
+  })
   // 1. Trae el artículo principal
   const { data: article, error } = await supabase
     .from("articles")

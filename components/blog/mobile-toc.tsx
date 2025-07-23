@@ -15,6 +15,29 @@ export default function MobileTOC({ tableOfContents, postId, onItemClick }: Mobi
 
     if (tableOfContents.length === 0) return null
 
+    // Función mejorada para manejar el click
+    const handleItemClick = (item: { id: string; title: string }) => {
+        // Primero ejecutamos el callback si existe
+        onItemClick?.(item.title, postId)
+
+        // Pequeño delay antes de cerrar para que el scroll tenga tiempo
+        setTimeout(() => {
+            setIsOpen(false)
+        }, 100)
+
+        // Scroll manual como fallback
+        setTimeout(() => {
+            const element = document.getElementById(item.id)
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'nearest'
+                })
+            }
+        }, 150)
+    }
+
     return (
         <div className="lg:hidden mb-6">
             {/* Botón para abrir TOC */}
@@ -52,16 +75,12 @@ export default function MobileTOC({ tableOfContents, postId, onItemClick }: Mobi
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: index * 0.05 }}
                                     >
-                                        <a
-                                            href={`#${item.id}`}
-                                            className="block px-4 py-3 text-gray-300 hover:text-white hover:bg-[#1a1a2e] transition-colors border-l-2 border-transparent hover:border-[#ff6b35]"
-                                            onClick={() => {
-                                                setIsOpen(false)
-                                                onItemClick?.(item.title, postId)
-                                            }}
+                                        <button
+                                            className="w-full text-left block px-4 py-3 text-gray-300 hover:text-white hover:bg-[#1a1a2e] transition-colors border-l-2 border-transparent hover:border-[#ff6b35]"
+                                            onClick={() => handleItemClick(item)}
                                         >
                                             <span className="text-sm">{item.title}</span>
-                                        </a>
+                                        </button>
                                     </motion.li>
                                 ))}
                             </ul>
