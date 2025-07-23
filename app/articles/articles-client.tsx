@@ -272,7 +272,7 @@ export default function Articles() {
                                     <h1 className="text-4xl font-bold text-game-white">
                                         Your Ultimate <span className="text-[#ff6b35]">Gaming</span> Resource
                                     </h1>
-                                    <p className="text-gray-300 mt-2">Discover the latest games, reviews, and gaming tech insights.</p>
+                                    <p className="text-gray-300 mt-2">Discover the latest reviews, helpful guides, and tech insights.</p>
                                 </div>
 
                                 <motion.div className="flex gap-4" variants={itemVariants}>

@@ -1,12 +1,23 @@
 // components/article-card.tsx
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 
 export function ArticleCard({ article, large = false, className = "" }) {
+    const router = useRouter()
+
     if (!article) return null
+
+    const handleCardClick = () => {
+        router.push(`/blog/${article.slug}`)
+    }
+
     return (
-        <article className={`bg-[#1a1a2e] rounded-lg border border-gray-800 overflow-hidden ${className}`}>
+        <article 
+            className={`bg-[#1a1a2e] rounded-lg border border-gray-800 overflow-hidden cursor-pointer hover:bg-[#2a2a4e] transition-colors ${className}`}
+            onClick={handleCardClick}
+        >
             <div className={`relative w-full ${large ? "h-[400px]" : "h-[240px]"}`}>
                 <Image
                     src={article.featured_image || "/placeholder.svg"}
@@ -30,12 +41,7 @@ export function ArticleCard({ article, large = false, className = "" }) {
                     })}
                 </time>
                 <h3 className="font-bold text-white">
-                    <Link
-                        href={`/blog/${article.slug}`}
-                        className="hover:underline focus:outline-none focus:ring-2 focus:ring-game-cyan rounded"
-                    >
-                        {article.title}
-                    </Link>
+                    {article.title}
                 </h3>
                 {article.excerpt && <p className="text-sm text-gray-400">{article.excerpt}</p>}
                 <div className="flex gap-2 flex-wrap">
@@ -44,6 +50,7 @@ export function ArticleCard({ article, large = false, className = "" }) {
                             key={idx}
                             href={`/articles?tag=${tag.name.toLowerCase().replace(/\s+/g, "-")}`}
                             className="category-tag bg-game-blue transition-colors"
+                            onClick={(e) => e.stopPropagation()}
                         >
                             {tag.name}
                         </Link>
