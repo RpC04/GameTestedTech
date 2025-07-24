@@ -77,21 +77,21 @@ const InfoBlocks = () => {
     {
       image: "/images/unsplash.png",
       title: "Honest Reviews: Opinions You Can Trust",
-      description: "At Game Tested Tech, we provide truthful reviews to empower you with the knowledge needed to make informed decisions about gaming hardware and peripherals...",
+      description: "At Game Tested Tech, we provide truthful reviews to empower you with the knowledge needed to make informed decisions about gaming hardware and peripherals. Whether you're researching your next upgrade, seeking validation after a purchase, or simply curious about the latest tech, we're here to guide you. Our in-depth analyses cover performance, features, value, and user experience, ensuring you find the perfect gear for your gaming setup.",
       reverse: false,
       delay: 0.1
     },
     {
       image: "/images/unsplash.png", 
       title: "Unlock True Gaming Potential: Expert Guides",
-      description: "Game Tested Tech strives to provide diverse, helpful information to empower gamers of all levels...",
+      description: "Game Tested Tech strives to provide diverse, helpful information to empower gamers of all levels. This includes comprehensive guides covering topics like troubleshooting common errors, optimizing performance, overclocking components, and building powerful gaming PCs. Our guides are easy to understand and follow, making it simple to learn and apply the knowledge.",
       reverse: true,
       delay: 0.25
     },
     {
       image: "/images/unsplash.png",
       title: "The Game Tested Way: Our Methodology", 
-      description: "Benchmarking products requires meticulous care, time, and unwavering honesty...",
+      description: "Benchmarking products requires meticulous care, time, and unwavering honesty. At Game Tested Tech, we prioritize accuracy and take precautions to ensure data integrity. We acknowledge that unforeseen circumstances or human error can occasionally lead to inaccuracies, and we take full responsibility for rectifying any such issues. Game Tested Tech cares about providing reliable, trustworthy information.",
       reverse: false,
       delay: 0.4
     }
@@ -102,7 +102,7 @@ const InfoBlocks = () => {
       {blocks.map((block, index) => (
         <motion.div
           key={index}
-          className={`flex ${block.reverse ? 'flex-col-reverse md:flex-row' : 'flex-col md:flex-row'} items-center rounded-2xl shadow-lg p-6 gap-6`}
+          className={`flex ${block.reverse ? 'flex-col md:flex-row-reverse' : 'flex-col md:flex-row'} items-center rounded-2xl shadow-lg p-6 gap-6`}
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: block.delay, type: "spring" }}
@@ -111,13 +111,13 @@ const InfoBlocks = () => {
           <img
             src={block.image}
             alt={block.title}
-            className="w-full h-40 md:w-[360px] md:h-[240px] object-cover rounded-xl"
+            className="w-full h-40 md:w-[360px] md:h-[240px] object-cover rounded-xl flex-shrink-0"
           />
-          <div className={block.reverse ? "text-right w-full" : ""}>
-            <h3 className="text-xl font-bold mb-2 text-white">
+          <div className={`flex-1 ${block.reverse ? 'text-end' : ''}`}>
+            <h3 className="text-xl font-bold mb-4 text-white">
               {block.title}
             </h3>
-            <p className="text-gray-300">
+            <p className="text-gray-300 leading-relaxed">
               {block.description}
             </p>
           </div>

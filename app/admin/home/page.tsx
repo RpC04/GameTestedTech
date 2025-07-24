@@ -1,4 +1,3 @@
-// app/admin/home/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -87,7 +86,7 @@ export default function AdminHomePage() {
     return (
       <div className="min-h-screen bg-[#0f0f23] text-white p-6">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">Manage Home Statistics</h1>
+          <h1 className="text-3xl font-bold mb-8">Manage Statistics</h1>
           <div className="text-center">Loading...</div>
         </div>
       </div>
@@ -98,7 +97,7 @@ export default function AdminHomePage() {
     return (
       <div className="min-h-screen bg-[#0f0f23] text-white p-6">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">Manage Home Statistics</h1>
+          <h1 className="text-3xl font-bold mb-8">Manage Statistics</h1>
           <div className="text-center text-red-500">Error: {error}</div>
         </div>
       </div>
@@ -109,7 +108,7 @@ export default function AdminHomePage() {
     <div className="min-h-screen bg-[#0f0f23] text-white p-6">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Manage Home Statistics</h1>
+          <h1 className="text-3xl font-bold">Manage Statistics</h1>
           <Button 
             onClick={refetch} 
             variant="outline"
@@ -194,7 +193,7 @@ export default function AdminHomePage() {
             {/* Preview Hero Stats */}
             <Card className="bg-[#1a1a2e] border-gray-700">
               <CardHeader>
-                <CardTitle className="text-white">Preview - Hero Stats</CardTitle>
+                <CardTitle className="text-white">Preview - Hero Stats (for home and articles)</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex gap-8 text-center">
