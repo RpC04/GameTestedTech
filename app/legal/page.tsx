@@ -8,6 +8,7 @@ import Footer from "@/components/footer";
 export default function LegalPage() {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  
 
   const toggleSection = (section: string) => {
     setExpandedSection(expandedSection === section ? null : section);
