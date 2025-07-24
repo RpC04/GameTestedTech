@@ -1,3 +1,4 @@
+// components/home/HeroSection.tsx
 "use client";
 
 import Image from "next/image";
@@ -5,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { containerVariants, itemVariants, floatAnimation } from "@/constants/home/animations";
-import { heroStats } from "@/constants/home/data";
+import { useHeroStats } from "@/hooks/useHeroStats";
 
 interface HeroSectionProps {
   isLoaded: boolean;
@@ -14,6 +15,8 @@ interface HeroSectionProps {
 }
 
 export const HeroSection = ({ isLoaded, isHovering, setIsHovering }: HeroSectionProps) => {
+  const { heroStats, loading, error } = useHeroStats();
+
   return (
     <div className="relative w-full bg-gradient-to-r from-[#1a1a2e] to-[#0f0f23] overflow-hidden">
       {/* Decorative background */}
@@ -79,18 +82,35 @@ export const HeroSection = ({ isLoaded, isHovering, setIsHovering }: HeroSection
               </motion.div>
             </motion.div>
 
+            {/* Hero Stats - Dinámicas desde BD */}
             <motion.div className="flex gap-8 pt-4" variants={itemVariants}>
-              {heroStats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  className="text-center"
-                  whileHover={{ y: -5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-sm text-gray-400">{stat.label}</p>
-                </motion.div>
-              ))}
+              {loading ? (
+                // Loading skeleton
+                [...Array(3)].map((_, index) => (
+                  <div key={index} className="text-center">
+                    <div className="animate-pulse">
+                      <div className="h-6 w-12 bg-gray-700 rounded mb-1"></div>
+                      <div className="h-4 w-16 bg-gray-600 rounded"></div>
+                    </div>
+                  </div>
+                ))
+              ) : error ? (
+                <div className="text-red-500 text-sm">
+                  Error loading stats
+                </div>
+              ) : (
+                heroStats.map((stat, index) => (
+                  <motion.div
+                    key={stat.id}
+                    className="text-center"
+                    whileHover={{ y: -5 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <p className="text-2xl font-bold">{stat.value}</p>
+                    <p className="text-sm text-gray-400">{stat.label}</p>
+                  </motion.div>
+                ))
+              )}
             </motion.div>
           </motion.div>
 
