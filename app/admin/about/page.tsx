@@ -6,7 +6,7 @@ import { TeamMembersTab } from "@/components/admin/about/TeamMembersTab"
 import { GeneralInfoTab } from "@/components/admin/about/GeneralInfoTab"
 import { CoreValuesTab } from "@/components/admin/about/CoreValuesTab"
 import { FaqTab } from "@/components/admin/about/FaqTab"
-import type { AboutPage, CoreValue, TeamMember, FAQ } from "@/components/admin/about/types" 
+import type { AboutPage, CoreValue, TeamMember, FAQ } from "@/types/admin/about/types" 
 
 
 export default function AboutPageSettings() {

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button" 
 import { useState } from "react"
 import { Plus, Edit3, Trash2, Eye, EyeOff } from "lucide-react"
-import type { FAQ, FaqTabProps } from "./types"
+import type { FAQ, FaqTabProps } from "@/types/admin/about/types"
 
 export function FaqTab({
     faqs,

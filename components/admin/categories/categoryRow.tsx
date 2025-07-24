@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Tag, Edit, Trash2, Save, X, ChevronRight, FolderOpen } from "lucide-react"
-import type { Category } from "@/components/admin/categories/types"
+import type { Category } from "@/types/admin/categories/types"
 
 interface CategoryRowProps {
   category: Category

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button" 
 import { useState } from "react"
 import { Plus, Edit3, Trash2, Eye, EyeOff } from "lucide-react"
-import type { CoreValue, CoreValuesTabProps } from "./types"
+import type { CoreValue, CoreValuesTabProps } from "@/types/admin/about/types"
 
 export function CoreValuesTab({
     coreValues,

@@ -111,8 +111,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // If not authenticated, don't render anything (redirect will happen)
   if (!isAuthenticated) {
     return null
-  }
-{/* { name: "Dashboard", href: "/admin", icon: <LayoutDashboard className="h-5 w-5" /> }, */}
+  } 
+  
   const navItems = [
     
     { name: "Articles", href: "/admin/articles", icon: <FileText className="h-5 w-5" /> },
@@ -120,6 +120,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Contact", href: "/admin/contact", icon: <Inbox className="h-5 w-5" /> },
     { name: "Tags", href: "/admin/tags", icon: <Tags className="h-5 w-5" /> }, 
     { name: "Profile", href: "/admin/profile", icon: <UserRoundPen className="h-5 w-5" /> },
+    { name: "HomePage", href: "/admin/home", icon: <UserRoundPen className="h-5 w-5" /> }, 
     { name: "AboutPage", href: "/admin/about", icon: <UserRoundPen className="h-5 w-5" /> }, 
   ]
 

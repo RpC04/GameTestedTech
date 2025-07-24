@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache"
 
 export async function POST(request: NextRequest) {
   try {
-    const requestUrl = new URL(request.url)
     const supabase = createRouteHandlerClient({ cookies })
 
     // Verify the request is authenticated
