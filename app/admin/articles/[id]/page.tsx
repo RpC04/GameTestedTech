@@ -1,4 +1,4 @@
-import ArticleEditor from "@/components/admin/ArticleEditor"
+import ArticleEditor from "@/components/admin/articles/ArticleEditor"
 
 export const dynamic = "force-dynamic"
 
