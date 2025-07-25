@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
-import type { Category, CategoryFormData, CategoryState } from "@/components/admin/categories/types"
+import type { Category, CategoryFormData, CategoryState } from "@/types/admin/categories/types"
 
 export function useCategories() {
   const [state, setState] = useState<CategoryState>({

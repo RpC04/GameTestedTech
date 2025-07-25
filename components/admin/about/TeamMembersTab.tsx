@@ -3,7 +3,7 @@ import { useState } from "react"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Plus, Edit3, Trash2, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button" 
-import type { TeamMember, TeamMembersTabProps } from "./types" 
+import type { TeamMember, TeamMembersTabProps } from "@/types/admin/about/types" 
 
 export function TeamMembersTab({ 
   teamMembers, 

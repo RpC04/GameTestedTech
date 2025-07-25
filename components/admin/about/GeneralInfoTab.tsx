@@ -1,7 +1,7 @@
 "use client"
 import { Save } from "lucide-react"
 import { Button } from "@/components/ui/button" 
-import type { GeneralInfoTabProps } from "./types"  // AboutPage used in GeneralInfoTabProps
+import type { GeneralInfoTabProps } from "@/types/admin/about/types"  // AboutPage used in GeneralInfoTabProps
 
 export function GeneralInfoTab({
     aboutPage,
