@@ -1,4 +1,4 @@
-import { Stat } from "@/types/home/index";
+import { Stat } from "@/types/home/type";
 
 export const stats: Stat[] = [
   { value: "1.2M+", label: "Community Members" },
