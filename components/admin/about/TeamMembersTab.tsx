@@ -3,26 +3,7 @@ import { useState } from "react"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Plus, Edit3, Trash2, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button" 
-
-type TeamMember = {
-  id: string
-  name: string
-  role: string
-  bio: string
-  image_url: string | null
-  twitter_url: string | null
-  linkedin_url: string | null
-  instagram_url: string | null
-  order_position: number
-  is_active: boolean
-}
-
-interface TeamMembersTabProps {
-  teamMembers: TeamMember[]
-  onSave: (member: Partial<TeamMember>) => void
-  onDelete: (id: string) => void
-  onToggleActive: (id: string, status: boolean) => void
-}
+import type { TeamMember, TeamMembersTabProps } from "@/types/admin/about/types" 
 
 export function TeamMembersTab({ 
   teamMembers, 

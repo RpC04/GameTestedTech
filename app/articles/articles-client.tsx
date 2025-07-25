@@ -16,6 +16,7 @@ import { Header } from "@/components/header"
 import Footer from "@/components/footer"
 import MobileFilters from "@/components/articles/mobile-filters"
 import { useSearchParams } from 'next/navigation'
+import { useHeroStats } from "@/hooks/useHeroStats";
 
 export default function Articles() {
     // Sample latest articles data
@@ -30,6 +31,7 @@ export default function Articles() {
     const [startDate, endDate] = dateRange
     const [tags, setTags] = useState<{ id: number; name: string }[]>([])
     const [selectedTags, setSelectedTags] = useState<number[]>([])
+    const { heroStats, loading: statsLoading, error: statsError } = useHeroStats();
     const searchParams = useSearchParams()
     const categorySlug = searchParams.get('category')
 
@@ -294,30 +296,32 @@ export default function Articles() {
                                 </motion.div>
 
                                 <motion.div className="flex gap-8 pt-4" variants={itemVariants}>
-                                    <motion.div
-                                        className="text-center"
-                                        whileHover={{ y: -5 }}
-                                        transition={{ type: "spring", stiffness: 300 }}
-                                    >
-                                        <p className="text-2xl font-bold">666K</p>
-                                        <p className="text-sm text-gray-400">Users</p>
-                                    </motion.div>
-                                    <motion.div
-                                        className="text-center"
-                                        whileHover={{ y: -5 }}
-                                        transition={{ type: "spring", stiffness: 300 }}
-                                    >
-                                        <p className="text-2xl font-bold">6666K</p>
-                                        <p className="text-sm text-gray-400">Articles</p>
-                                    </motion.div>
-                                    <motion.div
-                                        className="text-center"
-                                        whileHover={{ y: -5 }}
-                                        transition={{ type: "spring", stiffness: 300 }}
-                                    >
-                                        <p className="text-2xl font-bold">666K</p>
-                                        <p className="text-sm text-gray-400">Games</p>
-                                    </motion.div>
+                                    {statsLoading ? ( 
+                                        [...Array(3)].map((_, index) => (
+                                            <div key={index} className="text-center">
+                                                <div className="animate-pulse">
+                                                    <div className="h-6 w-12 bg-gray-700 rounded mb-1"></div>
+                                                    <div className="h-4 w-16 bg-gray-600 rounded"></div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : statsError ? (
+                                        <div className="text-red-500 text-sm">
+                                            Error loading stats
+                                        </div>
+                                    ) : (
+                                        heroStats.map((stat, index) => (
+                                            <motion.div
+                                                key={stat.id}
+                                                className="text-center"
+                                                whileHover={{ y: -5 }}
+                                                transition={{ type: "spring", stiffness: 300 }}
+                                            >
+                                                <p className="text-2xl font-bold">{stat.value}</p>
+                                                <p className="text-sm text-gray-400">{stat.label}</p>
+                                            </motion.div>
+                                        ))
+                                    )}
                                 </motion.div>
                             </div>
 

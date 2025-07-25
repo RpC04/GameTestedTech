@@ -498,10 +498,7 @@ const ContactPage = () => {
                     className="text-[#ff6b35] hover:text-white transition-colors"
                   >
                     <Mail className="h-5 w-5" />
-                  </a>
-                  <a href="tel:+15551234567" className="text-[#ff6b35] hover:text-white transition-colors">
-                    <Phone className="h-5 w-5" />
-                  </a>
+                  </a> 
                 </div>
               </div>
             </div>
