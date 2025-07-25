@@ -1,7 +1,7 @@
 // hooks/useHomeStats.ts
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Stat } from "@/types/home/index";
+import { Stat } from "@/types/home/type";
 
 export const useHomeStats = () => {
   const [stats, setStats] = useState<Stat[]>([]);

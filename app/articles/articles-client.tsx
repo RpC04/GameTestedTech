@@ -4,14 +4,12 @@ import Image from "next/image"
 import Link from "next/link"
 import DatePicker from "react-datepicker"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { HomeJsonLd } from "@/components/home-jsonld"
 import { supabase } from "@/lib/supabase"
 import { useEffect, useState } from "react"
 import { Disclosure } from "@headlessui/react"
 import { ChevronDown } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import ArticlesDropdown from "@/components/articles/articles-dropdown"
 import { Header } from "@/components/header"
 import Footer from "@/components/footer"
 import MobileFilters from "@/components/articles/mobile-filters"
@@ -19,18 +17,14 @@ import { useSearchParams } from 'next/navigation'
 import { useHeroStats } from "@/hooks/useHeroStats";
 
 export default function Articles() {
-    // Sample latest articles data
     const [isLoaded, setIsLoaded] = useState(false)
     const [latestArticles, setLatestArticles] = useState<any[]>([])
-    const [featuredGames, setFeaturedGames] = useState<any[]>([])
     const [categories, setCategories] = useState<{ id: number; name: string; icon?: string }[]>([])
     const [selectedCategories, setSelectedCategories] = useState<number[]>([])
     const [subcategories, setSubcategories] = useState<{ id: number; name: string; parent_id: number | null }[]>([])
     const [selectedSubcategories, setSelectedSubcategories] = useState<number[]>([])
     const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null])
     const [startDate, endDate] = dateRange
-    const [tags, setTags] = useState<{ id: number; name: string }[]>([])
-    const [selectedTags, setSelectedTags] = useState<number[]>([])
     const { heroStats, loading: statsLoading, error: statsError } = useHeroStats();
     const searchParams = useSearchParams()
     const categorySlug = searchParams.get('category')
@@ -42,6 +36,15 @@ export default function Articles() {
             duration: 6,
             repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
+        },
+    }
+
+    const itemVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: { type: "spring", stiffness: 100 },
         },
     }
 
@@ -127,48 +130,6 @@ export default function Articles() {
     }, [])
 
     useEffect(() => {
-        async function fetchTags() {
-            const { data, error } = await supabase
-                .from("tags")
-                .select("id, name")
-                .order("name")
-
-            if (!error && data) {
-                setTags(data)
-            }
-        }
-
-        fetchTags()
-    }, [])
-
-
-    useEffect(() => {
-        async function fetchFeaturedGames() {
-            const { data, error } = await supabase
-                .from("articles")
-                .select(`
-                    *,
-                    category:categories ( id, name ),
-                    article_tags (
-                        tag:tags ( id, name, is_featured )
-                    )
-                `)
-                .order("created_at", { ascending: false })
-
-            if (!error && data) {
-                // Filter articles that have at least one featured tag
-                const filtered = data.filter((article) =>
-                    (article.article_tags || []).some(({ tag }) => tag?.is_featured)
-                )
-
-                setFeaturedGames(filtered.slice(0, 3)) // Show only maximum 3 featured articles
-            }
-        }
-
-        fetchFeaturedGames()
-    }, [])
-
-    useEffect(() => {
         async function fetchFilteredArticles() {
             let query = supabase
                 .from("articles")
@@ -208,36 +169,18 @@ export default function Articles() {
             const { data, error } = await query
 
             if (!error && data) {
-                // Manual filter by tags (many-to-many relationship)
-                const filteredByTags =
-                    selectedTags.length > 0
-                        ? data.filter((article) =>
-                            (article.article_tags || []).some(({ tag }) => selectedTags.includes(tag.id))
-                        )
-                        : data
-                setLatestArticles(filteredByTags)
+                setLatestArticles(data)
             }
         }
 
         fetchFilteredArticles()
-    }, [selectedCategories, selectedSubcategories, selectedTags, startDate, endDate])
+    }, [selectedCategories, selectedSubcategories, startDate, endDate])
 
     function handleClearFilters() {
         setSelectedCategories([])
         setSelectedSubcategories([])
-        setSelectedTags([])
         setDateRange([null, null])
     }
-
-    const itemVariants = {
-        hidden: { y: 20, opacity: 0 },
-        visible: {
-            y: 0,
-            opacity: 1,
-            transition: { type: "spring", stiffness: 100 },
-        },
-    }
-
 
     return (
         <div className="min-h-screen flex flex-col bg-[#0f0f23]">
@@ -296,7 +239,7 @@ export default function Articles() {
                                 </motion.div>
 
                                 <motion.div className="flex gap-8 pt-4" variants={itemVariants}>
-                                    {statsLoading ? ( 
+                                    {statsLoading ? (
                                         [...Array(3)].map((_, index) => (
                                             <div key={index} className="text-center">
                                                 <div className="animate-pulse">
@@ -310,7 +253,7 @@ export default function Articles() {
                                             Error loading stats
                                         </div>
                                     ) : (
-                                        heroStats.map((stat, index) => (
+                                        heroStats.map((stat) => (
                                             <motion.div
                                                 key={stat.id}
                                                 className="text-center"
@@ -381,7 +324,7 @@ export default function Articles() {
                         {/* Latest Articles - 3 columns */}
                         <div className="col-span-1 lg:col-span-3">
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                                {latestArticles.map((article, index) => (
+                                {latestArticles.map((article) => (
                                     <article key={article.id} className="bg-[#0f0f23] border-none overflow-hidden rounded-lg cursor-pointer hover:bg-[#1a1a2e] transition-all duration-300 transform hover:scale-[1.02]"
                                         onClick={() => window.location.href = `/blog/${article.slug}`}>
                                         <div className="aspect-video relative">
@@ -538,41 +481,6 @@ export default function Articles() {
                                             </div>
                                         )}
                                     </Disclosure>
-                                    {/* TAG FILTER 
-                                    <Disclosure>
-                                        {({ open }) => (
-                                            <div>
-                                                <Disclosure.Button className="flex w-full justify-between items-center text-white font-medium py-2">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="text-white">Tags</span>
-                                                    </div>
-                                                    <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
-                                                </Disclosure.Button>
-                                                <Disclosure.Panel className="mt-2 space-y-2 max-h-64 overflow-y-auto pr-2">
-                                                    {tags.map((tag) => (
-                                                        <label
-                                                            key={tag.id}
-                                                            className="flex items-center gap-2 text-sm text-white cursor-pointer select-none"
-                                                        >
-                                                            <input
-                                                                type="checkbox"
-                                                                value={tag.id}
-                                                                checked={selectedTags.includes(tag.id)}
-                                                                onChange={(e) => {
-                                                                    const id = parseInt(e.target.value)
-                                                                    setSelectedTags((prev) =>
-                                                                        e.target.checked ? [...prev, id] : prev.filter((tid) => tid !== id)
-                                                                    )
-                                                                }}
-                                                                className="appearance-none w-4 h-4 border-2 border-gray-500 rounded-sm bg-[#1a1a1a] checked:bg-[#9d8462] checked:border-[#9d8462] focus:outline-none transition-all duration-150"
-                                                            />
-                                                            {tag.name}
-                                                        </label>
-                                                    ))}
-                                                </Disclosure.Panel>
-                                            </div>
-                                        )}
-                                    </Disclosure>*/}
 
                                     {/* DATE FILTER */}
                                     <Disclosure>

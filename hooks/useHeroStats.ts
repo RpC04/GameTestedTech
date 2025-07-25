@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Stat } from "@/types/home/index";
+import { Stat } from "@/types/home/type";
 
 export const useHeroStats = () => {
   const [heroStats, setHeroStats] = useState<Stat[]>([]);
