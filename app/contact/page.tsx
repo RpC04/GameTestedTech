@@ -37,7 +37,7 @@ const ContactPage = () => {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [formError, setFormError] = useState("")
 
-  // Referencias para animaciones basadas en scroll
+  // Animation references for scroll-based animations
   const formRef = useRef(null)
   const infoRef = useRef(null)
   const faqRef = useRef(null)
@@ -59,7 +59,7 @@ const ContactPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Validación básica
+    // Basic validation
     if (!formState.name || !formState.email || !formState.message) {
       setFormError("Please fill in all required fields")
       return
@@ -73,7 +73,7 @@ const ContactPage = () => {
     setFormError("")
     setIsSubmitting(true)
 
-    // Simulación de envío de formulario
+    // Simulate form submission
     try {
       const { error } = await supabase
         .from("contact_messages")
@@ -100,28 +100,7 @@ const ContactPage = () => {
     }
   }
 
-  // Variantes de animación
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 100 },
-    },
-  }
-
-  // Animación de flotación para la imagen del controlador
+  // Float animation for the controller image
   const floatAnimation = {
     y: [0, -15, 0],
     rotate: [0, 2, 0, -2, 0],
@@ -197,7 +176,7 @@ const ContactPage = () => {
               </div>
             </div>
 
-            {/* Imagen del controlador con animación de flotación */}
+            {/* Controller image with float animation */}
             <div className="hidden md:flex justify-center items-center">
               <motion.div animate={floatAnimation} className="relative z-10">
                 <Image
@@ -563,36 +542,7 @@ const ContactPage = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-              {/* 
-              <div className="bg-[#1a1a2e] rounded-xl p-6 border border-gray-800 transform transition-all hover:translate-y-[-5px] hover:shadow-lg">
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#ff6b35]/10 p-3 rounded-full">
-                    <Phone className="h-6 w-6 text-[#ff6b35]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-white mb-2">Phone</h3>
-                    <a href="tel:+15551234567" className="text-gray-200 text-lg hover:text-[#ff6b35] transition-colors">
-                      +1 (555) 123-4567
-                    </a>
-                    <p className="text-gray-400 mt-1">Mon-Fri, 9AM-5PM EST</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-[#1a1a2e] rounded-xl p-6 border border-gray-800 transform transition-all hover:translate-y-[-5px] hover:shadow-lg">
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#ff6b35]/10 p-3 rounded-full">
-                    <MapPin className="h-6 w-6 text-[#ff6b35]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-white mb-2">Location</h3>
-                    <p className="text-gray-200">123 Gaming Street</p>
-                    <p className="text-gray-200">Tech City, TC 10101</p>
-                    <p className="text-gray-400 mt-1">United States</p>
-                  </div>
-                </div>
-              </div>*/}
+              </div> 
             </div>
 
             <div className="bg-[#1a1a2e] rounded-xl p-6 border border-gray-800">

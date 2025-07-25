@@ -73,8 +73,7 @@ export default function ArticlesPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    // Filter articles client-side for simplicity
-    // In a real app, you might want to do this server-side
+    // Filter articles client-side for simplicity 
     fetchArticles()
   }
 

@@ -2,7 +2,7 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react"
-import { FAQ } from "@/types/about"
+import { FAQ } from "@/types/about/about"
 
 interface FAQSectionProps {
   title: string

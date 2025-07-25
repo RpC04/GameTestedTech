@@ -21,7 +21,7 @@ export default function AboutPageSettings() {
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
 
-    // Estados para modales/formularios
+    // States for modals/forms
     const [setEditingValue] = useState<CoreValue | null>(null) 
     const [setEditingFaq] = useState<FAQ | null>(null)
     const [setShowValueForm] = useState(false) 
@@ -80,7 +80,7 @@ export default function AboutPageSettings() {
         }
     }
 
-    // Función para guardar información general
+    // Function to save general information
     const saveGeneralInfo = async () => {
         if (!aboutPage) return
 
@@ -106,7 +106,7 @@ export default function AboutPageSettings() {
         }
     }
 
-    // Función para guardar/actualizar core value
+    // Function to save/update core value
     const saveCoreValue = async (value: Partial<CoreValue>) => {
         try {
             if (value.id) {
@@ -142,7 +142,7 @@ export default function AboutPageSettings() {
         }
     }
 
-    // Función para guardar/actualizar team member 
+    // Function to save/update team member
     const saveTeamMember = async (member: Partial<TeamMember>) => {
         try {
             if (member.id) {
@@ -190,7 +190,7 @@ export default function AboutPageSettings() {
             setError("Failed to save team member: " + error.message)
         }
     }
-    // Función para guardar/actualizar FAQ
+    // Function to save/update FAQ
     const saveFaq = async (faq: Partial<FAQ>) => {
         try {
             if (faq.id) {
@@ -226,7 +226,7 @@ export default function AboutPageSettings() {
         }
     }
 
-    // Función para eliminar elementos
+    // Function to delete items
     const deleteItem = async (table: string, id: string) => {
         try {
             const { error } = await supabase
@@ -244,7 +244,7 @@ export default function AboutPageSettings() {
         }
     }
 
-    // Función para toggle active/inactive
+    // Function to toggle active/inactive
     const toggleActive = async (table: string, id: string, currentStatus: boolean) => {
         try {
             const { error } = await supabase

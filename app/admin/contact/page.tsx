@@ -66,7 +66,7 @@ export default function ContactMessagesPage() {
         return newSet
       })
 
-      // Cerrar modal si el mensaje que se está viendo fue eliminado
+      // Close modal if the message being viewed was deleted
       if (viewingMessage && viewingMessage.id === id) {
         setViewingMessage(null)
       }
@@ -90,7 +90,7 @@ export default function ContactMessagesPage() {
       setMessages(prev => prev.filter(msg => !selectedMessages.has(msg.id)))
       setSelectedMessages(new Set())
 
-      // Cerrar modal si el mensaje que se está viendo fue eliminado
+      // Close modal if the message being viewed was deleted
       if (viewingMessage && selectedMessages.has(viewingMessage.id)) {
         setViewingMessage(null)
       }
@@ -137,7 +137,7 @@ export default function ContactMessagesPage() {
     const workbook = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(workbook, worksheet, "Contact Messages")
 
-    // Ajustar ancho de columnas
+    // Adjust column widths
     const colWidths = [
       { wch: 20 }, // Name
       { wch: 30 }, // Email
@@ -158,48 +158,48 @@ export default function ContactMessagesPage() {
 
     const doc = new jsPDF()
 
-    // Título
+    // Title
     doc.setFontSize(20)
     doc.setFont("helvetica", "bold")
     doc.text('Contact Messages Report', 20, 20)
 
-    // Fecha del reporte
+    // Report date
     doc.setFontSize(12)
     doc.setFont("helvetica", "normal")
     doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 35)
     doc.text(`Total Messages: ${messages.length}`, 20, 45)
 
-    // Línea separadora
+    // Separator line
     doc.setDrawColor(157, 132, 98)
     doc.line(20, 50, 190, 50)
 
     let yPosition = 65
 
     messages.forEach((msg, index) => {
-      // Verificar si necesitamos una nueva página
+      // Verify if we need a new page
       if (yPosition > 260) {
         doc.addPage()
         yPosition = 20
       }
 
-      // Encabezado del mensaje
+      // Message header
       doc.setFontSize(14)
       doc.setFont("helvetica", "bold")
       doc.text(`Message #${index + 1}`, 20, yPosition)
       yPosition += 10
 
-      // Información del mensaje
+      // Message information
       doc.setFontSize(10)
       doc.setFont("helvetica", "normal")
 
-      // Nombre
+      // Name
       doc.setFont("helvetica", "bold")
       doc.text('From:', 20, yPosition)
       doc.setFont("helvetica", "normal")
       doc.text(`${msg.name} (${msg.email})`, 40, yPosition)
       yPosition += 8
 
-      // Asunto
+      // Subject
       doc.setFont("helvetica", "bold")
       doc.text('Subject:', 20, yPosition)
       doc.setFont("helvetica", "normal")
@@ -207,14 +207,14 @@ export default function ContactMessagesPage() {
       doc.text(subjectLines, 45, yPosition)
       yPosition += (subjectLines.length * 5) + 3
 
-      // Fecha
+      // Date
       doc.setFont("helvetica", "bold")
       doc.text('Date:', 20, yPosition)
       doc.setFont("helvetica", "normal")
       doc.text(new Date(msg.created_at).toLocaleDateString(), 40, yPosition)
       yPosition += 8
 
-      // Mensaje
+      // Message
       doc.setFont("helvetica", "bold")
       doc.text('Message:', 20, yPosition)
       yPosition += 5
@@ -223,7 +223,7 @@ export default function ContactMessagesPage() {
       doc.text(messageLines, 20, yPosition)
       yPosition += (messageLines.length * 5) + 10
 
-      // Línea separadora entre mensajes
+      // Separator line between messages
       if (index < messages.length - 1) {
         doc.setDrawColor(200, 200, 200)
         doc.line(20, yPosition, 190, yPosition)

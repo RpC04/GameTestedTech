@@ -56,30 +56,30 @@ export default function Articles() {
     useEffect(() => {
         async function activateCategoryFilter() {
             if (categorySlug) {
-                // Dividir el parámetro por comas para manejar múltiples categorías
+                // Split the parameter by commas to handle multiple categories
                 const categorySlugs = categorySlug.split(',').map(slug => slug.trim());
 
-                // Buscar todas las categorías que coincidan con los slugs
+                // Search for all categories that match the slugs
                 const { data, error } = await supabase
                     .from("categories")
                     .select("id, parent_id, slug")
-                    .in("slug", categorySlugs); // Usar 'in' en lugar de 'eq' para múltiples valores
+                    .in("slug", categorySlugs); // Use 'in' instead of 'eq' for multiple values
 
                 if (data && !error) {
                     const parentCategoryIds: number[] = [];
                     const subcategoryIds: number[] = [];
 
                     data.forEach(category => {
-                        // Si tiene parent_id es una subcategoría
+                        // If it has a parent_id it's a subcategory
                         if (category.parent_id) {
                             subcategoryIds.push(category.id);
                         } else {
-                            // Si no tiene parent_id es una categoría padre
+                            // If it doesn't have a parent_id it's a parent category
                             parentCategoryIds.push(category.id);
                         }
                     });
 
-                    // Actualizar los estados con todas las categorías encontradas
+                    // Update states with all found categories
                     if (parentCategoryIds.length > 0) {
                         setSelectedCategories(parentCategoryIds);
                     }
@@ -88,7 +88,7 @@ export default function Articles() {
                     }
                 }
             } else {
-                // Si no hay categorySlug, limpiar los filtros de categorías
+                // If there is no categorySlug, clear category filters
                 setSelectedCategories([]);
                 setSelectedSubcategories([]);
             }
@@ -118,7 +118,7 @@ export default function Articles() {
             const { data, error } = await supabase
                 .from("categories")
                 .select("id, name, parent_id")
-                .not("parent_id", "is", null) // Solo subcategorías
+                .not("parent_id", "is", null) // Only subcategories
                 .order("name")
 
             if (!error && data) {

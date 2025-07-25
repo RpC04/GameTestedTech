@@ -15,12 +15,12 @@ export default function AdminLogin() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  // Verificar si las variables de entorno están disponibles
+  // Verify if environment variables are available
   const isMissingEnvVars =
     typeof process.env.NEXT_PUBLIC_SUPABASE_URL === "undefined" ||
     typeof process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === "undefined"
 
-  // Solo crear el cliente si las variables de entorno están disponibles
+  // Only create the client if environment variables are available
   const supabase = !isMissingEnvVars ? createClientComponentClient() : null
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function AdminLogin() {
     }
   }
 
-  // Si hay un error con las variables de entorno, mostrar mensaje
+  // If there is an error with the environment variables, show message
   if (configError) {
     return (
       <div className="min-h-screen bg-[#0a0a14] flex items-center justify-center p-4">

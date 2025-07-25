@@ -16,19 +16,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter()
   const pathname = usePathname()
 
-  // Verificar si las variables de entorno están disponibles
+  // Verify if environment variables are available
   const isMissingEnvVars =
     typeof process.env.NEXT_PUBLIC_SUPABASE_URL === "undefined" ||
     typeof process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === "undefined"
 
-  // Solo crear el cliente si las variables de entorno están disponibles
+  // Only create the client if environment variables are available
   const supabase = !isMissingEnvVars ? createClientComponentClient() : null
 
   useEffect(() => {
     async function checkAuth() {
       setIsLoading(true)
 
-      // Si faltan variables de entorno, mostrar error
+      // If environment variables are missing, show error
       if (isMissingEnvVars) {
         setError(
           "Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
@@ -77,7 +77,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }
 
-  // Si hay un error con las variables de entorno, mostrar mensaje
+  // If there is an error with the environment variables, show message
   if (error) {
     return (
       <div className="min-h-screen bg-[#0a0a14] text-gray-200 flex items-center justify-center p-4">

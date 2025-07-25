@@ -7,10 +7,12 @@ import { SearchBar } from "@/components/ui/search-bar"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react";
 import { useAnalytics } from '@/hooks/use-analytics';
+import { useHeroStats } from '@/hooks/useHeroStats';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { trackEvent } = useAnalytics();
+  const { heroStats, loading: statsLoading, error: statsError } = useHeroStats();
 
   const handleNavigationClick = (destination: string, location: 'desktop' | 'mobile') => {
     trackEvent('navigation_click', 'header', `${destination}_${location}`);
@@ -236,19 +238,28 @@ export function Header() {
                   <p className="text-gray-400 text-sm">
                     Tech for Gamers, By Gamers
                   </p>
-                  <div className="flex justify-center gap-4 mt-3">
-                    <div className="text-center">
-                      <div className="text-[#ff6b35] font-bold">500+</div>
-                      <div className="text-gray-400 text-xs">Articles</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-[#ff6b35] font-bold">50K+</div>
-                      <div className="text-gray-400 text-xs">Readers</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-[#ff6b35] font-bold">20+</div>
-                      <div className="text-gray-400 text-xs">Categories</div>
-                    </div>
+                  <div className="flex justify-center gap-4 mt-3"> 
+                    {statsLoading ? (
+                      [...Array(3)].map((_, index) => (
+                        <div key={index} className="text-center">
+                          <div className="animate-pulse">
+                            <div className="h-4 w-8 bg-gray-700 rounded mb-1"></div>
+                            <div className="h-3 w-12 bg-gray-600 rounded"></div>
+                          </div>
+                        </div>
+                      ))
+                    ) : statsError ? (
+                      <div className="text-red-500 text-xs">
+                        Stats unavailable
+                      </div>
+                    ) : (
+                      heroStats.map((stat) => (
+                        <div key={stat.id} className="text-center">
+                          <div className="text-[#ff6b35] font-bold">{stat.value}</div>
+                          <div className="text-gray-400 text-xs">{stat.label}</div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               </div>

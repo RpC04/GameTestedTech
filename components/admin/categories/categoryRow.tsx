@@ -33,10 +33,8 @@ export function CategoryRow({
   const isExpanded = expandedCategories.has(category.id)
 
   const handleSave = async () => {
-    const success = await onUpdate(category.id, editData)
-    if (success) {
-      setIsEditing(false)
-    }
+    await onUpdate(category.id, editData)
+    setIsEditing(false)
   }
 
   const handleCancel = () => {

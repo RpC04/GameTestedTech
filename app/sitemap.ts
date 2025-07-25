@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route === "" ? 1 : 0.8,
   }))
 
-  // Article pages - in a real app, you would fetch these from your database
+  // Article pages
   const articleRoutes = Array(12)
     .fill(null)
     .map((_, i) => ({

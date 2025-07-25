@@ -32,11 +32,11 @@ export default function ProfileSettings() {
     const fetchAuthorProfile = async () => {
         setIsLoading(true)
         try {
-            // Obtener usuario autenticado
+            // Get authenticated user
             const { data: { user }, error: userError } = await supabase.auth.getUser()
             if (userError || !user) throw new Error("No authenticated user found")
 
-            // Buscar el autor correspondiente
+            // Find the corresponding author
             const { data, error } = await supabase
                 .from("authors")
                 .select("*")
@@ -84,21 +84,21 @@ export default function ProfileSettings() {
             const fileName = `${author.id}-${Date.now()}.${fileExt}`
             const filePath = `profile/${fileName}`
 
-            // Subir archivo al bucket
+            // Upload file to bucket
             const { error: uploadError } = await supabase.storage
                 .from("imagesblog")
                 .upload(filePath, file, { upsert: true })
 
             if (uploadError) throw uploadError
 
-            // Obtener URL pública
+            // Get public URL
             const { data: publicUrlData } = supabase.storage
                 .from("imagesblog")
                 .getPublicUrl(filePath)
 
             const newAvatarUrl = publicUrlData?.publicUrl
 
-            // Actualizar en la base de datos
+            // Update database
             const { error: updateError } = await supabase
                 .from("authors")
                 .update({
@@ -109,7 +109,7 @@ export default function ProfileSettings() {
 
             if (updateError) throw updateError
 
-            // Actualizar estado local
+            // Update local state
             setAuthor(prev => prev ? { ...prev, avatar_url: newAvatarUrl } : null)
             setPreviewImage(newAvatarUrl)
             setSuccess("Profile image updated successfully!")
@@ -154,7 +154,7 @@ export default function ProfileSettings() {
 
             setSuccess("Profile updated successfully!")
 
-            // Actualizar el updated_at local
+            // Update local updated_at
             setAuthor(prev => prev ? {
                 ...prev,
                 updated_at: new Date().toISOString()

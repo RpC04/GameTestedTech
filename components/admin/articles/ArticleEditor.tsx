@@ -48,17 +48,17 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
     async function fetchData() {
       setIsLoading(true)
       try {
-        //Fetch de categorías
+        //Fetch of categories
         const { data: categoriesData } = await supabase.from("categories").select("id, name").order("name")
 
         if (categoriesData) setCategories(categoriesData)
 
-        //Fetch de tags
+        //Fetch of tags
         const { data: tagsData } = await supabase.from("tags").select("id, name").order("name")
 
         if (tagsData) setAvailableTags(tagsData)
 
-        //Fetch del artículo si no es nuevo
+        //Fetch of article if not new
         if (numericId) {
           const { data: articleData, error } = await supabase
             .from("articles")
@@ -151,19 +151,19 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
       }
 
       if (isNewArticle) {
-        // Obtener usuario autenticado
+        // Get authenticated user
         const {
           data: { user },
           error: userError,
         } = await supabase.auth.getUser()
-        if (userError || !user) throw new Error("No se pudo obtener el usuario.")
+        if (userError || !user) throw new Error("Could not obtain the user.")
 
-        // Buscar el autor correspondiente (relacionado con ese usuario)
+        // Get author corresponding to this user
         const { data: author, error: authorError } = await supabase.from("authors").select("id").limit(1).single()
 
-        if (authorError || !author) throw new Error("No se encontró un autor vinculado al usuario.")
+        if (authorError || !author) throw new Error("Could not find author linked to user.")
 
-        // Insertar el artículo con author_id incluido
+        // Insert article with author_id included
         const { data, error } = await supabase
           .from("articles")
           .insert([
@@ -177,7 +177,7 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
         if (error) throw error
 
         const newArticleId = data?.[0]?.id
-        if (!newArticleId) throw new Error("No se pudo obtener el ID del nuevo artículo.")
+        if (!newArticleId) throw new Error("Could not obtain the ID of the new article.")
 
         if (tags.length > 0) {
           const tagInserts = tags.map((tagId) => ({
@@ -196,10 +196,10 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
         const { error } = await supabase.from("articles").update(payload).eq("id", article_id)
         if (error) throw error
 
-        // Primero borra los tags antiguos
+        // First delete old tags
         await supabase.from("article_tags").delete().eq("article_id", article_id)
 
-        // Luego inserta los nuevos
+        // Then insert new ones
         if (tags.length > 0) {
           const tagInserts = tags.map((tagId) => ({
             article_id,
@@ -244,8 +244,8 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
     try {
       if (article.featured_image) {
         try {
-          const oldFilePath = extractFilePathFromUrl(article.featured_image); // ✅ Usar la función helper
-          console.log("Path a borrar:", oldFilePath); // Debug
+          const oldFilePath = extractFilePathFromUrl(article.featured_image); //Use the helper function
+          console.log("Path to delete:", oldFilePath); // Debug
 
           if (oldFilePath) {
             const { error: deleteError } = await supabase.storage
@@ -253,13 +253,13 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
               .remove([oldFilePath]);
 
             if (deleteError) {
-              console.error("Error borrando:", deleteError);
+              console.error("Error deleting:", deleteError);
             } else {
-              console.log("✅ Imagen anterior borrada exitosamente");
+              console.log("Previous image deleted successfully");
             }
           }
         } catch (error) {
-          console.log("No se pudo borrar imagen anterior:", error)
+          console.log("Could not delete previous image:", error)
         }
       }
 
@@ -554,10 +554,10 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
           <div className="bg-slate-900 rounded-lg p-6 shadow-md">
             <h3 className="text-lg font-medium text-white mb-4">Featured Image</h3>
 
-            {/* ...dentro de la sección Featured Image... */}
+            {/* ...inside the Featured Image section... */}
             <div className="space-y-4">
 
-              {/* Input de archivo oculto */}
+              {/* Hidden file input */}
               <input
                 type="file"
                 accept="image/*"
@@ -584,7 +584,7 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
                       ; (e.target as HTMLImageElement).src = "/placeholder.svg?height=200&width=400"
                     }}
                   />
-                  {/* Botón para quitar imagen (opcional) */}
+                  {/* Button to remove image (optional) */}
                   <button
                     type="button"
                     className="absolute top-2 right-2 bg-red-700 hover:bg-red-800 text-white text-xs px-2 py-1 rounded"

@@ -11,7 +11,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const supabase = createServerComponentClient({
     cookies: () => cookieStore
   })
-  // 1. Trae el artículo principal
+  // 1. Get the main article
   const { data: article, error } = await supabase
     .from("articles")
     .select(`
@@ -28,7 +28,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     return <div className="text-white p-8">Article not found.</div>
   }
 
-  // 2. Busca los tags (ids)
+  // 2. Get the tags (ids)
   const { data: articleTags } = await supabase
     .from('article_tags')
     .select('tag_id')
@@ -36,7 +36,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   const tagIds = (articleTags || []).map(t => t.tag_id)
 
-  // 3. Busca los nombres de los tags
+  // 3. Get the tag names
   let tagNames: string[] = []
   if (tagIds.length > 0) {
     const { data: tags } = await supabase
@@ -46,7 +46,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     tagNames = tags?.map(t => t.name) || []
   }
 
-  // 4. Busca artículos relacionados por categoría
+  // 4. Get related articles by category
   const { data: articlesByCategory } = await supabase
     .from('articles')
     .select('id, title, slug, excerpt, featured_image, category_id, author_id, created_at')
@@ -54,7 +54,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .neq('id', article.id)
     .eq('status', 'published')
 
-  // 5. Busca artículos relacionados por tags
+  // 5. Search for related articles by tags
   let articlesByTags: RelatedArticle[] = []
   if (tagIds.length > 0) {
     const { data: articleTagRows } = await supabase
@@ -73,7 +73,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     }
   }
 
-  // 6. Junta, filtra duplicados y limita
+  // 6. Combine, filter duplicates and limit
   const allArticles = [...(articlesByCategory || []), ...articlesByTags]
   const uniqueArticles: Record<number, RelatedArticle> = {}
   allArticles.forEach(a => { uniqueArticles[a.id] = a })

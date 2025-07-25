@@ -17,12 +17,12 @@ export function TeamMembersTab({
   
   const supabase = createClientComponentClient()
 
-  // Función para extraer el path de la imagen desde la URL
+  // Function to extract image path from URL
   const getImagePathFromUrl = (imageUrl: string): string | null => {
     if (!imageUrl) return null
     
     try {
-      // Extraer el path después de '/storage/v1/object/public/imagesweb/'
+      // Extract path after '/storage/v1/object/public/imagesweb/'
       const urlParts = imageUrl.split('/storage/v1/object/public/imagesweb/')
       if (urlParts.length > 1) {
         return urlParts[1]
@@ -34,7 +34,7 @@ export function TeamMembersTab({
     }
   }
 
-  // Función para borrar imagen del bucket
+  // Function to delete image from bucket
   const deleteImageFromBucket = async (imageUrl: string): Promise<void> => {
     if (!imageUrl) return
 
@@ -56,7 +56,7 @@ export function TeamMembersTab({
     }
   }
 
-  // Función para subir imagen
+  // Function to upload image
   const uploadImage = async (file: File, memberId?: string): Promise<string | null> => {
     try {
       const fileExt = file.name.split('.').pop()
@@ -92,12 +92,12 @@ export function TeamMembersTab({
       setIsUploadingImage(true)
       
       try {
-        // Si estamos editando y ya hay una imagen, borrar la anterior
+        // If we are editing and already have an image, delete the old one
         if (editingMember?.image_url) {
           await deleteImageFromBucket(editingMember.image_url)
         }
 
-        // Subir nueva imagen
+        // Upload new image
         const newImageUrl = await uploadImage(imageFile, editingMember?.id)
         imageUrl = newImageUrl
 
@@ -128,16 +128,16 @@ export function TeamMembersTab({
     setEditingMember(null)
   }
 
-  // Función para borrar miembro (incluyendo su imagen)
+  // Function to delete member (including their image)
   const handleDelete = async (member: TeamMember) => {
     if (confirm(`Are you sure you want to delete ${member.name}?`)) {
       try {
-        // Borrar imagen del bucket primero
+        // Delete image from bucket first
         if (member.image_url) {
           await deleteImageFromBucket(member.image_url)
         }
-        
-        // Luego borrar el miembro de la base de datos
+
+        // Then delete the member from the database
         onDelete(member.id)
       } catch (error) {
         console.error('Error deleting member:', error)

@@ -35,11 +35,11 @@ export default function LegalPage() {
       link.click();
       document.body.removeChild(link);
 
-      // Limpiar el objeto URL después de la descarga
+      // Clean up the URL object after download
       window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       console.error('Error downloading file:', error);
-      // Fallback: abrir en nueva pestaña si falla la descarga
+      // Fallback: open in new tab if download fails
       window.open(url, '_blank');
     } finally {
       setDownloadingId(null);
