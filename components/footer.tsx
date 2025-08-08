@@ -63,8 +63,8 @@ export default function FooterAnimated() {
                         viewport={{ once: true }}
                     >
                         <motion.div variants={itemVariants}>
-                            <Link 
-                                href="/" 
+                            <Link
+                                href="/"
                                 className="flex items-center gap-2 mb-4"
                                 onClick={handleLogoClick}
                             >
@@ -76,10 +76,10 @@ export default function FooterAnimated() {
                                     className="object-contain"
                                 />
                                 <span className="text-game-white text-sm font-bold">
-                  GAME
-                  <br />
-                  TESTED TECH
-                </span>
+                                    GAME
+                                    <br />
+                                    TESTED TECH
+                                </span>
                             </Link>
                             <p className="text-gray-400 text-sm">
                                 Your trusted source for honest gaming hardware reviews, guides, and tech insights.
@@ -98,8 +98,8 @@ export default function FooterAnimated() {
                             Quick Links
                         </motion.h3>
                         <motion.div variants={itemVariants}>
-                            <Link 
-                                href="/" 
+                            <Link
+                                href="/"
                                 className="block text-gray-400 hover:text-white transition-colors"
                                 onClick={() => handleNavigationClick('home')}
                             >
@@ -107,8 +107,8 @@ export default function FooterAnimated() {
                             </Link>
                         </motion.div>
                         <motion.div variants={itemVariants}>
-                            <Link 
-                                href="/articles" 
+                            <Link
+                                href="/articles"
                                 className="block text-gray-400 hover:text-white transition-colors"
                                 onClick={() => handleNavigationClick('articles')}
                             >
@@ -116,8 +116,8 @@ export default function FooterAnimated() {
                             </Link>
                         </motion.div>
                         <motion.div variants={itemVariants}>
-                            <Link 
-                                href="/about" 
+                            <Link
+                                href="/about"
                                 className="block text-gray-400 hover:text-white transition-colors"
                                 onClick={() => handleNavigationClick('about')}
                             >
@@ -125,8 +125,8 @@ export default function FooterAnimated() {
                             </Link>
                         </motion.div>
                         <motion.div variants={itemVariants}>
-                            <Link 
-                                href="/contact" 
+                            <Link
+                                href="/contact"
                                 className="block text-gray-400 hover:text-white transition-colors"
                                 onClick={() => handleNavigationClick('contact')}
                             >
@@ -134,8 +134,8 @@ export default function FooterAnimated() {
                             </Link>
                         </motion.div>
                         <motion.div variants={itemVariants}>
-                            <Link 
-                                href="/legal" 
+                            <Link
+                                href="/legal"
                                 className="block text-gray-400 hover:text-white transition-colors"
                                 onClick={() => handleNavigationClick('legal')}
                             >
@@ -155,6 +155,8 @@ export default function FooterAnimated() {
                             Follow Us
                         </motion.h3>
                         <motion.a
+                            target="_blank"
+                            rel="noopener noreferrer"
                             href="https://discord.gg/hgkdMseg9n"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
@@ -164,6 +166,8 @@ export default function FooterAnimated() {
                             <span>Discord</span>
                         </motion.a>
                         <motion.a
+                            target="_blank"
+                            rel="noopener noreferrer"
                             href="https://www.facebook.com/gametestedtech"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
@@ -173,6 +177,8 @@ export default function FooterAnimated() {
                             <span>Facebook</span>
                         </motion.a>
                         <motion.a
+                            target="_blank"
+                            rel="noopener noreferrer"
                             href="https://www.instagram.com/gametestedtech"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
@@ -182,6 +188,8 @@ export default function FooterAnimated() {
                             <span>Instagram</span>
                         </motion.a>
                         <motion.a
+                            target="_blank"
+                            rel="noopener noreferrer"
                             href="https://x.com/GameTestedTech"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
@@ -191,6 +199,8 @@ export default function FooterAnimated() {
                             <span>X</span>
                         </motion.a>
                         <motion.a
+                            target="_blank"
+                            rel="noopener noreferrer"
                             href="https://www.youtube.com/@gametestedtech"
                             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                             variants={itemVariants}
@@ -198,7 +208,7 @@ export default function FooterAnimated() {
                         >
                             <Youtube className="h-5 w-5" />
                             <span>Youtube</span>
-                        </motion.a> 
+                        </motion.a>
                     </motion.div>
                 </div>
                 <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
