@@ -15,24 +15,28 @@ export default function MobileTOC({ tableOfContents, postId, onItemClick }: Mobi
 
     if (tableOfContents.length === 0) return null
 
-    // Función mejorada para manejar el click
+    // Improved function to handle click with offset for mobile
     const handleItemClick = (item: { id: string; title: string }) => {
-        // Primero ejecutamos el callback si existe
+        // First we execute the callback if it exists
         onItemClick?.(item.title, postId)
 
-        // Pequeño delay antes de cerrar para que el scroll tenga tiempo
+        // Small delay before closing so that the scroll has time
         setTimeout(() => {
             setIsOpen(false)
         }, 100)
 
-        // Scroll manual como fallback
+        // Scroll manually with offset for mobile
         setTimeout(() => {
             const element = document.getElementById(item.id)
             if (element) {
-                element.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                    inline: 'nearest'
+                // Calculate position with offset for mobile
+                const offsetTop = element.getBoundingClientRect().top + window.pageYOffset
+                const isMobile = window.innerWidth <= 768
+                const offset = isMobile ? 80 : 40 // Greater offset for mobile
+
+                window.scrollTo({
+                    top: offsetTop - offset,
+                    behavior: 'smooth'
                 })
             }
         }, 150)
@@ -40,7 +44,7 @@ export default function MobileTOC({ tableOfContents, postId, onItemClick }: Mobi
 
     return (
         <div className="lg:hidden mb-6">
-            {/* Botón para abrir TOC */}
+            {/* Button to open TOC */}
             <motion.button
                 onClick={() => setIsOpen(!isOpen)}
                 className="w-full bg-[#1a1a2e] hover:bg-[#2a2a4e] text-white border border-gray-600 rounded-lg p-4 flex items-center justify-between transition-all"
@@ -56,7 +60,7 @@ export default function MobileTOC({ tableOfContents, postId, onItemClick }: Mobi
                 />
             </motion.button>
 
-            {/* Dropdown animado */}
+            {/* Dropdown animation */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
