@@ -74,6 +74,10 @@ GameTestedTech is a comprehensive gaming technology review website that provides
 
 This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
 
+## Credits
+
+Developed by [RpC05](https://github.com/RpC05)
+
 ## Contact
 
 - Email: [contact@gametestedtech.com](mailto:contact@gametestedtech.com)
