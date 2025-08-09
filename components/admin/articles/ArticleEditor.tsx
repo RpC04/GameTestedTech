@@ -144,7 +144,14 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
       const { tags, article_tags, ...articleData } = article
 
       const payload = {
-        ...articleData,
+        title: articleData.title,
+        slug: articleData.slug,
+        content: articleData.content,
+        excerpt: articleData.excerpt,
+        featured_image: articleData.featured_image,
+        category_id: articleData.category_id,
+        meta_title: articleData.meta_title,
+        meta_description: articleData.meta_description,
         status,
         updated_at: new Date().toISOString(),
         ...(isNewArticle && { created_at: new Date().toISOString() }),
