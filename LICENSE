@@ -1,32 +1,50 @@
-MIT License
+Modified MIT License
 
-Copyright (c) 2025 Gepetero
+Copyright (c) 2025 GameTestedTech
 
+Software Structure License:
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights  
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell     
-copies of the Software, and to permit persons to whom the Software is         
-furnished to do so, subject to the following conditions:
+of this software's structure and associated documentation files (the "Software Structure"),
+to deal with the Software Structure without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software Structure, and to permit persons to whom the Software Structure
+is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in    
-all copies or substantial portions of the Software.
+1. The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software Structure.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR    
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,      
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE    
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER        
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN     
-THE SOFTWARE.
+2. Brand Asset Restrictions:
+   - The name "GameTestedTech"
+   - The GameTestedTech logo
+   - Any associated images or visual assets
+   - Brand identity elements (including but not limited to color schemes, designs, and layouts)
+   - Marketing materials and content
+   Are expressly excluded from this license and may not be used, copied, modified,
+   merged, published, distributed, sublicensed, and/or sold without explicit
+   written permission from GameTestedTech.
 
----
+3. Permitted Uses:
+   - The technical architecture and code structure
+   - The component hierarchy and organization
+   - Development patterns and methodologies
+   - Configuration files (excluding brand-specific content)
+   - Technical documentation structure
 
-🚫 **Trademark & Brand Notice**
+4. Content Restrictions:
+   All content, articles, reviews, and media assets are proprietary and not
+   included in this license. You must replace all content with your own original
+   content when using this Software Structure.
 
-The name **Game Tested Tech**, its **logo**, and all associated **branding elements** (including images, color schemes, and design identity) are **not covered by this license**.
+THE SOFTWARE STRUCTURE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE STRUCTURE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE STRUCTURE.
 
-You **may not** use the name "Game Tested Tech", its logo, or branding to advertise, promote, or present derivative works without **explicit written permission** from the owner.
+For permissions regarding brand assets or clarification about usage, please
+contact GameTestedTech directly.
 
 This includes but is not limited to:
 - Reuse of the project name in any product or service
