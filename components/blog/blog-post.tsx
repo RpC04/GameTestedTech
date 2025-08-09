@@ -46,30 +46,59 @@ const formatDate = (date: string | Date | null | undefined): string => {
 // Configurar renderer para agregar ID a h2
 const renderer = new marked.Renderer()
 renderer.heading = function (text, level) {
-    if (level === 2) {
-        const id = text.toLowerCase().replace(/\s+/g, "-")
-        return `<h2 id="${id}">${text}</h2>`
+    if (level === 1 || level === 2) {  // h1 y h2
+        const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "")
+        return `<h${level} id="${id}">${text}</h${level}>`
     }
     return `<h${level}>${text}</h${level}>`
 }
 marked.setOptions({ renderer })
 
-function processHtmlAndExtractTOC(html: string): { htmlWithIds: string, toc: { id: string, title: string }[] } {
+function processHtmlAndExtractTOC(html: string): {
+    htmlWithIds: string,
+    toc: { id: string, title: string, children?: { id: string, title: string }[] }[]
+} {
     const $ = cheerio.load(html);
-    const toc: { id: string, title: string }[] = [];
-    $("h2").each((idx, el) => {
+    const toc: { id: string, title: string, children?: { id: string, title: string }[] }[] = [];
+    let currentH1: { id: string, title: string, children: { id: string, title: string }[] } | null = null;
+
+    $("h1, h2").each((idx, el) => {
         const text = $(el).text();
+        const element = $(el);
+        const tagName = element?.[0]?.tagName?.toLowerCase() || '';
         let id = $(el).attr("id");
+
         if (!id) {
-            id =
-                text
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")
-                    .replace(/[^\w-]/g, "") + "-" + idx;
+            id = text
+                .toLowerCase()
+                .replace(/\s+/g, "-")
+                .replace(/[^\w-]/g, "") + "-" + idx;
             $(el).attr("id", id);
         }
-        toc.push({ id, title: text });
+
+        if (tagName === "h1") {
+            // Guardar el h1 anterior si existe
+            if (currentH1) {
+                toc.push(currentH1);
+            }
+            // Crear nuevo h1
+            currentH1 = { id, title: text, children: [] };
+        } else if (tagName === "h2") {
+            // Si hay un h1 actual, agregar el h2 como hijo
+            if (currentH1) {
+                currentH1.children.push({ id, title: text });
+            } else {
+                // Si no hay h1, crear uno temporal o agregar directamente
+                toc.push({ id, title: text });
+            }
+        }
     });
+
+    // No olvides agregar el último h1
+    if (currentH1) {
+        toc.push(currentH1);
+    }
+
     return { htmlWithIds: $.html(), toc };
 }
 
@@ -467,14 +496,35 @@ export default function BlogPost({ article, relatedArticles = [] }: { article: a
                                     <ul className="space-y-3">
                                         {tableOfContents.map((item) => (
                                             <li key={item.id}>
+                                                {/* H1 principal */}
                                                 <a
                                                     href={`#${item.id}`}
-                                                    className="text-gray-300 hover:text-white"
+                                                    className="text-white hover:text-[#ff6b35] font-medium block"
                                                     onClick={() => {
                                                         trackEvent('toc_click', 'navigation', item.title, post.id);
-                                                    }}>
+                                                    }}
+                                                >
                                                     {item.title}
                                                 </a>
+
+                                                {/* H2 anidados */}
+                                                {item.children && item.children.length > 0 && (
+                                                    <ul className="ml-4 mt-2 space-y-2">
+                                                        {item.children.map((child) => (
+                                                            <li key={child.id}>
+                                                                <a
+                                                                    href={`#${child.id}`}
+                                                                    className="text-gray-300 hover:text-white text-sm block"
+                                                                    onClick={() => {
+                                                                        trackEvent('toc_click', 'navigation', child.title, post.id);
+                                                                    }}
+                                                                >
+                                                                    {child.title}
+                                                                </a>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
                                             </li>
                                         ))}
                                     </ul>
