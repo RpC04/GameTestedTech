@@ -8,7 +8,6 @@ import { CoreValuesTab } from "@/components/admin/about/CoreValuesTab"
 import { FaqTab } from "@/components/admin/about/FaqTab"
 import type { AboutPage, CoreValue, TeamMember, FAQ } from "@/types/admin/about/types" 
 
-
 export default function AboutPageSettings() {
     const [aboutPage, setAboutPage] = useState<AboutPage | null>(null)
     const [coreValues, setCoreValues] = useState<CoreValue[]>([])
@@ -21,11 +20,10 @@ export default function AboutPageSettings() {
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
 
-    // States for modals/forms
-    const [setEditingValue] = useState<CoreValue | null>(null) 
-    const [setEditingFaq] = useState<FAQ | null>(null)
-    const [setShowValueForm] = useState(false) 
-    const [setShowFaqForm] = useState(false)
+    const [editingValue, setEditingValue] = useState<CoreValue | null>(null) 
+    const [editingFaq, setEditingFaq] = useState<FAQ | null>(null)
+    const [showValueForm, setShowValueForm] = useState(false) 
+    const [showFaqForm, setShowFaqForm] = useState(false)
 
     const supabase = createClientComponentClient()
 
@@ -92,7 +90,17 @@ export default function AboutPageSettings() {
             const { error } = await supabase
                 .from('about_page')
                 .upsert({
-                    ...aboutPage,
+                    id: aboutPage.id, // ✅ UUID - mantener si existe
+                    hero_title: aboutPage.hero_title,
+                    hero_subtitle: aboutPage.hero_subtitle,
+                    mission_title: aboutPage.mission_title,
+                    mission_content: aboutPage.mission_content,
+                    values_title: aboutPage.values_title,
+                    values_subtitle: aboutPage.values_subtitle,
+                    team_title: aboutPage.team_title,
+                    team_subtitle: aboutPage.team_subtitle,
+                    faq_title: aboutPage.faq_title,
+                    faq_subtitle: aboutPage.faq_subtitle,
                     updated_at: new Date().toISOString()
                 })
 
@@ -110,23 +118,32 @@ export default function AboutPageSettings() {
     const saveCoreValue = async (value: Partial<CoreValue>) => {
         try {
             if (value.id) {
-                // Update existing
+                // Update existing - UUID
                 const { error } = await supabase
                     .from('core_values')
                     .update({
-                        ...value,
+                        title: value.title,
+                        description: value.description,
+                        icon_name: value.icon_name,
+                        color: value.color,
+                        order_position: value.order_position,
+                        is_active: value.is_active,
                         updated_at: new Date().toISOString()
                     })
                     .eq('id', value.id)
 
                 if (error) throw error
             } else {
-                // Create new
+                // Create new 
                 const { error } = await supabase
                     .from('core_values')
                     .insert([{
-                        ...value,
-                        order_position: coreValues.length
+                        title: value.title,
+                        description: value.description,
+                        icon_name: value.icon_name,
+                        color: value.color,
+                        order_position: coreValues.length,
+                        is_active: value.is_active ?? true
                     }])
 
                 if (error) throw error
@@ -146,7 +163,7 @@ export default function AboutPageSettings() {
     const saveTeamMember = async (member: Partial<TeamMember>) => {
         try {
             if (member.id) {
-                // Update existing - mantener el ID existente
+                // Update existing - UUID
                 const { error } = await supabase
                     .from('team_members')
                     .update({
@@ -157,6 +174,7 @@ export default function AboutPageSettings() {
                         twitter_url: member.twitter_url,
                         linkedin_url: member.linkedin_url,
                         instagram_url: member.instagram_url,
+                        order_position: member.order_position,
                         is_active: member.is_active,
                         updated_at: new Date().toISOString()
                     })
@@ -164,7 +182,7 @@ export default function AboutPageSettings() {
 
                 if (error) throw error
             } else {
-                // Create new - NO incluir el campo id, que se genere automáticamente
+                // Create new 
                 const { error } = await supabase
                     .from('team_members')
                     .insert([{
@@ -175,9 +193,8 @@ export default function AboutPageSettings() {
                         twitter_url: member.twitter_url,
                         linkedin_url: member.linkedin_url,
                         instagram_url: member.instagram_url,
-                        is_active: member.is_active || true,
-                        order_position: teamMembers.length
-                        // NO incluir 'id' aquí - se genera automáticamente
+                        order_position: teamMembers.length,
+                        is_active: member.is_active ?? true
                     }])
 
                 if (error) throw error
@@ -190,15 +207,19 @@ export default function AboutPageSettings() {
             setError("Failed to save team member: " + error.message)
         }
     }
+
     // Function to save/update FAQ
     const saveFaq = async (faq: Partial<FAQ>) => {
         try {
             if (faq.id) {
-                // Update existing
+                // Update existing - UUID
                 const { error } = await supabase
                     .from('faqs')
                     .update({
-                        ...faq,
+                        question: faq.question,
+                        answer: faq.answer,
+                        order_position: faq.order_position,
+                        is_active: faq.is_active,
                         updated_at: new Date().toISOString()
                     })
                     .eq('id', faq.id)
@@ -209,8 +230,10 @@ export default function AboutPageSettings() {
                 const { error } = await supabase
                     .from('faqs')
                     .insert([{
-                        ...faq,
-                        order_position: faqs.length
+                        question: faq.question,
+                        answer: faq.answer,
+                        order_position: faqs.length,
+                        is_active: faq.is_active ?? true
                     }])
 
                 if (error) throw error
@@ -316,7 +339,7 @@ export default function AboutPageSettings() {
 
             {/* Tab Content */}
             <div className="mt-6">
-                {activeTab === 'general' && (
+                {activeTab === 'general' && aboutPage && (
                     <GeneralInfoTab
                         aboutPage={aboutPage}
                         setAboutPage={setAboutPage}

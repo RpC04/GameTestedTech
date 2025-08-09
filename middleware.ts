@@ -5,33 +5,40 @@ import type { NextRequest } from "next/server"
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
 
-  // Verificar si las variables de entorno están disponibles
   const isMissingEnvVars =
     typeof process.env.NEXT_PUBLIC_SUPABASE_URL === "undefined" ||
     typeof process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === "undefined"
 
-  // Si faltan variables de entorno, permitir el acceso para mostrar el mensaje de error
   if (isMissingEnvVars) {
     return res
   }
 
   const supabase = createMiddlewareClient({ req, res })
 
-  // Check if the request is for the admin area
-  if (req.nextUrl.pathname.startsWith("/admin") && req.nextUrl.pathname !== "/admin/login") {
+  // Redirect to admin if already logged in and trying to access login
+  if (req.nextUrl.pathname === "/admin/login") {
     try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        return NextResponse.redirect(new URL("/admin", req.url))
+      }
+    } catch (error) {
+      console.error("Login redirect error:", error)
+    }
+    return res
+  }
 
-      // If no session, redirect to login
+  // Check admin area protection
+  if (req.nextUrl.pathname.startsWith("/admin")) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+
       if (!session) {
         const redirectUrl = new URL("/admin/login", req.url)
         return NextResponse.redirect(redirectUrl)
-      }
+      } 
     } catch (error) {
       console.error("Auth middleware error:", error)
-      // En caso de error, redirigir al login
       const redirectUrl = new URL("/admin/login", req.url)
       return NextResponse.redirect(redirectUrl)
     }
