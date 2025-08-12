@@ -4,8 +4,6 @@ import { Roboto } from "next/font/google"
 import Script from 'next/script'
 import './globals.css'
 
-export const runtime = "edge";
-
 const roboto = Roboto({
   weight: ["400", "500", "700", "900"],
   subsets: ["latin"],
