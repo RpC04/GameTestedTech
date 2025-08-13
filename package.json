@@ -4,23 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "build:worker": "opennextjs-cloudflare build",
     "bundle:worker": "esbuild .open-next/worker.js --bundle --outfile=.open-next/assets/_worker.js --format=esm --main-fields=module,main --external:cloudflare:workers --external:node:* --external:async_hooks --external:fs --external:path --external:url --external:buffer --external:crypto --external:stream --external:util --external:vm --external:http --external:https --external:zlib --external:string_decoder --external:events --external:os --external:tty --external:net --external:tls --external:assert --external:child_process --external:module --external:worker_threads",
-    "deploy:pages": "npm run build:worker && npm run bundle:worker && wrangler pages deploy --commit-dirty=true",
-    "dev:worker": "opennextjs-cloudflare preview",
-    "preview:worker": "npm run build:worker && opennextjs-cloudflare preview",
-    "deploy:worker": "opennextjs-cloudflare deploy"
+    "deploy:pages": "npm run build:worker && npm run bundle:worker && wrangler pages deploy",
+    "preview:worker": "npm run build:worker && opennextjs-cloudflare preview"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@headlessui/react": "^2.2.3",
+    "@opennextjs/cloudflare": "^1.6.5",
     "@radix-ui/react-accordion": "^1.2.8",
     "@radix-ui/react-alert-dialog": "^1.1.11",
     "@radix-ui/react-aspect-ratio": "^1.1.4",
@@ -95,7 +93,6 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^1.6.5",
     "@tailwindcss/postcss": "^4.1.5",
     "@types/jspdf": "^1.3.3",
     "@types/react": "^18.2.0",
