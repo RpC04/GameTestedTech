@@ -11,7 +11,7 @@
     "build:worker": "opennextjs-cloudflare build",
     "bundle:worker": "esbuild .open-next/worker.js --bundle --outfile=.open-next/assets/_worker.js --format=esm --main-fields=module,main --external:cloudflare:workers --external:node:* --external:async_hooks --external:fs --external:path --external:url --external:buffer --external:crypto --external:stream --external:util --external:vm --external:http --external:https --external:zlib --external:string_decoder --external:events --external:os --external:tty --external:net --external:tls --external:assert --external:child_process --external:module --external:worker_threads",
     "deploy:pages": "npm run build:worker && npm run bundle:worker && wrangler pages deploy .open-next/assets",
-    "preview:worker": "npm run build:worker && opennextjs-cloudflare preview"
+    "preview:worker": "npm run build:worker && npm run bundle:worker && wrangler pages dev .open-next/assets"
   },
   "keywords": [],
   "author": "",
