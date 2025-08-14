@@ -3,8 +3,8 @@ import { useEffect, useState } from "react"
 import { createClient } from "@supabase/supabase-js"
 import { Trash2, Download, FileText, FileSpreadsheet, AlertCircle, Eye, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import * as XLSX from 'xlsx'
-import jsPDF from 'jspdf'
+// import * as XLSX from 'xlsx'
+// import jsPDF from 'jspdf'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || "",
@@ -119,11 +119,14 @@ export default function ContactMessagesPage() {
     }
   }
 
-  const exportToExcel = () => {
+  const exportToExcel = async () => {
     if (messages.length === 0) {
       alert("No messages to export")
       return
     }
+
+    // Dynamic import of the library
+    const XLSX = await import('xlsx');
 
     const exportData = messages.map(msg => ({
       Name: msg.name,
@@ -150,11 +153,14 @@ export default function ContactMessagesPage() {
     XLSX.writeFile(workbook, `contact-messages-${new Date().toISOString().split('T')[0]}.xlsx`)
   }
 
-  const exportToPDF = () => {
+  const exportToPDF = async () => {
     if (messages.length === 0) {
       alert("No messages to export")
       return
     }
+
+    // Dynamic import of the libraries
+    const { default: jsPDF } = await import('jspdf'); 
 
     const doc = new jsPDF()
 
