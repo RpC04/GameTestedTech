@@ -3,9 +3,7 @@ compatibility_date = "2024-05-01"
 compatibility_flags = [ "nodejs_compat" ]
 
 pages_build_output_dir = ".open-next/assets"
-
-[[
-    nodejs_compat_modules
-]]
+ 
+[[nodejs_compat_modules]]
 name = "os"
 path = "./empty-polyfill.js"
