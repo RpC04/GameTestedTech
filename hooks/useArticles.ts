@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Article } from "@/types/article";
 
 export const useLatestArticles = (limit: number = 6) => {
@@ -11,6 +11,7 @@ export const useLatestArticles = (limit: number = 6) => {
     async function fetchArticles() {
       try {
         setLoading(true);
+        const supabase = createSupabaseBrowserClient();
         const { data, error } = await supabase
           .from("articles")
           .select(`

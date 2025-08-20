@@ -1,6 +1,8 @@
 "use client"
 import { useState, useEffect } from "react"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import React, { Suspense } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { User, Mail, FileText, Camera, Save, AlertCircle, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -23,7 +25,7 @@ export default function ProfileSettings() {
     const [success, setSuccess] = useState("")
     const [previewImage, setPreviewImage] = useState<string | null>(null)
 
-    const supabase = createClientComponentClient()
+    const supabase = createSupabaseBrowserClient()
 
     useEffect(() => {
         fetchAuthorProfile()

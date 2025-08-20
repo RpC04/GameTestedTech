@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useRouter } from 'next/navigation';
 
 interface Category {
@@ -53,6 +53,7 @@ export default function ArticlesDropdown() {
     useEffect(() => {
         async function fetchCategories() {
             try {
+                const supabase = createSupabaseBrowserClient();
                 const { data, error } = await supabase
                     .from("categories")
                     .select("*")

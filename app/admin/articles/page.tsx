@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import type React from "react"
 
 import Link from "next/link"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import {
   FileText,
   Plus,
@@ -41,7 +41,7 @@ export default function ArticlesPage() {
   const [selectedArticles, setSelectedArticles] = useState<number[]>([])
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const supabase = createClientComponentClient()
+  const supabase = createSupabaseBrowserClient()
 
   useEffect(() => {
     fetchArticles()

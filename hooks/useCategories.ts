@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { useState, useEffect } from "react";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { Category, CategoryFormData, CategoryState } from "@/types/admin/categories/types"
 
 export function useCategories() {
@@ -15,7 +15,7 @@ export function useCategories() {
   })
 
   const [error, setError] = useState("")
-  const supabase = createClientComponentClient()
+  const supabase = createSupabaseBrowserClient()
 
   // Función para actualizar estado
   const updateState = (updates: Partial<CategoryState>) => {

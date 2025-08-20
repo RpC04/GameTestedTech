@@ -1,6 +1,2 @@
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-export const supabase = createClient(supabaseUrl, supabaseKey)
+// This file is deprecated. Use lib/supabase/client.ts for browser client or lib/supabase/server.ts for server client
+export { createSupabaseBrowserClient as supabase } from './supabase/client';

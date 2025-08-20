@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Stat } from "@/types/home/type";
 
 export const useHeroStats = () => {
@@ -11,6 +11,7 @@ export const useHeroStats = () => {
     async function fetchHeroStats() {
       try {
         setLoading(true);
+        const supabase = createSupabaseBrowserClient();
         const { data, error } = await supabase
           .from("hero_stats")
           .select("*")

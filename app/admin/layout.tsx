@@ -5,7 +5,7 @@ import type React from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LayoutDashboard, Tags, FileText, Tag, Inbox, Users, UserCog, UserRoundPen, Settings, LogOut, Menu, X, AlertCircle } from "lucide-react"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -22,7 +22,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     typeof process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === "undefined"
 
   // Only create the client if environment variables are available
-  const supabase = !isMissingEnvVars ? createClientComponentClient() : null
+  const supabase = !isMissingEnvVars ? createSupabaseBrowserClient() : null
 
   useEffect(() => {
     async function checkAuth() {

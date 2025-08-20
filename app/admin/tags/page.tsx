@@ -1,6 +1,8 @@
 "use client"
 import { useState, useEffect } from "react"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import React, { Suspense } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Tag, TagIcon, Plus, Edit, Trash2, Save, X, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -22,7 +24,7 @@ export default function TagsPage() {
   const [isAdding, setIsAdding] = useState(false)
   const [error, setError] = useState("")
 
-  const supabase = createClientComponentClient()
+  const supabase = createSupabaseBrowserClient()
 
   useEffect(() => {
     fetchTags()

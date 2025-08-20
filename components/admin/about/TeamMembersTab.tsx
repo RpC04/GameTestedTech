@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Plus, Edit3, Trash2, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button" 
 import type { TeamMember, TeamMembersTabProps } from "@/types/admin/about/types" 
@@ -15,7 +15,7 @@ export function TeamMembersTab({
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null)
   const [isUploadingImage, setIsUploadingImage] = useState(false)
   
-  const supabase = createClientComponentClient()
+  const supabase = createSupabaseBrowserClient()
 
   // Function to extract image path from URL
   const getImagePathFromUrl = (imageUrl: string): string | null => {

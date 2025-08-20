@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useState, useEffect } from 'react';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { AboutPage, CoreValue, TeamMember, FAQ } from '@/types/about/about'
 
 export function useAboutData() {
@@ -10,7 +10,7 @@ export function useAboutData() {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState("")
 
-    const supabase = createClientComponentClient()
+    const supabase = createSupabaseBrowserClient()
 
     const fetchAllData = async () => {
         setIsLoading(true)

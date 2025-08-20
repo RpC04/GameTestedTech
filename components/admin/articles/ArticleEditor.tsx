@@ -5,7 +5,7 @@ import type React from "react"
 import type { ArticleFormWithTags, Category, Tag } from "@/types/article"
 
 import { useRouter } from "next/navigation"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Save, ArrowLeft, ImageIcon, Eye, EyeOff, Trash2, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -42,7 +42,7 @@ export default function ArticleEditor({ articleId }: { articleId: string }) {
   const [availableTags, setAvailableTags] = useState<Pick<Tag, "id" | "name">[]>([])
 
   const router = useRouter()
-  const supabase = createClientComponentClient()
+  const supabase = createSupabaseBrowserClient()
 
   useEffect(() => {
     async function fetchData() {

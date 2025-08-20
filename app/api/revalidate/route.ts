@@ -1,11 +1,12 @@
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
+import { createSupabaseServerClient } from "@/lib/supabase/server"
 import { cookies } from "next/headers"
 import { type NextRequest, NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const cookieStore = await cookies()
+    const supabase = createSupabaseServerClient(cookieStore)
 
     // Verify the request is authenticated
     const {

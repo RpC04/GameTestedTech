@@ -1,5 +1,5 @@
 import { cookies } from "next/headers"
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createSupabaseServerClient } from "@/lib/supabase/server"
 import BlogPost from "@/components/blog/blog-post"
 import type { RelatedArticle } from "@/types/article"
 
@@ -8,9 +8,7 @@ export const dynamic = "force-dynamic"
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const cookieStore = await cookies()
-  const supabase = createServerComponentClient({
-    cookies: () => cookieStore
-  })
+  const supabase = createSupabaseServerClient(cookieStore)
   // 1. Get the main article
   const { data: article, error } = await supabase
     .from("articles")

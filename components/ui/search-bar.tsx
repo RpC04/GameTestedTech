@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { Search, FileText, Hash, Clock } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
 type SearchResult =
@@ -21,6 +21,8 @@ export function SearchBar() {
     setLoading(true);
     
     try {
+      const supabase = createSupabaseBrowserClient();
+      
       // Buscar en artículos
       const { data: articles } = await supabase
         .from('articles')

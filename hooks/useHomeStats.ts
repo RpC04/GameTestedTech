@@ -1,6 +1,6 @@
 // hooks/useHomeStats.ts
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Stat } from "@/types/home/type";
 
 export const useHomeStats = () => {
@@ -12,6 +12,8 @@ export const useHomeStats = () => {
   const fetchStats = async () => {
     try {
       setLoading(true);
+      
+      const supabase = createSupabaseBrowserClient();
       
       // Fetch home stats
       const { data: homeData, error: homeError } = await supabase
@@ -40,6 +42,7 @@ export const useHomeStats = () => {
 
   const updateStat = async (id: number, value: string, label: string, type: 'home' | 'hero' = 'home') => {
     try {
+      const supabase = createSupabaseBrowserClient();
       const table = type === 'home' ? 'home_stats' : 'hero_stats';
       
       const { error } = await supabase

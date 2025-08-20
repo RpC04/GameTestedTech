@@ -5,7 +5,7 @@ import Link from "next/link"
 import DatePicker from "react-datepicker"
 import { Button } from "@/components/ui/button"
 import { HomeJsonLd } from "@/components/home-jsonld"
-import { supabase } from "@/lib/supabase"
+import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 import { useEffect, useState } from "react"
 import { Disclosure } from "@headlessui/react"
 import { ChevronDown } from "lucide-react"
@@ -34,8 +34,8 @@ export default function Articles() {
         rotate: [0, 2, 0, -2, 0],
         transition: {
             duration: 6,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
+            repeat: Infinity,
+            ease: "easeInOut" as const,
         },
     }
 
@@ -44,7 +44,7 @@ export default function Articles() {
         visible: {
             y: 0,
             opacity: 1,
-            transition: { type: "spring", stiffness: 100 },
+            transition: { type: "spring" as const, stiffness: 100 },
         },
     }
 
@@ -59,6 +59,7 @@ export default function Articles() {
                 // Split the parameter by commas to handle multiple categories
                 const categorySlugs = categorySlug.split(',').map(slug => slug.trim());
 
+                const supabase = createSupabaseBrowserClient();
                 // Search for all categories that match the slugs
                 const { data, error } = await supabase
                     .from("categories")
@@ -99,6 +100,7 @@ export default function Articles() {
 
     useEffect(() => {
         async function fetchCategories() {
+            const supabase = createSupabaseBrowserClient();
             const { data, error } = await supabase
                 .from("categories")
                 .select("id, name")
@@ -115,6 +117,7 @@ export default function Articles() {
 
     useEffect(() => {
         async function fetchSubcategories() {
+            const supabase = createSupabaseBrowserClient();
             const { data, error } = await supabase
                 .from("categories")
                 .select("id, name, parent_id")
@@ -131,6 +134,7 @@ export default function Articles() {
 
     useEffect(() => {
         async function fetchFilteredArticles() {
+            const supabase = createSupabaseBrowserClient();
             let query = supabase
                 .from("articles")
                 .select(`

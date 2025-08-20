@@ -9,7 +9,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Heart, Eye, Clock } from "lucide-react"
 import { Header } from "@/components/header"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useAnalytics } from '@/hooks/use-analytics'
 import MobileTOC from "@/components/blog/mobile-toc"
@@ -21,7 +21,7 @@ marked.setOptions({
     headerPrefix: ''
 })
 
-const supabase = createClientComponentClient()
+const supabase = createSupabaseBrowserClient()
 
 
 // Function to calculate reading time based on word count

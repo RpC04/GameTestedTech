@@ -1,6 +1,8 @@
 "use client"
 import { useState, useEffect } from "react"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import React, { Suspense } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { AlertCircle, CheckCircle, Users, HelpCircle, FileText } from "lucide-react"
 import { TeamMembersTab } from "@/components/admin/about/TeamMembersTab"
 import { GeneralInfoTab } from "@/components/admin/about/GeneralInfoTab"
@@ -25,7 +27,7 @@ export default function AboutPageSettings() {
     const [showValueForm, setShowValueForm] = useState(false) 
     const [showFaqForm, setShowFaqForm] = useState(false)
 
-    const supabase = createClientComponentClient()
+    const supabase = createSupabaseBrowserClient()
 
     useEffect(() => {
         fetchAllData()
