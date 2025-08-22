@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+.github
+.open-next
+*.log
+.DS_Store
+.env.local

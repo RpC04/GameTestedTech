@@ -4,13 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "deploy": "npx opennextjs-cloudflare build && wrangler pages deploy .open-next/assets",
-    "preview": "npx opennextjs-cloudflare build && wrangler pages dev .open-next/assets"
-  },
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
